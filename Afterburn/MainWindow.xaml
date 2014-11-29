@@ -1,0 +1,15 @@
+﻿<Window x:Class="Afterburn.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:ignore="http://www.ignore.com"
+        mc:Ignorable="d ignore"
+        MinWidth="1024"
+        MinHeight="768"
+        Title="Afterburn"
+        DataContext="{Binding Main, Source={StaticResource Locator}}">
+     <Grid x:Name="LayoutRoot">
+        <TextBlock Text="Afterburn" FontFamily="/Afterburn;component/Assets/#Oswald" FontSize="24"/>
+    </Grid>
+</Window>
