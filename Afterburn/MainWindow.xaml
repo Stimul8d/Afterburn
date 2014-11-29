@@ -3,13 +3,50 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
         xmlns:ignore="http://www.ignore.com"
         mc:Ignorable="d ignore"
         MinWidth="1024"
         MinHeight="768"
         Title="Afterburn"
         DataContext="{Binding Main, Source={StaticResource Locator}}">
-     <Grid x:Name="LayoutRoot">
-        <TextBlock Text="Afterburn" FontFamily="/Afterburn;component/Assets/#Oswald" FontSize="24"/>
+    <Grid x:Name="LayoutRoot">
+        <Grid.Background>
+            <ImageBrush ImageSource="Assets/white_paperboard.png" 
+                        ViewportUnits="Absolute"
+                        Viewport="0,0,100,100"
+                        AlignmentX="Left"
+                        AlignmentY="Top"
+                        TileMode="Tile" Stretch="None"/>
+        </Grid.Background>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid Background="#B2544CFF">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Image HorizontalAlignment="Left" Source="Assets/icon.png" Margin="5" Opacity="0.75"/>
+            <TextBlock Text="Afterburn" FontFamily="/Afterburn;component/Assets/#Oswald" FontSize="32" Foreground="White" Grid.Column="1" Margin="0,-4,0,0"/>
+        </Grid>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="5"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Controls:MetroAnimatedTabControl>
+                <Controls:MetroTabItem Header="Estimate &amp; Tracking">
+                    
+                </Controls:MetroTabItem>
+                <Controls:MetroTabItem Header="Analysis">
+                    
+                </Controls:MetroTabItem>
+            </Controls:MetroAnimatedTabControl>
+        </Grid>
     </Grid>
 </Window>
