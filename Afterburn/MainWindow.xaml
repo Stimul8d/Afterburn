@@ -47,7 +47,7 @@
                     </DoubleAnimationUsingKeyFrames>
                 </Storyboard>
             </DataTemplate.Resources>
-            <Grid x:Name="grid">
+            <Grid x:Name="grid" Margin="0,0,0,10">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="100"/>
                     <ColumnDefinition Width="100"/>
@@ -55,10 +55,10 @@
                     <ColumnDefinition Width="50"/>
                     <ColumnDefinition Width="20"/>
                 </Grid.ColumnDefinitions>
-                <TextBox HorizontalAlignment="Stretch" TextWrapping="NoWrap" Text="{Binding Reference}" VerticalAlignment="Stretch" Width="Auto" Margin="0,0,5,0" BorderThickness="0" Padding="-5,0,0,0"/>
-                <TextBox HorizontalAlignment="Stretch" Height="Auto" TextWrapping="NoWrap" Text="{Binding Feature}" VerticalAlignment="Stretch" Width="Auto" Margin="0,0,5,0" BorderThickness="0" Grid.Column="1" Padding="-5,0,0,0"/>
-                <TextBox HorizontalAlignment="Stretch" Height="Auto" TextWrapping="NoWrap" Text="{Binding Name}" VerticalAlignment="Stretch" Width="Auto" Margin="0,0,5,0" BorderThickness="0" Grid.Column="2" Padding="-5,0,0,0"/>
-                <TextBox HorizontalAlignment="Stretch" Height="Auto" TextWrapping="NoWrap" Text="{Binding Hours}" VerticalAlignment="Stretch" Width="Auto" BorderThickness="0" Grid.Column="3" Padding="-5,0,0,0" Grid.ColumnSpan="2" MaxLength="5"/>
+                <TextBox HorizontalAlignment="Stretch" TextWrapping="NoWrap" Text="{Binding Reference}" VerticalAlignment="Stretch" Width="Auto" Margin="0,0,5,0" BorderThickness="0" Padding="-5,0,0,0" Background="#7FFFFFFF"/>
+                <TextBox HorizontalAlignment="Stretch" Height="Auto" TextWrapping="NoWrap" Text="{Binding Feature}" VerticalAlignment="Stretch" Width="Auto" Margin="0,0,5,0" BorderThickness="0" Grid.Column="1" Padding="-5,0,0,0" Background="#7FFFFFFF"/>
+                <TextBox HorizontalAlignment="Stretch" Height="Auto" TextWrapping="NoWrap" Text="{Binding Name}" VerticalAlignment="Stretch" Width="Auto" Margin="0,0,5,0" BorderThickness="0" Grid.Column="2" Padding="-5,0,0,0" Background="#7FFFFFFF"/>
+                <TextBox HorizontalAlignment="Stretch" Height="Auto" TextWrapping="NoWrap" Text="{Binding Hours}" VerticalAlignment="Stretch" Width="Auto" BorderThickness="0" Grid.Column="3" Padding="-5,0,0,0" Grid.ColumnSpan="2" MaxLength="5" Background="#7FFFFFFF"/>
                 <Button x:Name="deleteButton" VerticalAlignment="Stretch" Width="Auto" Grid.Column="4" BorderThickness="0" Style="{DynamicResource NoHoverButtonStyle}" Opacity="0.005">
                     <Button.Background>
                         <ImageBrush ImageSource="Assets/Add.png"/>
@@ -111,7 +111,7 @@
             <Controls:MetroAnimatedTabControl Margin="5">
                 <Controls:MetroTabItem Header="Estimate &amp; Tracking"
                                                DataContext="{Binding Estimate, Source={StaticResource Locator}}">
-                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="0,0,0,20">
                         <Grid ScrollViewer.VerticalScrollBarVisibility="Disabled" Margin="10,0,10,10">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition MinWidth="400"/>
@@ -124,7 +124,7 @@
                                         <RowDefinition Height="Auto"/>
                                         <RowDefinition/>
                                     </Grid.RowDefinitions>
-                                    <Grid VerticalAlignment="Top">
+                                    <Grid VerticalAlignment="Top" Margin="0,0,0,5">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="100"/>
                                             <ColumnDefinition Width="100"/>
@@ -132,10 +132,10 @@
                                             <ColumnDefinition Width="50"/>
                                             <ColumnDefinition Width="20"/>
                                         </Grid.ColumnDefinitions>
-                                        <TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="16" Foreground="#FF464646" Text="Reference" TextTrimming="CharacterEllipsis"/>
-                                        <TextBlock VerticalAlignment="Top" Grid.Column="1" FontSize="16" Foreground="#FF464646" Text="Feature" TextTrimming="CharacterEllipsis"/>
-                                        <TextBlock VerticalAlignment="Top" Grid.Column="2" FontSize="16" Foreground="#FF464646" Text="Task" TextTrimming="CharacterEllipsis"/>
-                                        <TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Column="3" FontSize="16" Foreground="#FF464646" Text="Hours" TextTrimming="CharacterEllipsis"/>
+                                        <TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="16" Foreground="#FF464646" Text="Reference" TextTrimming="CharacterEllipsis" FontWeight="Bold"/>
+                                        <TextBlock VerticalAlignment="Top" Grid.Column="1" FontSize="16" Foreground="#FF464646" Text="Feature" TextTrimming="CharacterEllipsis" FontWeight="Bold"/>
+                                        <TextBlock VerticalAlignment="Top" Grid.Column="2" FontSize="16" Foreground="#FF464646" Text="Task" TextTrimming="CharacterEllipsis" FontWeight="Bold"/>
+                                        <TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Column="3" FontSize="16" Foreground="#FF464646" Text="Hours" TextTrimming="CharacterEllipsis" FontWeight="Bold"/>
                                     </Grid>
                                     <ItemsControl Grid.Row="1" ItemsSource="{Binding Tasks}" ItemTemplate="{DynamicResource TaskEstimateTemplate}"/>
                                 </Grid>

@@ -18,7 +18,11 @@ namespace Afterburn.ViewModel
                 Name = "Sort coupons by fixture start time",
                 Hours = 6.25
             };
-            Tasks.Add(t);
+
+            for (int i = 0; i < 25; i++)
+            {
+                Tasks.Add(t); 
+            }
         }
     }
 }
