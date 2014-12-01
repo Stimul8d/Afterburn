@@ -69,7 +69,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Converters\GridLengthToWidthConverter.cs" />
     <Compile Include="ViewModel\EstimateViewModel.cs" />
+    <Compile Include="ViewModel\TaskUpdateViewModel.cs" />
     <Compile Include="ViewModel\TaskViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
     <Page Include="MainWindow.xaml">
@@ -112,9 +114,6 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Assets\white_paperboard.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Assets\icon.png" />
   </ItemGroup>
   <ItemGroup>
@@ -122,7 +121,13 @@
     <Resource Include="Assets\Save.png" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Assets\Delete.png" />
+  </ItemGroup>
+  <ItemGroup>
     <Resource Include="Assets\Add.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\Background.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

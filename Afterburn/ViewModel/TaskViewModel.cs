@@ -1,11 +1,19 @@
 ﻿using GalaSoft.MvvmLight;
 using System;
+using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace Afterburn.ViewModel
 {
     public class TaskViewModel : ViewModelBase
     {
+        public ObservableCollection<TaskUpdateViewModel> Updates { get; set; }
+
+        public TaskViewModel()
+        {
+            Updates = new ObservableCollection<TaskUpdateViewModel>();
+        }
+
         #region INPC
         /// <summary>
         /// The <see cref="Reference" /> property's name.
