@@ -7,7 +7,7 @@
         xmlns:ignore="http://www.ignore.com"
         mc:Ignorable="d ignore"
         MinWidth="1024"
-        MinHeight="768"
+        MinHeight="600"
         Title="Afterburn">
     <Window.Resources>
 
@@ -58,7 +58,7 @@
                 <TextBox HorizontalAlignment="Stretch" TextWrapping="NoWrap" Text="{Binding Reference}" VerticalAlignment="Stretch" Width="Auto" Margin="0,0,5,0" BorderThickness="0" Padding="0" Background="#7FFFFFFF"/>
                 <TextBox HorizontalAlignment="Stretch" Height="Auto" TextWrapping="NoWrap" Text="{Binding Feature}" VerticalAlignment="Stretch" Width="Auto" Margin="0,0,5,0" BorderThickness="0" Grid.Column="1" Padding="0" Background="#7FFFFFFF"/>
                 <TextBox HorizontalAlignment="Stretch" Height="Auto" TextWrapping="NoWrap" Text="{Binding Name}" VerticalAlignment="Stretch" Width="Auto" Margin="0,0,5,0" BorderThickness="0" Grid.Column="2" Padding="0" Background="#7FFFFFFF"/>
-                <TextBox HorizontalAlignment="Stretch" Height="Auto" TextWrapping="NoWrap" Text="{Binding Hours}" VerticalAlignment="Stretch" Width="Auto" BorderThickness="0" Grid.Column="3" Padding="0" Grid.ColumnSpan="2" MaxLength="5" Background="#7FFFFFFF"/>
+                <TextBox HorizontalAlignment="Stretch" Height="Auto" TextWrapping="NoWrap" Text="{Binding Hours}" VerticalAlignment="Stretch" Width="Auto" BorderThickness="0" Grid.Column="3" Padding="0" Grid.ColumnSpan="2" MaxLength="5" Background="#7FFFFFFF" TextAlignment="Center"/>
                 <Button x:Name="deleteButton" VerticalAlignment="Stretch" Width="Auto" Grid.Column="4" BorderThickness="0" Style="{DynamicResource NoHoverButtonStyle}" Opacity="0.005">
                     <Button.Background>
                         <ImageBrush ImageSource="Assets/Delete.png"/>
@@ -78,7 +78,7 @@
         </DataTemplate>
 
         <DataTemplate x:Key="TaskUpdatesTemplate">
-            <StackPanel Orientation="Vertical" Width="425">
+            <StackPanel Orientation="Vertical" Width="Auto">
                 <ItemsControl 
                 	ItemsSource="{Binding Updates}"
                 	ItemTemplate="{DynamicResource TaskUpdateTemplate}" Margin="0,0,0,10">
@@ -92,10 +92,10 @@
             </StackPanel>
         </DataTemplate>
         <DataTemplate x:Key="TaskUpdateTemplate">
-            <TextBox Text="{Binding Hours}" Margin="0,0,10,0" BorderBrush="{x:Null}" Background="#7FFFFFFF" TextAlignment="Center" MaxLength="5" Width="75"/>
+            <TextBox Text="{Binding Hours}" Margin="0,0,10,0" BorderBrush="{x:Null}" Background="#7FFFFFFF" TextAlignment="Center" MaxLength="5" Width="45"/>
         </DataTemplate>
         <DataTemplate x:Key="TaskUpdateDatesTemplate">
-            <TextBlock Text="{Binding Date, StringFormat=\{0:dd.M.yy\}}" FontSize="16" FontWeight="Bold" Foreground="#FF464646" Margin="0,0,22,0"/>
+            <TextBlock Text="{Binding Date, StringFormat=\{0:dd.M.yy\}}" FontSize="12" FontWeight="Bold" Foreground="#FF464646" Margin="0,0,7,0"/>
         </DataTemplate>
     </Window.Resources>
     <Grid x:Name="LayoutRoot">
@@ -147,14 +147,14 @@
                                 <ColumnDefinition Width="50"/>
                                 <ColumnDefinition Width="20"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="16" Foreground="#FF464646" Text="Reference" TextTrimming="CharacterEllipsis" FontWeight="Bold" Margin="0"/>
-                            <TextBlock VerticalAlignment="Top" Grid.Column="1" FontSize="16" Foreground="#FF464646" Text="Feature" TextTrimming="CharacterEllipsis" FontWeight="Bold" Margin="0"/>
-                            <TextBlock VerticalAlignment="Top" Grid.Column="2" FontSize="16" Foreground="#FF464646" Text="Task" TextTrimming="CharacterEllipsis" FontWeight="Bold" Margin="0"/>
-                            <TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Column="3" FontSize="16" Foreground="#FF464646" Text="Hours" TextTrimming="CharacterEllipsis" FontWeight="Bold" Margin="0" Grid.ColumnSpan="2"/>
+                            <TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="#FF464646" Text="Reference" TextTrimming="CharacterEllipsis" FontWeight="Bold" Margin="0"/>
+                            <TextBlock VerticalAlignment="Top" Grid.Column="1" Foreground="#FF464646" Text="Feature" TextTrimming="CharacterEllipsis" FontWeight="Bold" Margin="0"/>
+                            <TextBlock VerticalAlignment="Top" Grid.Column="2" Foreground="#FF464646" Text="Task" TextTrimming="CharacterEllipsis" FontWeight="Bold" Margin="0"/>
+                            <TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Column="3" Foreground="#FF464646" Text="Hours" TextTrimming="CharacterEllipsis" FontWeight="Bold" Margin="0" Grid.ColumnSpan="2"/>
                         </Grid>
-                        <Canvas Margin="39,0,10,0" ClipToBounds="True">
-                            <Grid x:Name="HeaderGrid_Copy" Canvas.Left="{Binding ElementName=itemsControl,Path=ActualWidth}" VerticalAlignment="Top" HorizontalAlignment="Left">
-                                <ItemsControl ItemsSource="{Binding Tasks[0].Updates}" ItemTemplate="{DynamicResource TaskUpdateDatesTemplate}">
+                        <Canvas Margin="34,0,10,0" ClipToBounds="True">
+                            <Grid x:Name="HeaderGrid_Copy" Canvas.Left="{Binding ElementName=itemsControl,Path=ActualWidth}" HorizontalAlignment="Left">
+                                <ItemsControl ItemsSource="{Binding Tasks[0].Updates}" ItemTemplate="{DynamicResource TaskUpdateDatesTemplate}" VerticalContentAlignment="Bottom">
                                     <ItemsControl.ItemsPanel>
                                         <ItemsPanelTemplate>
                                             <StackPanel Orientation="Horizontal"/>
@@ -168,11 +168,11 @@
                         <ScrollViewer VerticalScrollBarVisibility="Auto" Grid.Row="1" Grid.ColumnSpan="2">
                             <Grid x:Name="DetailsGrid" ScrollViewer.VerticalScrollBarVisibility="Disabled" Margin="10,0,10,10">
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition x:Name="DetailsColumn" MinWidth="400"/>
+                                    <ColumnDefinition x:Name="DetailsColumn" />
                                     <ColumnDefinition Width="15"/>
                                     <ColumnDefinition x:Name="UpdatesColumn" Width="auto"/>
                                 </Grid.ColumnDefinitions>
-                                <StackPanel>
+                                <StackPanel >
                                     <ItemsControl x:Name="itemsControl" ItemsSource="{Binding Tasks}" ItemTemplate="{DynamicResource TaskEstimateTemplate}" VerticalAlignment="Top" Margin="0,5,5,0"/>
                                     <Button VerticalAlignment="Top" HorizontalAlignment="Left" Padding="0" BorderThickness="0" Style="{DynamicResource NoHoverButtonStyle}" Width="32" Height="32" Margin="-5,0,0,5">
                                         <Button.Background>
@@ -188,26 +188,42 @@
                                             </ImageBrush>
                                         </Button.Background>
                                     </Button>
-                                    <Grid x:Name="grid" Margin="0,0,5,0" ClipToBounds="True">
-                                        <TextBox HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Stretch" Width="Auto" Margin="0,0,5,0" BorderThickness="0" Padding="0" Background="#7FFFFFFF" IsEnabled="False" IsUndoEnabled="False" Text="Other Tasks &amp; Distractions" TextAlignment="Center"/>
+                                    <Grid x:Name="grid" Margin="0,0,5,10" ClipToBounds="True">
+                                        <TextBox HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Stretch" Width="Auto" BorderThickness="0" Padding="0" Background="#3FFFFFFF" IsEnabled="False" IsUndoEnabled="False" Text="Other Tasks &amp; Distractions" TextAlignment="Center" BorderBrush="{x:Null}"/>
+                                    </Grid>
+                                    <Grid Margin="0,0,5,0" ClipToBounds="True">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition Width="70"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBox HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Stretch" Width="Auto" Margin="0,0,5,0" BorderThickness="0" Padding="0" Background="#3FFFFFFF" IsEnabled="False" IsUndoEnabled="False" Text="Total" TextAlignment="Center" BorderBrush="{x:Null}"/>
+                                        <TextBox HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Stretch" Width="Auto" BorderThickness="0" Padding="0" Background="#3FFFFFFF" IsEnabled="False" IsUndoEnabled="False" Text="142.75" TextAlignment="Center" Grid.Column="1" BorderBrush="{x:Null}"/>
                                     </Grid>
                                 </StackPanel>
                                 <GridSplitter HorizontalAlignment="Stretch" Grid.Column="1" Margin="5,0" Width="5" Background="#3F5BAFDE"/>
-                                <Grid Grid.Column="2" Margin="5,5,0,0">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto"/>
-                                        <ColumnDefinition Width="Auto"/>
-                                    </Grid.ColumnDefinitions>
-                                    <ItemsControl x:Name="itemsControl1" HorizontalAlignment="Left" 
-                                		VerticalAlignment="Top" 
-                                		FontSize="16" Foreground="#FF464646" 
-                                		ItemsSource="{Binding Tasks}" ItemTemplate="{DynamicResource TaskUpdatesTemplate}"/>
-                                    <Button HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Column="1" Style="{DynamicResource NoHoverButtonStyle}" Height="32" Width="32" Margin="0,-5,0,0">
+                                <DockPanel Grid.Column="2" Margin="5,5,0,0">
+                                    <StackPanel Orientation="Vertical" HorizontalAlignment="Left">
+                                        <ItemsControl x:Name="itemsControl1" HorizontalAlignment="Left" 
+                                			VerticalAlignment="Top" 
+                                			FontSize="16" Foreground="#FF464646" 
+                                			ItemsSource="{Binding Tasks}" ItemTemplate="{DynamicResource TaskUpdatesTemplate}"/>
+                                        <ItemsControl x:Name="itemsControl1_Copy" 
+                                			FontSize="16" Foreground="#FF464646" 
+                                			ItemsSource="{Binding Distractions.Updates}" 
+                                			ItemTemplate="{DynamicResource TaskUpdateTemplate}" VerticalAlignment="Top" Margin="0,37,0,0" HorizontalAlignment="Left">
+                                            <ItemsControl.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <StackPanel Orientation="Horizontal"/>
+                                                </ItemsPanelTemplate>
+                                            </ItemsControl.ItemsPanel>
+                                        </ItemsControl>
+                                    </StackPanel>
+                                    <Button HorizontalAlignment="Left" VerticalAlignment="Top" Style="{DynamicResource NoHoverButtonStyle}" Height="32" Width="32" Margin="0,-5,0,0">
                                         <Button.Background>
                                             <ImageBrush ImageSource="Assets/Add.png"/>
                                         </Button.Background>
                                     </Button>
-                                </Grid>
+                                </DockPanel>
                             </Grid>
 
                         </ScrollViewer>
