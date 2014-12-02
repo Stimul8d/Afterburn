@@ -62,8 +62,10 @@ namespace Afterburn.ViewModel
                 {
                     return;
                 }
-
+                
                 hours = value;
+                if (hours < 0)
+                    hours = 0;
                 RaisePropertyChanged(HoursPropertyName);
             }
         }

@@ -14,7 +14,7 @@ namespace Afterburn.ViewModel
         {
             CreateTasks();
             Distractions = new TaskViewModel();
-            for (int i = 0; i < 50; i++)
+            for (int i = 0; i < 25; i++)
             {
                 var date = DateTime.Now.AddDays(i);
                 var update = new TaskUpdateViewModel
@@ -37,7 +37,7 @@ namespace Afterburn.ViewModel
                 Hours = 6.25
             };
 
-            for (int i = 0; i < 50; i++)
+            for (int i = 0; i < 25; i++)
             {
                 var date = DateTime.Now.AddDays(i);
                 var update = new TaskUpdateViewModel
@@ -48,7 +48,7 @@ namespace Afterburn.ViewModel
                 t.Updates.Add(update);
             }
 
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < 25; i++)
             {
                 Tasks.Add(t);
             }
