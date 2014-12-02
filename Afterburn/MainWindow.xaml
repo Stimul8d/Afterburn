@@ -95,7 +95,7 @@
             <TextBox Text="{Binding Hours}" Margin="0,0,10,0" BorderBrush="{x:Null}" Background="#7FFFFFFF" TextAlignment="Center" MaxLength="5" Width="75"/>
         </DataTemplate>
         <DataTemplate x:Key="TaskUpdateDatesTemplate">
-            <TextBlock Text="{Binding Updates/Date, StringFormat=\{0:dd.M.yy\}}" FontSize="16" FontWeight="Bold" Foreground="#FF464646" Margin="0,0,22,0"/>
+            <TextBlock Text="{Binding Date, StringFormat=\{0:dd.M.yy\}}" FontSize="16" FontWeight="Bold" Foreground="#FF464646" Margin="0,0,22,0"/>
         </DataTemplate>
     </Window.Resources>
     <Grid x:Name="LayoutRoot">
@@ -154,7 +154,7 @@
                         </Grid>
                         <Canvas Margin="39,0,10,0" ClipToBounds="True">
                             <Grid x:Name="HeaderGrid_Copy" Canvas.Left="{Binding ElementName=itemsControl,Path=ActualWidth}" VerticalAlignment="Top" HorizontalAlignment="Left">
-                                <ItemsControl ItemsSource="{Binding Tasks}" ItemTemplate="{DynamicResource TaskUpdateDatesTemplate}">
+                                <ItemsControl ItemsSource="{Binding Tasks[0].Updates}" ItemTemplate="{DynamicResource TaskUpdateDatesTemplate}">
                                     <ItemsControl.ItemsPanel>
                                         <ItemsPanelTemplate>
                                             <StackPanel Orientation="Horizontal"/>
@@ -174,11 +174,23 @@
                                 </Grid.ColumnDefinitions>
                                 <StackPanel>
                                     <ItemsControl x:Name="itemsControl" ItemsSource="{Binding Tasks}" ItemTemplate="{DynamicResource TaskEstimateTemplate}" VerticalAlignment="Top" Margin="0,5,5,0"/>
-                                    <Button VerticalAlignment="Top" HorizontalAlignment="Left" Padding="0" BorderThickness="0" Style="{DynamicResource NoHoverButtonStyle}" Width="32" Height="32" Margin="-5,0,0,0">
+                                    <Button VerticalAlignment="Top" HorizontalAlignment="Left" Padding="0" BorderThickness="0" Style="{DynamicResource NoHoverButtonStyle}" Width="32" Height="32" Margin="-5,0,0,5">
                                         <Button.Background>
-                                            <ImageBrush ImageSource="Assets/Add.png"/>
+                                            <ImageBrush ImageSource="Assets/Add.png" Stretch="None">
+                                                <ImageBrush.RelativeTransform>
+                                                    <TransformGroup>
+                                                        <ScaleTransform CenterY="0.5" CenterX="0.5" ScaleX="0.8" ScaleY="0.8"/>
+                                                        <SkewTransform CenterY="0.5" CenterX="0.5"/>
+                                                        <RotateTransform CenterY="0.5" CenterX="0.5"/>
+                                                        <TranslateTransform/>
+                                                    </TransformGroup>
+                                                </ImageBrush.RelativeTransform>
+                                            </ImageBrush>
                                         </Button.Background>
                                     </Button>
+                                    <Grid x:Name="grid" Margin="0,0,5,0" ClipToBounds="True">
+                                        <TextBox HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Stretch" Width="Auto" Margin="0,0,5,0" BorderThickness="0" Padding="0" Background="#7FFFFFFF" IsEnabled="False" IsUndoEnabled="False" Text="Other Tasks &amp; Distractions" TextAlignment="Center"/>
+                                    </Grid>
                                 </StackPanel>
                                 <GridSplitter HorizontalAlignment="Stretch" Grid.Column="1" Margin="5,0" Width="5" Background="#3F5BAFDE"/>
                                 <Grid Grid.Column="2" Margin="5,5,0,0">
