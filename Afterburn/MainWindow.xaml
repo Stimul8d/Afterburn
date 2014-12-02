@@ -76,23 +76,26 @@
                 </Trigger>
             </DataTemplate.Triggers>
         </DataTemplate>
-        <DataTemplate x:Key="TaskUpdatesTemplate">
-            <ItemsControl 
-                ItemsSource="{Binding Updates}"
-                ItemTemplate="{DynamicResource TaskUpdateTemplate}" Margin="0,0,0,10">
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <StackPanel Orientation="Horizontal"/>
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
 
-            </ItemsControl>
+        <DataTemplate x:Key="TaskUpdatesTemplate">
+            <StackPanel Orientation="Vertical" Width="425">
+                <ItemsControl 
+                	ItemsSource="{Binding Updates}"
+                	ItemTemplate="{DynamicResource TaskUpdateTemplate}" Margin="0,0,0,10">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Horizontal"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+
+                </ItemsControl>
+            </StackPanel>
         </DataTemplate>
         <DataTemplate x:Key="TaskUpdateTemplate">
             <TextBox Text="{Binding Hours}" Margin="0,0,10,0" BorderBrush="{x:Null}" Background="#7FFFFFFF" TextAlignment="Center" MaxLength="5" Width="75"/>
         </DataTemplate>
-        <DataTemplate x:Key="UpdateDatesTemplate">
-            <TextBlock Text="{Binding Date, StringFormat=\{0:dd/M/yy\}}" FontWeight="Bold" FontSize="16" Foreground="#FF464646" Margin="0,0,15,0"/>
+        <DataTemplate x:Key="TaskUpdateDatesTemplate">
+            <TextBlock Text="{Binding Updates/Date, StringFormat=\{0:dd.M.yy\}}" FontSize="16" FontWeight="Bold" Foreground="#FF464646" Margin="0,0,22,0"/>
         </DataTemplate>
     </Window.Resources>
     <Grid x:Name="LayoutRoot">
@@ -131,8 +134,6 @@
                                                DataContext="{Binding Estimate, Source={StaticResource Locator}}">
                     <Grid Margin="0,0,0,20">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition/>
-                            <ColumnDefinition Width="{Binding ElementName=UpdatesColumn, Path=Width}"/>
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
@@ -151,20 +152,24 @@
                             <TextBlock VerticalAlignment="Top" Grid.Column="2" FontSize="16" Foreground="#FF464646" Text="Task" TextTrimming="CharacterEllipsis" FontWeight="Bold" Margin="0"/>
                             <TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Column="3" FontSize="16" Foreground="#FF464646" Text="Hours" TextTrimming="CharacterEllipsis" FontWeight="Bold" Margin="0" Grid.ColumnSpan="2"/>
                         </Grid>
+                        <Canvas Margin="39,0,10,0" ClipToBounds="True">
+                            <Grid x:Name="HeaderGrid_Copy" Canvas.Left="{Binding ElementName=itemsControl,Path=ActualWidth}" VerticalAlignment="Top" HorizontalAlignment="Left">
+                                <ItemsControl ItemsSource="{Binding Tasks}" ItemTemplate="{DynamicResource TaskUpdateDatesTemplate}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <StackPanel Orientation="Horizontal"/>
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                </ItemsControl>
+                            </Grid>
 
-                        <ItemsControl ItemTemplate="{DynamicResource UpdateDatesTemplate}" ItemsSource="{Binding Tasks/Updates}" Grid.Column="1" Margin="0,0,17,0">
-                            <ItemsControl.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <StackPanel Orientation="Horizontal"/>
-                                </ItemsPanelTemplate>
-                            </ItemsControl.ItemsPanel>
-                        </ItemsControl>
+                        </Canvas>
 
                         <ScrollViewer VerticalScrollBarVisibility="Auto" Grid.Row="1" Grid.ColumnSpan="2">
                             <Grid x:Name="DetailsGrid" ScrollViewer.VerticalScrollBarVisibility="Disabled" Margin="10,0,10,10">
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition MinWidth="400"/>
-                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition x:Name="DetailsColumn" MinWidth="400"/>
+                                    <ColumnDefinition Width="15"/>
                                     <ColumnDefinition x:Name="UpdatesColumn" Width="auto"/>
                                 </Grid.ColumnDefinitions>
                                 <StackPanel>
