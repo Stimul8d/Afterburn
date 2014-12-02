@@ -121,10 +121,10 @@
             </Grid.ColumnDefinitions>
             <Image HorizontalAlignment="Left" Source="Assets/icon.png" Margin="5" Opacity="0.75"/>
             <TextBlock Text="Afterburn" FontFamily="/Afterburn;component/Assets/#Oswald" FontSize="32" Foreground="White" Grid.Column="1" Margin="0,-4,0,0"/>
-            <Button Grid.Column="3"  Style="{DynamicResource MetroCircleButtonStyle}" Opacity="0.75" Margin="5">
+            <Button Grid.Column="3"  Style="{DynamicResource NoHoverButtonStyle}" Opacity="0.75" Margin="5">
                 <Image Source="Assets/Open.png"/>
             </Button>
-            <Button Style="{DynamicResource MetroCircleButtonStyle}" Grid.Column="4" Width="41" Opacity="0.75" Margin="5">
+            <Button Style="{DynamicResource NoHoverButtonStyle}" Grid.Column="4" Width="41" Opacity="0.75" Margin="5">
                 <Image Source="Assets/Save.png"/>
             </Button>
         </Grid>
@@ -181,10 +181,21 @@
                                     </Button>
                                 </StackPanel>
                                 <GridSplitter HorizontalAlignment="Stretch" Grid.Column="1" Margin="5,0" Width="5" Background="#3F5BAFDE"/>
-                                <ItemsControl x:Name="itemsControl1" HorizontalAlignment="Left" 
-                                           VerticalAlignment="Top" 
-                                           FontSize="16" Foreground="#FF464646" 
-                                           Grid.Column="2" Margin="5,5,5,0" ItemsSource="{Binding Tasks}" ItemTemplate="{DynamicResource TaskUpdatesTemplate}"/>
+                                <Grid Grid.Column="2" Margin="5,5,0,0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <ItemsControl x:Name="itemsControl1" HorizontalAlignment="Left" 
+                                		VerticalAlignment="Top" 
+                                		FontSize="16" Foreground="#FF464646" 
+                                		ItemsSource="{Binding Tasks}" ItemTemplate="{DynamicResource TaskUpdatesTemplate}"/>
+                                    <Button HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Column="1" Style="{DynamicResource NoHoverButtonStyle}" Height="32" Width="32" Margin="0,-5,0,0">
+                                        <Button.Background>
+                                            <ImageBrush ImageSource="Assets/Add.png"/>
+                                        </Button.Background>
+                                    </Button>
+                                </Grid>
                             </Grid>
 
                         </ScrollViewer>
