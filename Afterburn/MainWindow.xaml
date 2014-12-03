@@ -4,6 +4,8 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+        xmlns:dv="clr-namespace:System.Windows.Controls.DataVisualization;assembly=System.Windows.Controls.DataVisualization.Toolkit"
+        xmlns:dvc="clr-namespace:System.Windows.Controls.DataVisualization.Charting;assembly=System.Windows.Controls.DataVisualization.Toolkit"
         xmlns:ignore="http://www.ignore.com"
         mc:Ignorable="d ignore"
         MinWidth="1024"
@@ -98,7 +100,7 @@
             <TextBlock Text="{Binding Date, StringFormat=\{0:dd.M\}}" FontSize="12" FontWeight="Bold" Foreground="#FF464646" Margin="0,0,13,0"/>
         </DataTemplate>
     </Window.Resources>
-    <Grid x:Name="LayoutRoot">
+    <Grid x:Name="LayoutRoot" DataContext="{Binding Source={StaticResource Locator}}">
         <Grid.Background>
             <ImageBrush ImageSource="Assets/Background.png" 
                         ViewportUnits="Absolute"
@@ -231,7 +233,16 @@
                     </Grid>
 
                 </Controls:MetroTabItem>
-                <Controls:MetroTabItem Header="Analysis">
+                <Controls:MetroTabItem Header="Analysis" DataContext="{Binding Analysis, Mode=OneWay}">
+                    <Grid>
+                        <dvc:Chart>
+                            <dvc:LineSeries Title="Burndown"
+                                IndependentValueBinding="{Binding Key}"
+                                DependentValueBinding="{Binding Value}" ItemsSource="{Binding HoursRemaining}">
+
+                            </dvc:LineSeries>
+                        </dvc:Chart>
+                    </Grid>
 
                 </Controls:MetroTabItem>
             </Controls:MetroAnimatedTabControl>
