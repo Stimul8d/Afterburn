@@ -82,7 +82,6 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Converters\GridLengthToWidthConverter.cs" />
-    <Compile Include="ViewModel\AnalysisViewModel.cs" />
     <Compile Include="ViewModel\EstimateViewModel.cs" />
     <Compile Include="ViewModel\TaskUpdateViewModel.cs" />
     <Compile Include="ViewModel\TaskViewModel.cs" />

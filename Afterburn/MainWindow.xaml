@@ -94,10 +94,10 @@
             </StackPanel>
         </DataTemplate>
         <DataTemplate x:Key="TaskUpdateTemplate">
-            <TextBox Text="{Binding Hours}" Margin="0,0,10,0" BorderBrush="{x:Null}" Background="#7FFFFFFF" TextAlignment="Center" MaxLength="5" Width="34" Padding="-4,0,0,0"/>
+            <TextBox Text="{Binding Hours}" Margin="0,0,10,0" BorderBrush="{x:Null}" Background="#7FFFFFFF" TextAlignment="Center" MaxLength="6" Width="41" Padding="-4,0,0,0"/>
         </DataTemplate>
         <DataTemplate x:Key="TaskUpdateDatesTemplate">
-            <TextBlock Text="{Binding Date, StringFormat=\{0:dd.M\}}" FontSize="12" FontWeight="Bold" Foreground="#FF464646" Margin="0,0,13,0"/>
+            <TextBlock Text="{Binding Date, StringFormat=\{0:dd.M\}}" FontSize="12" FontWeight="Bold" Foreground="#FF464646" Margin="0,0,20,0"/>
         </DataTemplate>
     </Window.Resources>
     <Grid x:Name="LayoutRoot" DataContext="{Binding Source={StaticResource Locator}}">
@@ -154,7 +154,7 @@
                             <TextBlock VerticalAlignment="Top" Grid.Column="2" Foreground="#FF464646" Text="Task" TextTrimming="CharacterEllipsis" FontWeight="Bold" Margin="0"/>
                             <TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Column="3" Foreground="#FF464646" Text="Hours" TextTrimming="CharacterEllipsis" FontWeight="Bold" Margin="0" Grid.ColumnSpan="2"/>
                         </Grid>
-                        <Canvas Margin="36,0,10,0" ClipToBounds="True">
+                        <Canvas Margin="40,0,10,0" ClipToBounds="True">
                             <Grid x:Name="HeaderGrid_Copy" Canvas.Left="{Binding ElementName=itemsControl,Path=ActualWidth}" HorizontalAlignment="Left">
                                 <ItemsControl ItemsSource="{Binding Tasks[0].Updates}" ItemTemplate="{DynamicResource TaskUpdateDatesTemplate}" VerticalContentAlignment="Bottom">
                                     <ItemsControl.ItemsPanel>
@@ -219,6 +219,16 @@
                                                 </ItemsPanelTemplate>
                                             </ItemsControl.ItemsPanel>
                                         </ItemsControl>
+                                        <ItemsControl x:Name="itemsControl1_Copy1" 
+                                        	FontSize="16" Foreground="#FF464646" 
+                                        	ItemsSource="{Binding TasksRollup.Updates}" 
+                                        	ItemTemplate="{DynamicResource TaskUpdateTemplate}" VerticalAlignment="Top" Margin="0,10,0,0" HorizontalAlignment="Left">
+                                            <ItemsControl.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <StackPanel Orientation="Horizontal"/>
+                                                </ItemsPanelTemplate>
+                                            </ItemsControl.ItemsPanel>
+                                        </ItemsControl>
                                     </StackPanel>
                                     <Button HorizontalAlignment="Left" VerticalAlignment="Top" Style="{DynamicResource NoHoverButtonStyle}" Height="32" Width="32" Margin="0,-5,0,0">
                                         <Button.Background>
@@ -233,13 +243,18 @@
                     </Grid>
 
                 </Controls:MetroTabItem>
-                <Controls:MetroTabItem Header="Analysis" DataContext="{Binding Analysis, Mode=OneWay}">
+                <Controls:MetroTabItem Header="Analysis" DataContext="{Binding Estimate, Mode=OneWay}">
                     <Grid>
-                        <dvc:Chart>
-                            <dvc:LineSeries Title="Burndown"
-                                IndependentValueBinding="{Binding Key}"
-                                DependentValueBinding="{Binding Value}" ItemsSource="{Binding HoursRemaining}">
-
+                        <dvc:Chart UseLayoutRounding="False">
+                            <dvc:LineSeries Title="Remaining Hours"
+                                IndependentValueBinding="{Binding Date}"
+                                DependentValueBinding="{Binding Hours}" ItemsSource="{Binding TasksRollup.Updates}">
+                            </dvc:LineSeries>
+                            <dvc:LineSeries Title="Other Tasks &amp; Distractions"
+                                IndependentValueBinding="{Binding Date}"
+                                DependentValueBinding="{Binding Hours}"
+                                            ItemsSource="{Binding Distractions.Updates}">
+                                
                             </dvc:LineSeries>
                         </dvc:Chart>
                     </Grid>

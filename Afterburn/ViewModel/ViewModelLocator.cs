@@ -28,8 +28,6 @@ namespace Afterburn.ViewModel
             ServiceLocator.SetLocatorProvider(() => SimpleIoc.Default);
 
             SimpleIoc.Default.Register<EstimateViewModel>();
-
-            SimpleIoc.Default.Register<AnalysisViewModel>();
         }
 
         /// <summary>
@@ -45,21 +43,6 @@ namespace Afterburn.ViewModel
                 return ServiceLocator.Current.GetInstance<EstimateViewModel>();
             }
         }
-
-        /// <summary>
-        /// Gets the Analysis property.
-        /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance",
-            "CA1822:MarkMembersAsStatic",
-            Justification = "This non-static member is needed for data binding purposes.")]
-        public AnalysisViewModel Analysis
-        {
-            get
-            {
-                return ServiceLocator.Current.GetInstance<AnalysisViewModel>();
-            }
-        }
-
 
         /// <summary>
         /// Cleans up all the resources.

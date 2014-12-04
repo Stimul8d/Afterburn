@@ -9,12 +9,31 @@ namespace Afterburn.ViewModel
     {
         public ObservableCollection<TaskViewModel> Tasks { get; set; }
         public TaskViewModel Distractions { get; set; }
+        public TaskViewModel TasksRollup { get; set; }
 
         public EstimateViewModel()
         {
             CreateTasks();
+            CreateDistractions();
+            
+            TasksRollup = new TaskViewModel();
+            for (int i = 0; i < 15; i++)
+            {
+                var date = DateTime.Now.AddDays(i);
+                var update = new TaskUpdateViewModel
+                {
+                    Date = date,
+                    Hours = 15 - i + 0.25
+                };
+                update.Hours *= 13;
+                TasksRollup.Updates.Add(update);
+            }
+        }
+  
+        private void CreateDistractions()
+        {
             Distractions = new TaskViewModel();
-            for (int i = 0; i < 25; i++)
+            for (int i = 0; i < 15; i++)
             {
                 var date = DateTime.Now.AddDays(i);
                 var update = new TaskUpdateViewModel
@@ -37,7 +56,7 @@ namespace Afterburn.ViewModel
                 Hours = 6.25
             };
 
-            for (int i = 0; i < 25; i++)
+            for (int i = 0; i < 15; i++)
             {
                 var date = DateTime.Now.AddDays(i);
                 var update = new TaskUpdateViewModel
@@ -48,7 +67,7 @@ namespace Afterburn.ViewModel
                 t.Updates.Add(update);
             }
 
-            for (int i = 0; i < 25; i++)
+            for (int i = 0; i < 13; i++)
             {
                 Tasks.Add(t);
             }
