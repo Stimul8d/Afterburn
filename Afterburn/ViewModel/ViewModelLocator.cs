@@ -27,20 +27,20 @@ namespace Afterburn.ViewModel
         {
             ServiceLocator.SetLocatorProvider(() => SimpleIoc.Default);
 
-            SimpleIoc.Default.Register<EstimateViewModel>();
+            SimpleIoc.Default.Register<MainViewModel>();
         }
 
         /// <summary>
-        /// Gets the Estimate property.
+        /// Gets the Main property.
         /// </summary>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance",
             "CA1822:MarkMembersAsStatic",
             Justification = "This non-static member is needed for data binding purposes.")]
-        public EstimateViewModel Estimate
+        public MainViewModel Main
         {
             get
             {
-                return ServiceLocator.Current.GetInstance<EstimateViewModel>();
+                return ServiceLocator.Current.GetInstance<MainViewModel>();
             }
         }
 

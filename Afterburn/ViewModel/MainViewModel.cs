@@ -5,13 +5,13 @@ using System.Collections.ObjectModel;
 namespace Afterburn.ViewModel
 {
 
-    public class EstimateViewModel : ViewModelBase
+    public class MainViewModel : ViewModelBase
     {
         public ObservableCollection<TaskViewModel> Tasks { get; set; }
         public TaskViewModel Distractions { get; set; }
         public TaskViewModel TasksRollup { get; set; }
 
-        public EstimateViewModel()
+        public MainViewModel()
         {
             CreateTasks();
             CreateDistractions();
