@@ -301,6 +301,15 @@
 								IndependentValueBinding="{Binding Date}"
 								DependentValueBinding="{Binding Hours}"
 								ItemsSource="{Binding Distractions.Updates}"/>
+                            <dvc:LineSeries Title="Ideal Remaining Hours"
+                            	IndependentValueBinding="{Binding Date}"
+                            	DependentValueBinding="{Binding Hours}" ItemsSource="{Binding ProjectedTotal.Updates}"/>
+                            <dvc:LineSeries Title="Ideal Remaining Hours - Distractions"
+                            	IndependentValueBinding="{Binding Date}"
+                            	DependentValueBinding="{Binding Hours}" ItemsSource="{Binding ProjectedTotalMinusDistractions.Updates}"/>
+                            <dvc:LineSeries Title="Total Worked"
+                            	IndependentValueBinding="{Binding Date}"
+                            	DependentValueBinding="{Binding Hours}" ItemsSource="{Binding TotalWorked.Updates}"/>
                         </dvc:Chart>
                     </Grid>
 

@@ -36,7 +36,6 @@ namespace Afterburn.ViewModel
         private void CreateTotalWorked()
         {
             TotalWorked = new TaskViewModel();
-            TotalWorked = new TaskViewModel();
             for (int i = 0; i < NumOfUpdates; i++)
             {
                 var date = DateTime.Now.AddDays(i).Date;
