@@ -8,8 +8,8 @@ namespace Afterburn.ViewModel
 
     public class MainViewModel : ViewModelBase
     {
-        const int NumOfUpdates = 10;
-        const int NumOfTasks = 5;
+        const int NumOfUpdates = 5;
+        const int NumOfTasks = 3;
 
         static readonly Random rand = new Random();
 
@@ -18,6 +18,7 @@ namespace Afterburn.ViewModel
         public TaskViewModel TasksRollup { get; set; }
         public TaskViewModel ProjectedTotal { get; set; }
         public TaskViewModel ProjectedTotalMinusDistractions { get; set; }
+        public TaskViewModel TotalWorked { get; set; }
 
         public MainViewModel()
         {
@@ -29,7 +30,23 @@ namespace Afterburn.ViewModel
 
             CreateProjectedTotal();
             CreateProjectedTotalMinusDistractions();
-
+            CreateTotalWorked();
+        }
+  
+        private void CreateTotalWorked()
+        {
+            TotalWorked = new TaskViewModel();
+            TotalWorked = new TaskViewModel();
+            for (int i = 0; i < NumOfUpdates; i++)
+            {
+                var date = DateTime.Now.AddDays(i).Date;
+                var update = new TaskUpdateViewModel
+                {
+                    Date = date,
+                    Hours = rand.Next(0, (int)HoursPerDay)
+                };
+                TotalWorked.Updates.Add(update);
+            }
         }
 
         private void CreateTasks()
