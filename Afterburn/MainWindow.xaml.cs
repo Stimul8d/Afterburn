@@ -1,5 +1,4 @@
-﻿using System.Windows;
-using Afterburn.ViewModel;
+﻿using Afterburn.ViewModel;
 using MahApps.Metro.Controls;
 
 namespace Afterburn
