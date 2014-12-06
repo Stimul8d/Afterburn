@@ -2,6 +2,9 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.Command;
+using GalaSoft.MvvmLight.Messaging;
+using Afterburn.Messages;
 
 namespace Afterburn.ViewModel
 {
@@ -20,22 +23,55 @@ namespace Afterburn.ViewModel
         public TaskViewModel ProjectedTotalMinusDistractions { get; set; }
         public TaskViewModel TotalWorked { get; set; }
 
+        public RelayCommand AddTaskCommand { get; set; }
+
         public MainViewModel()
         {
-            CreateTasks();
-            CreateDistractions();
-            CreateRollup();
+            Tasks = new ObservableCollection<TaskViewModel>();
+            Distractions = new TaskViewModel();
+            TasksRollup = new TaskViewModel();
+            ProjectedTotal = new TaskViewModel();
+            ProjectedTotalMinusDistractions = new TaskViewModel();
+            TotalWorked = new TaskViewModel();
 
-            TotalEstimatedHours = Tasks.Sum(t => t.Hours);
+            AddDummyTask();
 
-            CreateProjectedTotal();
-            CreateProjectedTotalMinusDistractions();
-            CreateTotalWorked();
+            //CreateTasks();
+            //CreateDistractions();
+            //CreateRollup();
+            //CreateProjectedTotal();
+            //CreateProjectedTotalMinusDistractions();
+            //CreateTotalWorked();
+            //TotalEstimatedHours = Tasks.Sum(t => t.Hours);
+
+            AddTaskCommand = new RelayCommand(() =>
+                {
+                    Tasks.Add(new TaskViewModel());
+                });
+
+            Messenger.Default.Register<DeleteTaskMessage>(this,
+                (m) =>
+                {
+                    Tasks.Remove(m.Task);
+                    if (Tasks.Count == 0)
+                        AddDummyTask();
+                });
         }
   
+        private void AddDummyTask()
+        {
+            var t = new TaskViewModel()
+            {
+                Reference = "Task-1",
+                Feature = "Homepage",
+                Name = "Complete the login form",
+                Hours = rand.Next(2, 16)
+            };
+            Tasks.Add(t);
+        }
+
         private void CreateTotalWorked()
         {
-            TotalWorked = new TaskViewModel();
             for (int i = 0; i < NumOfUpdates; i++)
             {
                 var date = DateTime.Now.AddDays(i).Date;
@@ -50,11 +86,9 @@ namespace Afterburn.ViewModel
 
         private void CreateTasks()
         {
-            Tasks = new ObservableCollection<TaskViewModel>();
-
             for (int i = 0; i < NumOfTasks; i++)
             {
-                var t = new TaskViewModel
+                var t = new TaskViewModel()
                 {
                     Reference = "PRJSBO-" + rand.Next(10),
                     Feature = "Custom Coupon",
@@ -82,7 +116,6 @@ namespace Afterburn.ViewModel
 
         private void CreateRollup()
         {
-            TasksRollup = new TaskViewModel();
             var dateTotals = Tasks.SelectMany(t => t.Updates)
                 .GroupBy(t => t.Date.Date)
                 .Select(g => new
@@ -103,7 +136,6 @@ namespace Afterburn.ViewModel
 
         private void CreateDistractions()
         {
-            Distractions = new TaskViewModel();
             for (int i = 0; i < NumOfUpdates; i++)
             {
                 var date = DateTime.Now.AddDays(i).Date;
@@ -118,7 +150,6 @@ namespace Afterburn.ViewModel
 
         private void CreateProjectedTotal()
         {
-            ProjectedTotal = new TaskViewModel();
             var total = TotalEstimatedHours - HoursPerDay;
             for (int i = 0; i < NumOfUpdates; i++)
             {
@@ -136,7 +167,6 @@ namespace Afterburn.ViewModel
 
         private void CreateProjectedTotalMinusDistractions()
         {
-            ProjectedTotalMinusDistractions = new TaskViewModel();
             for (int i = 0; i < NumOfUpdates; i++)
             {
                 var date = DateTime.Now.AddDays(i);

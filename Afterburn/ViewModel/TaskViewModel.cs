@@ -1,6 +1,10 @@
-﻿using GalaSoft.MvvmLight;
+﻿using Afterburn.Messages;
+using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.Command;
+using GalaSoft.MvvmLight.Messaging;
 using System;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Linq;
 
 namespace Afterburn.ViewModel
@@ -8,10 +12,17 @@ namespace Afterburn.ViewModel
     public class TaskViewModel : ViewModelBase
     {
         public ObservableCollection<TaskUpdateViewModel> Updates { get; set; }
+        public RelayCommand DeleteTaskCommand { get; set; }
 
         public TaskViewModel()
         {
             Updates = new ObservableCollection<TaskUpdateViewModel>();
+
+            DeleteTaskCommand = new RelayCommand(() =>
+            {
+                Messenger.Default.Send<DeleteTaskMessage>(
+                    new DeleteTaskMessage(this));
+            });
         }
 
         #region INPC

@@ -62,7 +62,9 @@
                 <TextBox HorizontalAlignment="Stretch" Height="Auto" TextWrapping="NoWrap" Text="{Binding Feature}" VerticalAlignment="Stretch" Width="Auto" Margin="0,0,5,0" BorderThickness="0" Grid.Column="1" Padding="0" Background="#7FFFFFFF"/>
                 <TextBox HorizontalAlignment="Stretch" Height="Auto" TextWrapping="NoWrap" Text="{Binding Name}" VerticalAlignment="Stretch" Width="Auto" Margin="0,0,5,0" BorderThickness="0" Grid.Column="2" Padding="0" Background="#7FFFFFFF"/>
                 <TextBox HorizontalAlignment="Stretch" Height="Auto" TextWrapping="NoWrap" Text="{Binding Hours}" VerticalAlignment="Stretch" Width="Auto" BorderThickness="0" Grid.Column="3" Padding="0" Grid.ColumnSpan="2" MaxLength="5" Background="#7FFFFFFF" TextAlignment="Center"/>
-                <Button x:Name="deleteButton" VerticalAlignment="Stretch" Width="Auto" Grid.Column="4" BorderThickness="0" Style="{DynamicResource NoHoverButtonStyle}" Opacity="0.005">
+                <Button x:Name="deleteButton"
+                        VerticalAlignment="Stretch" Width="Auto" Grid.Column="4" BorderThickness="0" 
+                        Style="{DynamicResource NoHoverButtonStyle}" Opacity="0.005" Command="{Binding DeleteTaskCommand}">
                     <Button.Background>
                         <ImageBrush ImageSource="Assets/Delete.png"/>
                     </Button.Background>
@@ -185,7 +187,8 @@
                                 </Grid.ColumnDefinitions>
                                 <StackPanel >
                                     <ItemsControl x:Name="itemsControl" ItemsSource="{Binding Tasks}" ItemTemplate="{DynamicResource TaskEstimateTemplate}" VerticalAlignment="Top" Margin="0,5,5,0"/>
-                                    <Button VerticalAlignment="Top" HorizontalAlignment="Left" Padding="0" BorderThickness="0" Style="{DynamicResource NoHoverButtonStyle}" Width="32" Height="32" Margin="-5,0,0,5">
+                                    <Button VerticalAlignment="Top" HorizontalAlignment="Left" Padding="0" BorderThickness="0" Style="{DynamicResource NoHoverButtonStyle}" Width="32" Height="32" Margin="-5,0,0,5" 
+                                            Command="{Binding AddTaskCommand}" >
                                         <Button.Background>
                                             <ImageBrush ImageSource="Assets/Add.png" Stretch="None">
                                                 <ImageBrush.RelativeTransform>
