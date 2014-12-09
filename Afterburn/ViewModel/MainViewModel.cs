@@ -11,7 +11,7 @@ namespace Afterburn.ViewModel
 
     public class MainViewModel : ViewModelBase
     {
-        const int NumOfUpdates = 5;
+        const int NumOfUpdates = 3;
         const int NumOfTasks = 3;
 
         static readonly Random rand = new Random();
@@ -24,6 +24,7 @@ namespace Afterburn.ViewModel
         public TaskViewModel TotalWorked { get; set; }
 
         public RelayCommand AddTaskCommand { get; set; }
+        public RelayCommand AddDayCommand { get; set; }
 
         public MainViewModel()
         {
@@ -34,9 +35,9 @@ namespace Afterburn.ViewModel
             ProjectedTotalMinusDistractions = new TaskViewModel();
             TotalWorked = new TaskViewModel();
 
-            AddDummyTask();
+            //AddDummyTask();
 
-            //CreateTasks();
+            CreateTasks();
             //CreateDistractions();
             //CreateRollup();
             //CreateProjectedTotal();
@@ -56,8 +57,20 @@ namespace Afterburn.ViewModel
                     if (Tasks.Count == 0)
                         AddDummyTask();
                 });
+
+            AddDayCommand = new RelayCommand(() =>
+            {
+                foreach (var task in Tasks)
+                {
+                    task.Updates.Add(new TaskUpdateViewModel
+                    {
+                        Date = DateTime.Now.Date,
+
+                    });
+                }
+            });
         }
-  
+
         private void AddDummyTask()
         {
             var t = new TaskViewModel()
@@ -100,7 +113,7 @@ namespace Afterburn.ViewModel
                     var previousHours =
                         j == 0 ? t.Hours : t.Updates[j - 1].Hours;
 
-                    var date = DateTime.Now.AddDays(j);
+                    var date = DateTime.Now.AddDays(j - NumOfUpdates);
                     var update = new TaskUpdateViewModel
                     {
                         Date = date,
