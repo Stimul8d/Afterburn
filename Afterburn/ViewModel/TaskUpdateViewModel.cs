@@ -1,5 +1,6 @@
 ﻿using Afterburn.Messages;
 using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
 using System;
 using System.Linq;
@@ -8,12 +9,18 @@ namespace Afterburn.ViewModel
 {
     public class TaskUpdateViewModel : ViewModelBase
     {
+        public RelayCommand DeleteDateCommand { get; set; }
 
         public TaskUpdateViewModel() : this(true) { }
 
         public TaskUpdateViewModel(bool notifyOnUpdates)
         {
             this.notifyOnUpdates = notifyOnUpdates;
+            DeleteDateCommand = new RelayCommand(() =>
+            {
+                Messenger.Default.Send<DeleteDateCommand>(
+                    new DeleteDateCommand(this.Date));
+            });
         }
 
         private readonly bool notifyOnUpdates;

@@ -59,6 +59,21 @@ namespace Afterburn.ViewModel
                         AddDummyTask();
                 });
 
+            Messenger.Default.Register<DeleteDateCommand>(this,
+                (m) =>
+                {
+                    foreach (var task in Tasks)
+                    {
+                        var updateToRemove = task.Updates
+                            .SingleOrDefault(t => t.Date == m.Date);
+
+                        if (updateToRemove == null)
+                            continue;
+                        task.Updates.Remove(updateToRemove);
+                    }
+                    CalculateTotals();
+                });
+
             Messenger.Default.Register<UpdateModifiedMessage>(this,
                 (m) =>
                 {
