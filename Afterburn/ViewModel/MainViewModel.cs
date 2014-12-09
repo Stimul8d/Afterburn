@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using GalaSoft.MvvmLight;
@@ -38,7 +39,7 @@ namespace Afterburn.ViewModel
             //AddDummyTask();
 
             CreateTasks();
-            //CreateDistractions();
+            CalculateTotals();
             //CreateRollup();
             //CreateProjectedTotal();
             //CreateProjectedTotalMinusDistractions();
@@ -58,25 +59,66 @@ namespace Afterburn.ViewModel
                         AddDummyTask();
                 });
 
-            AddDayCommand = new RelayCommand(() =>
-            {
-                foreach (var task in Tasks)
+            Messenger.Default.Register<UpdateModifiedMessage>(this,
+                (m) =>
                 {
-                    var lasthours = task.Updates.LastOrDefault() == null
-                                    ? task.Hours
-                                    : task.Updates.Last().Hours;
+                    CalculateTotals();
+                });
 
-                    var lastDate = AddDays(task.Updates.LastOrDefault() == null
-                                   ? DateTime.Today
-                                   : task.Updates.Last().Date, 1, skipWeekends);
+            AddDayCommand = new RelayCommand(AddDay);
 
-                    task.Updates.Add(new TaskUpdateViewModel
+        }
+
+        private void AddDay()
+        {
+            foreach (var task in Tasks)
+            {
+                var lasthours = task.Updates.LastOrDefault() == null
+                                ? task.Hours
+                                : task.Updates.Last().Hours;
+
+                var lastDate = AddDays(task.Updates.LastOrDefault() == null
+                                       ? DateTime.Today
+                                       : task.Updates.Last().Date, 1, skipWeekends);
+
+                task.Updates.Add(new TaskUpdateViewModel
+                {
+                    Date = lastDate,
+                    Hours = lasthours
+                });
+            }
+
+            CalculateTotals();
+        }
+
+        private void CalculateTotals()
+        {
+            Distractions.Updates.Clear();
+            TasksRollup.Updates.Clear();
+            var updates = GetDayUpdates();
+            DayUpdate previousUpdate = null;
+            foreach (var update in updates)
+            {
+                if (previousUpdate == null)
+                    previousUpdate = new DayUpdate
                     {
-                        Date = lastDate,
-                        Hours = lasthours
-                    });
-                }
-            });
+                        Hours = Tasks.Sum(t => t.Hours)
+                    };
+                var worked = previousUpdate.Hours - update.Hours;
+                var remaining = HoursPerDay - worked;
+
+                TasksRollup.Updates.Add(new TaskUpdateViewModel(false)
+                {
+                    Date = update.Date,
+                    Hours = worked
+                });
+
+                Distractions.Updates.Add(new TaskUpdateViewModel(false)
+                {
+                    Date = update.Date,
+                    Hours = remaining
+                });
+            }
         }
 
         public static DateTime AddDays(DateTime date, int days, bool ignoreWeekends)
@@ -151,18 +193,22 @@ namespace Afterburn.ViewModel
                     Name = "Sort coupons by fixture start time",
                     Hours = rand.Next(2, 16)
                 };
-                for (int j = 0; j < NumOfUpdates; j++)
-                {
-                    var previousHours =
-                        j == 0 ? t.Hours : t.Updates[j - 1].Hours;
 
-                    var date = DateTime.Now.AddDays(j - NumOfUpdates);
-                    var update = new TaskUpdateViewModel
+                if (IsInDesignMode)
+                {
+                    for (int j = 0; j < NumOfUpdates; j++)
                     {
-                        Date = date,
-                        Hours = previousHours - rand.Next(0, 3)
-                    };
-                    t.Updates.Add(update);
+                        var previousHours =
+                            j == 0 ? t.Hours : t.Updates[j - 1].Hours;
+
+                        var date = DateTime.Now.AddDays(j - NumOfUpdates);
+                        var update = new TaskUpdateViewModel
+                        {
+                            Date = date,
+                            Hours = previousHours - rand.Next(0, 3)
+                        };
+                        t.Updates.Add(update);
+                    }
                 }
                 Tasks.Add(t);
             }
@@ -172,22 +218,30 @@ namespace Afterburn.ViewModel
 
         private void CreateRollup()
         {
-            var dateTotals = Tasks.SelectMany(t => t.Updates)
-                .GroupBy(t => t.Date.Date)
-                .Select(g => new
-                {
-                    Date = g.Key,
-                    Total = g.Sum(x => x.Hours)
-                }).OrderBy(x => x.Date).ToList();
+            var dateTotals = GetDayUpdates();
 
             foreach (var item in dateTotals)
             {
                 TasksRollup.Updates.Add(new TaskUpdateViewModel
                 {
                     Date = item.Date,
-                    Hours = item.Total
+                    Hours = item.Hours
                 });
             }
+        }
+
+        private List<DayUpdate> GetDayUpdates()
+        {
+            var dateTotals = Tasks.SelectMany(t => t.Updates)
+                                  .GroupBy(t => t.Date.Date)
+                                  .Select(g => new DayUpdate
+                                         {
+                                             Date = g.Key,
+                                             Hours = g.Sum(x => x.Hours)
+                                         })
+                                  .OrderBy(x => x.Date)
+                                  .ToList();
+            return dateTotals;
         }
 
         private void CreateDistractions()
@@ -271,7 +325,7 @@ namespace Afterburn.ViewModel
         /// </summary>
         public const string HoursPerDayPropertyName = "HoursPerDay";
 
-        private double hoursPerDay = 8.5;
+        private double hoursPerDay = 8.0;
 
         /// <summary>
         /// Sets and gets the HoursPerDay property.
@@ -293,6 +347,7 @@ namespace Afterburn.ViewModel
 
                 hoursPerDay = value;
                 RaisePropertyChanged(HoursPerDayPropertyName);
+                CalculateTotals();
             }
         }
 
@@ -324,6 +379,12 @@ namespace Afterburn.ViewModel
                 totalEstimatedHours = value;
                 RaisePropertyChanged(TotalEstimatedHoursPropertyName);
             }
+        }
+
+        class DayUpdate
+        {
+            public DateTime Date { get; set; }
+            public double Hours { get; set; }
         }
     }
 }

@@ -97,7 +97,7 @@
             </StackPanel>
         </DataTemplate>
         <DataTemplate x:Key="TaskUpdateTemplate">
-            <TextBox Text="{Binding Hours}" Margin="0,0,10,0" BorderBrush="{x:Null}" Background="#7FFFFFFF" TextAlignment="Center" MaxLength="6" Width="41" Padding="-4,0,0,0"/>
+            <TextBox Text="{Binding Hours, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,10,0" BorderBrush="{x:Null}" Background="#7FFFFFFF" TextAlignment="Center" MaxLength="6" Width="41" Padding="-4,0,0,0"/>
         </DataTemplate>
         <DataTemplate x:Key="TaskUpdateDatesTemplate">
             <StackPanel Orientation="Vertical" Margin="0,-16,21,0">
@@ -236,7 +236,9 @@
                                         <ItemsControl x:Name="itemsControl1_Copy" 
 											FontSize="16" Foreground="#FF464646" 
 											ItemsSource="{Binding Distractions.Updates}" 
-											ItemTemplate="{DynamicResource TaskUpdateTemplate}" VerticalAlignment="Top" Margin="0,37,0,0" HorizontalAlignment="Left">
+											ItemTemplate="{DynamicResource TaskUpdateTemplate}" 
+                                                      VerticalAlignment="Top" Margin="0,37,0,0" 
+                                                      HorizontalAlignment="Left" IsHitTestVisible="False">
                                             <ItemsControl.ItemsPanel>
                                                 <ItemsPanelTemplate>
                                                     <StackPanel Orientation="Horizontal"/>

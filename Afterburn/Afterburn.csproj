@@ -85,6 +85,7 @@
     </ApplicationDefinition>
     <Compile Include="Converters\GridLengthToWidthConverter.cs" />
     <Compile Include="Messages\DeleteTaskMessage.cs" />
+    <Compile Include="Messages\UpdateModifiedMessage.cs" />
     <Compile Include="ViewModel\DayUpdateViewModel.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\TaskUpdateViewModel.cs" />

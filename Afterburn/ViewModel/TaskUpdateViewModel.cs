@@ -1,4 +1,6 @@
-﻿using GalaSoft.MvvmLight;
+﻿using Afterburn.Messages;
+using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.Messaging;
 using System;
 using System.Linq;
 
@@ -6,6 +8,16 @@ namespace Afterburn.ViewModel
 {
     public class TaskUpdateViewModel : ViewModelBase
     {
+
+        public TaskUpdateViewModel() : this(true) { }
+
+        public TaskUpdateViewModel(bool notifyOnUpdates)
+        {
+            this.notifyOnUpdates = notifyOnUpdates;
+        }
+
+        private readonly bool notifyOnUpdates;
+
         /// <summary>
         /// The <see cref="Date" /> property's name.
         /// </summary>
@@ -60,11 +72,14 @@ namespace Afterburn.ViewModel
                 {
                     return;
                 }
-                
+
                 hours = value;
                 if (hours < 0)
                     hours = 0;
                 RaisePropertyChanged(HoursPropertyName);
+                if (notifyOnUpdates)
+                    Messenger.Default.Send<UpdateModifiedMessage>(
+                    new UpdateModifiedMessage(this));
             }
         }
     }
