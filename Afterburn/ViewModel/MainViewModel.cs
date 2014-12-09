@@ -62,13 +62,56 @@ namespace Afterburn.ViewModel
             {
                 foreach (var task in Tasks)
                 {
+                    var lasthours = task.Updates.LastOrDefault() == null
+                                    ? task.Hours
+                                    : task.Updates.Last().Hours;
+
+                    var lastDate = AddDays(task.Updates.LastOrDefault() == null
+                                   ? DateTime.Today
+                                   : task.Updates.Last().Date, 1, skipWeekends);
+
                     task.Updates.Add(new TaskUpdateViewModel
                     {
-                        Date = DateTime.Now.Date,
-
+                        Date = lastDate,
+                        Hours = lasthours
                     });
                 }
             });
+        }
+
+        public static DateTime AddDays(DateTime date, int days, bool ignoreWeekends)
+        {
+            if (!ignoreWeekends)
+                return date.AddDays(days);
+
+            if (days < 0)
+            {
+                throw new ArgumentException("days cannot be negative", "days");
+            }
+
+            if (days == 0) return date;
+
+            if (date.DayOfWeek == DayOfWeek.Saturday)
+            {
+                date = date.AddDays(2);
+                days -= 1;
+            }
+            else if (date.DayOfWeek == DayOfWeek.Sunday)
+            {
+                date = date.AddDays(1);
+                days -= 1;
+            }
+
+            date = date.AddDays(days / 5 * 7);
+            int extraDays = days % 5;
+
+            if ((int)date.DayOfWeek + extraDays > 5)
+            {
+                extraDays += 2;
+            }
+
+            return date.AddDays(extraDays);
+
         }
 
         private void AddDummyTask()
@@ -190,6 +233,36 @@ namespace Afterburn.ViewModel
                 };
                 update.Hours *= NumOfTasks;
                 ProjectedTotalMinusDistractions.Updates.Add(update);
+            }
+        }
+
+        /// <summary>
+        /// The <see cref="SkipWeekends" /> property's name.
+        /// </summary>
+        public const string SkipWeekendsPropertyName = "SkipWeekends";
+
+        private bool skipWeekends = true;
+
+        /// <summary>
+        /// Sets and gets the SkipWeekends property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        public bool SkipWeekends
+        {
+            get
+            {
+                return skipWeekends;
+            }
+
+            set
+            {
+                if (skipWeekends == value)
+                {
+                    return;
+                }
+
+                skipWeekends = value;
+                RaisePropertyChanged(SkipWeekendsPropertyName);
             }
         }
 

@@ -100,7 +100,10 @@
             <TextBox Text="{Binding Hours}" Margin="0,0,10,0" BorderBrush="{x:Null}" Background="#7FFFFFFF" TextAlignment="Center" MaxLength="6" Width="41" Padding="-4,0,0,0"/>
         </DataTemplate>
         <DataTemplate x:Key="TaskUpdateDatesTemplate">
-            <TextBlock Text="{Binding Date, StringFormat=\{0:dd.M\}}" FontSize="12" FontWeight="Bold" Foreground="#FF464646" Margin="0,0,20,0"/>
+            <StackPanel Orientation="Vertical" Margin="0,-16,21,0">
+                <TextBlock Text="{Binding Date, StringFormat=\{0:ddd\}}" FontSize="12" FontWeight="Bold" Foreground="#FF464646" Margin="0" HorizontalAlignment="Center"/>
+                <TextBlock Text="{Binding Date, StringFormat=\{0:dd.M\}}" FontSize="12" FontWeight="Bold" Foreground="#FF464646" Margin="0"/>
+            </StackPanel>
         </DataTemplate>
     </Controls:MetroWindow.Resources>
     <Grid x:Name="LayoutRoot" DataContext="{Binding Source={StaticResource Locator}}">
@@ -165,8 +168,8 @@
                             <TextBlock VerticalAlignment="Top" Grid.Column="2" Foreground="#FF464646" Text="Task" TextTrimming="CharacterEllipsis" FontWeight="Bold" Margin="0"/>
                             <TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Column="3" Foreground="#FF464646" Text="Hours" TextTrimming="CharacterEllipsis" FontWeight="Bold" Margin="0" Grid.ColumnSpan="2"/>
                         </Grid>
-                        <Canvas Margin="40,0,10,0" ClipToBounds="True">
-                            <Grid x:Name="HeaderGrid_Copy" Canvas.Left="{Binding ActualWidth, ElementName=itemsControl}" HorizontalAlignment="Left">
+                        <Canvas Margin="40,0,10,0">
+                            <Grid x:Name="HeaderGrid_Copy" Canvas.Left="{Binding ActualWidth, ElementName=itemsControl}" HorizontalAlignment="Left" RenderTransformOrigin="0.5,0.5">
                                 <ItemsControl ItemsSource="{Binding Tasks[0].Updates}" ItemTemplate="{DynamicResource TaskUpdateDatesTemplate}" VerticalContentAlignment="Bottom">
                                     <ItemsControl.ItemsPanel>
                                         <ItemsPanelTemplate>
@@ -323,10 +326,14 @@
             </Controls:MetroAnimatedTabControl>
         </Grid>
 
-        <Controls:Flyout x:Name="flyout" Header="Settings" Position="Right" Width="200" Grid.RowSpan="5" d:IsHidden="True" d:IsLocked="True">
+        <Controls:Flyout x:Name="flyout" Header="Settings" Position="Right" Width="200" Grid.RowSpan="5" Theme="Light" d:IsHidden="True">
             <StackPanel Orientation="Vertical" Margin="10,0">
                 <TextBlock TextWrapping="Wrap" Text="Hours Per Day"/>
-                <Controls:NumericUpDown Minimum = "1" Maximum = "12" Interval = "0.5" VerticalAlignment="Top" Value="{Binding Main.HoursPerDay}"/>
+                <Controls:NumericUpDown Minimum = "1" Maximum = "12" Interval = "0.5" VerticalAlignment="Top" Value="{Binding Main.HoursPerDay}" Margin="0,0,0,10"/>
+                <StackPanel Orientation="Vertical">
+                    <TextBlock TextWrapping="Wrap" Text="Skip Weekends"/>
+                    <Controls:ToggleSwitch IsChecked="{Binding Main.SkipWeekends}" />
+                </StackPanel>
             </StackPanel>
         </Controls:Flyout>
     </Grid>
