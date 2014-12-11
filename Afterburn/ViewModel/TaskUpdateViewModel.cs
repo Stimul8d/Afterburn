@@ -52,8 +52,14 @@ namespace Afterburn.ViewModel
 
                 date = value;
                 RaisePropertyChanged(DatePropertyName);
+                RaisePropertyChanged("DateString");
             }
         }
+
+        public string DateString { get
+        {
+            return Date.ToString("ddd dd/MM");
+        } }
 
         /// <summary>
         /// The <see cref="Hours" /> property's name.

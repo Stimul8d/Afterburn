@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
@@ -13,13 +14,13 @@ namespace Afterburn.ViewModel
     public class MainViewModel : ViewModelBase
     {
         const int NumOfUpdates = 3;
-        const int NumOfTasks = 3;
+        const int NumOfTasks = 1;
 
         static readonly Random rand = new Random();
 
         public ObservableCollection<TaskViewModel> Tasks { get; set; }
         public TaskViewModel Distractions { get; set; }
-        public TaskViewModel TasksRollup { get; set; }
+        public TaskViewModel RemainingHours { get; set; }
         public TaskViewModel ProjectedTotal { get; set; }
         public TaskViewModel ProjectedTotalMinusDistractions { get; set; }
         public TaskViewModel TotalWorked { get; set; }
@@ -31,7 +32,7 @@ namespace Afterburn.ViewModel
         {
             Tasks = new ObservableCollection<TaskViewModel>();
             Distractions = new TaskViewModel();
-            TasksRollup = new TaskViewModel();
+            RemainingHours = new TaskViewModel();
             ProjectedTotal = new TaskViewModel();
             ProjectedTotalMinusDistractions = new TaskViewModel();
             TotalWorked = new TaskViewModel();
@@ -44,7 +45,7 @@ namespace Afterburn.ViewModel
             //CreateProjectedTotal();
             //CreateProjectedTotalMinusDistractions();
             //CreateTotalWorked();
-            //TotalEstimatedHours = Tasks.Sum(t => t.Hours);
+            
 
             AddTaskCommand = new RelayCommand(() =>
                 {
@@ -57,6 +58,8 @@ namespace Afterburn.ViewModel
                     Tasks.Remove(m.Task);
                     if (Tasks.Count == 0)
                         AddDummyTask();
+
+                    CalculateTotals();
                 });
 
             Messenger.Default.Register<DeleteDateCommand>(this,
@@ -72,6 +75,7 @@ namespace Afterburn.ViewModel
                         task.Updates.Remove(updateToRemove);
                     }
                     CalculateTotals();
+                    ShowHideAnalysis();
                 });
 
             Messenger.Default.Register<UpdateModifiedMessage>(this,
@@ -104,35 +108,63 @@ namespace Afterburn.ViewModel
             }
 
             CalculateTotals();
+            ShowHideAnalysis();
+        }
+
+        void ShowHideAnalysis()
+        {
+            AnalysisVisibility = Tasks.Any()
+                ? (Tasks.First().Updates.Any()
+                    ? Visibility.Visible
+                    : Visibility.Collapsed)
+                : Visibility.Collapsed;
         }
 
         private void CalculateTotals()
         {
             Distractions.Updates.Clear();
-            TasksRollup.Updates.Clear();
+            RemainingHours.Updates.Clear();
+            TotalWorked.Updates.Clear();
             var updates = GetDayUpdates();
             DayUpdate previousUpdate = null;
-            foreach (var update in updates)
-            {
-                if (previousUpdate == null)
+            
+            for (int ix = 0; ix < updates.Count; ix++)
+			{
+                if (ix == 0)
+                {
                     previousUpdate = new DayUpdate
                     {
                         Hours = Tasks.Sum(t => t.Hours)
                     };
+                }
+                else
+                {
+                    previousUpdate = updates[ix - 1];
+                }
+            
+                var update = updates[ix];
                 var worked = previousUpdate.Hours - update.Hours;
                 var remaining = HoursPerDay - worked;
 
-                TasksRollup.Updates.Add(new TaskUpdateViewModel(false)
+                RemainingHours.Updates.Add(new TaskUpdateViewModel(false)
                 {
-                    Date = update.Date,
+                    Date = update.Date.Date,
+                    Hours = update.Hours
+                });
+
+                TotalWorked.Updates.Add(new TaskUpdateViewModel(false)
+                {
+                    Date = update.Date.Date,
                     Hours = worked
                 });
 
                 Distractions.Updates.Add(new TaskUpdateViewModel(false)
                 {
-                    Date = update.Date,
+                    Date = update.Date.Date,
                     Hours = remaining
                 });
+
+                TotalEstimatedHours = Tasks.Sum(t => t.Hours);
             }
         }
 
@@ -237,7 +269,7 @@ namespace Afterburn.ViewModel
 
             foreach (var item in dateTotals)
             {
-                TasksRollup.Updates.Add(new TaskUpdateViewModel
+                RemainingHours.Updates.Add(new TaskUpdateViewModel
                 {
                     Date = item.Date,
                     Hours = item.Hours
@@ -393,6 +425,36 @@ namespace Afterburn.ViewModel
 
                 totalEstimatedHours = value;
                 RaisePropertyChanged(TotalEstimatedHoursPropertyName);
+            }
+        }
+
+        /// <summary>
+        /// The <see cref="AnalysisVisibility" /> property's name.
+        /// </summary>
+        public const string AnalysisVisibilityPropertyName = "AnalysisVisibility";
+
+        private Visibility analysisVisibility = Visibility.Collapsed;
+
+        /// <summary>
+        /// Sets and gets the AnalysisVisibility property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        public Visibility AnalysisVisibility
+        {
+            get
+            {
+                return analysisVisibility;
+            }
+
+            set
+            {
+                if (analysisVisibility == value)
+                {
+                    return;
+                }
+
+                analysisVisibility = value;
+                RaisePropertyChanged(AnalysisVisibilityPropertyName);
             }
         }
 

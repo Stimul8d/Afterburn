@@ -97,7 +97,7 @@
             </StackPanel>
         </DataTemplate>
         <DataTemplate x:Key="TaskUpdateTemplate">
-            <TextBox Text="{Binding Hours, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,10,0" BorderBrush="{x:Null}" Background="#7FFFFFFF" TextAlignment="Center" MaxLength="6" Width="41" Padding="-4,0,0,0"/>
+            <TextBox Text="{Binding Hours}" Margin="0,0,10,0" BorderBrush="{x:Null}" Background="#7FFFFFFF" TextAlignment="Center" MaxLength="6" Width="41" Padding="-4,0,0,0"/>
         </DataTemplate>
         <DataTemplate x:Key="TaskUpdateDatesTemplate">
         	<DataTemplate.Resources>
@@ -294,7 +294,7 @@
                                         </ItemsControl>
                                         <ItemsControl x:Name="itemsControl1_Copy4" 
                                         	FontSize="16" Foreground="#FF464646" 
-                                        	ItemsSource="{Binding TasksRollup.Updates}" 
+                                        	ItemsSource="{Binding TotalWorked.Updates}" 
                                         	ItemTemplate="{DynamicResource TaskUpdateTemplate}" VerticalAlignment="Top" Margin="0,10,0,0" HorizontalAlignment="Left" IsHitTestVisible="False">
                                             <ItemsControl.ItemsPanel>
                                                 <ItemsPanelTemplate>
@@ -304,7 +304,7 @@
                                         </ItemsControl>
                                         <ItemsControl x:Name="itemsControl1_Copy1" 
 											FontSize="16" Foreground="#FF464646" 
-											ItemsSource="{Binding TasksRollup.Updates}" 
+											ItemsSource="{Binding RemainingHours.Updates}" 
 											ItemTemplate="{DynamicResource TaskUpdateTemplate}" VerticalAlignment="Top" Margin="0,10,0,0" HorizontalAlignment="Left" IsHitTestVisible="False">
                                             <ItemsControl.ItemsPanel>
                                                 <ItemsPanelTemplate>
@@ -349,25 +349,39 @@
                     </Grid>
 
                 </Controls:MetroTabItem>
-                <Controls:MetroTabItem Header="Analysis" DataContext="{Binding Main, Mode=OneWay}">
+                <Controls:MetroTabItem Header="Analysis" DataContext="{Binding Main, Mode=OneWay}" Visibility="{Binding AnalysisVisibility}">
                     <Grid>
                         <dvc:Chart UseLayoutRounding="False">
+                            <dvc:Chart.Axes>
+                                
+                                <!--<dvc:DateTimeAxis Orientation="X" IntervalType="Days" Interval="1">
+                                    <dvc:DateTimeAxis.AxisLabelStyle>
+                                        <Style TargetType="dvc:DateTimeAxisLabel">
+                                            <Setter Property="StringFormat" Value="{}{0:MMM dd}"/>
+                                        </Style>
+                                    </dvc:DateTimeAxis.AxisLabelStyle>
+                                </dvc:DateTimeAxis>-->
+                                <dvc:CategoryAxis Orientation="X"/>
+                                <dvc:LinearAxis Orientation="Y"/>
+                            </dvc:Chart.Axes>
                             <dvc:LineSeries Title="Remaining Hours"
-								IndependentValueBinding="{Binding Date}"
-								DependentValueBinding="{Binding Hours}" ItemsSource="{Binding TasksRollup.Updates}"/>
+								IndependentValueBinding="{Binding DateString}"
+								DependentValueBinding="{Binding Hours}" 
+                                ItemsSource="{Binding RemainingHours.Updates}" AnimationSequence="FirstToLast"/>
                             <dvc:LineSeries Title="Other Tasks &amp; Distractions"
-								IndependentValueBinding="{Binding Date}"
+								IndependentValueBinding="{Binding DateString}"
 								DependentValueBinding="{Binding Hours}"
 								ItemsSource="{Binding Distractions.Updates}"/>
-                            <dvc:LineSeries Title="Ideal Remaining Hours"
+                            <dvc:LineSeries Title="Total Worked"
+                            	IndependentValueBinding="{Binding DateString}"
+                            	DependentValueBinding="{Binding Hours}" 
+                                ItemsSource="{Binding TotalWorked.Updates}" AnimationSequence="FirstToLast"/>
+                            <!--<dvc:LineSeries Title="Ideal Remaining Hours"
                             	IndependentValueBinding="{Binding Date}"
                             	DependentValueBinding="{Binding Hours}" ItemsSource="{Binding ProjectedTotal.Updates}"/>
                             <dvc:LineSeries Title="Ideal Remaining Hours - Distractions"
                             	IndependentValueBinding="{Binding Date}"
-                            	DependentValueBinding="{Binding Hours}" ItemsSource="{Binding ProjectedTotalMinusDistractions.Updates}"/>
-                            <dvc:LineSeries Title="Total Worked"
-                            	IndependentValueBinding="{Binding Date}"
-                            	DependentValueBinding="{Binding Hours}" ItemsSource="{Binding TotalWorked.Updates}"/>
+                            	DependentValueBinding="{Binding Hours}" ItemsSource="{Binding ProjectedTotalMinusDistractions.Updates}"/>-->
                         </dvc:Chart>
                     </Grid>
 
