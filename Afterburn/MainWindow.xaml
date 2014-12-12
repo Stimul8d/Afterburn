@@ -61,7 +61,7 @@
                 <TextBox HorizontalAlignment="Stretch" TextWrapping="NoWrap" Text="{Binding Reference}" VerticalAlignment="Stretch" Width="Auto" Margin="0,0,5,0" BorderThickness="0" Padding="0" Background="#7FFFFFFF"/>
                 <TextBox HorizontalAlignment="Stretch" Height="Auto" TextWrapping="NoWrap" Text="{Binding Feature}" VerticalAlignment="Stretch" Width="Auto" Margin="0,0,5,0" BorderThickness="0" Grid.Column="1" Padding="0" Background="#7FFFFFFF"/>
                 <TextBox HorizontalAlignment="Stretch" Height="Auto" TextWrapping="NoWrap" Text="{Binding Name}" VerticalAlignment="Stretch" Width="Auto" Margin="0,0,5,0" BorderThickness="0" Grid.Column="2" Padding="0" Background="#7FFFFFFF"/>
-                <TextBox HorizontalAlignment="Stretch" Height="Auto" TextWrapping="NoWrap" Text="{Binding Hours}" VerticalAlignment="Stretch" Width="Auto" BorderThickness="0" Grid.Column="3" Padding="0" Grid.ColumnSpan="2" MaxLength="5" Background="#7FFFFFFF" TextAlignment="Center"/>
+                <TextBox HorizontalAlignment="Stretch" Height="Auto" TextWrapping="NoWrap" Text="{Binding Hours}" VerticalAlignment="Stretch" Width="Auto" BorderThickness="0" Grid.Column="3" Padding="0" Grid.ColumnSpan="2" MaxLength="5" Background="#7FFFFFFF" TextAlignment="Center" IsEnabled="{Binding AllowEdits}"/>
                 <Button x:Name="deleteButton"
                         VerticalAlignment="Stretch" Width="Auto" Grid.Column="4" BorderThickness="0" 
                         Style="{DynamicResource NoHoverButtonStyle}" Opacity="0.005" Command="{Binding DeleteTaskCommand}">

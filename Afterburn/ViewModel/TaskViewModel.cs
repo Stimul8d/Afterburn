@@ -25,6 +25,37 @@ namespace Afterburn.ViewModel
         }
 
         #region INPC
+
+        /// <summary>
+        /// The <see cref="AllowEdits" /> property's name.
+        /// </summary>
+        public const string AllowEditsPropertyName = "AllowEdits";
+
+        private bool allowEdits = true;
+
+        /// <summary>
+        /// Sets and gets the AllowEdits property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        public bool AllowEdits
+        {
+            get
+            {
+                return allowEdits;
+            }
+
+            set
+            {
+                if (allowEdits == value)
+                {
+                    return;
+                }
+
+                allowEdits = value;
+                RaisePropertyChanged(AllowEditsPropertyName);
+            }
+        }
+
         /// <summary>
         /// The <see cref="Reference" /> property's name.
         /// </summary>
@@ -142,6 +173,7 @@ namespace Afterburn.ViewModel
 
                 hours = value;
                 RaisePropertyChanged(HoursPropertyName);
+                Messenger.Default.Send<EstimateUpdatedMessage>(new EstimateUpdatedMessage(this));
             }
         }
         #endregion

@@ -45,11 +45,27 @@ namespace Afterburn.ViewModel
             //CreateProjectedTotal();
             //CreateProjectedTotalMinusDistractions();
             //CreateTotalWorked();
-            
+
 
             AddTaskCommand = new RelayCommand(() =>
                 {
-                    Tasks.Add(new TaskViewModel());
+                    var newTask = new TaskViewModel();
+                    if (Tasks.Any(t => t.Updates.Any()))
+                    {
+                        var existingTask = Tasks.First(t => t.Updates.Any());
+                        {
+                            foreach (var update in existingTask.Updates)
+                            {
+                                newTask.Updates.Add(new TaskUpdateViewModel
+                                {
+                                    Date = update.Date,
+                                    Hours = 0
+                                });
+                            }
+                        }
+                    }
+
+                    Tasks.Add(newTask);
                 });
 
             Messenger.Default.Register<DeleteTaskMessage>(this,
@@ -78,6 +94,17 @@ namespace Afterburn.ViewModel
                     ShowHideAnalysis();
                 });
 
+
+            Messenger.Default.Register<EstimateUpdatedMessage>(this,
+                (m) =>
+                {
+                    foreach (var update in m.Task.Updates)
+                    {
+                        update.Hours = m.Task.Hours;
+                    }
+                    CalculateTotals();
+                });
+
             Messenger.Default.Register<UpdateModifiedMessage>(this,
                 (m) =>
                 {
@@ -92,6 +119,7 @@ namespace Afterburn.ViewModel
         {
             foreach (var task in Tasks)
             {
+                task.AllowEdits = false;
                 var lasthours = task.Updates.LastOrDefault() == null
                                 ? task.Hours
                                 : task.Updates.Last().Hours;
@@ -127,9 +155,9 @@ namespace Afterburn.ViewModel
             TotalWorked.Updates.Clear();
             var updates = GetDayUpdates();
             DayUpdate previousUpdate = null;
-            
+
             for (int ix = 0; ix < updates.Count; ix++)
-			{
+            {
                 if (ix == 0)
                 {
                     previousUpdate = new DayUpdate
@@ -141,7 +169,7 @@ namespace Afterburn.ViewModel
                 {
                     previousUpdate = updates[ix - 1];
                 }
-            
+
                 var update = updates[ix];
                 var worked = previousUpdate.Hours - update.Hours;
                 var remaining = HoursPerDay - worked;
@@ -425,6 +453,36 @@ namespace Afterburn.ViewModel
 
                 totalEstimatedHours = value;
                 RaisePropertyChanged(TotalEstimatedHoursPropertyName);
+            }
+        }
+
+        /// <summary>
+        /// The <see cref="AllowEstimateEdits" /> property's name.
+        /// </summary>
+        public const string AllowEstimateEditsPropertyName = "AllowEstimateEdits";
+
+        private bool allowEstimateEdits = true;
+
+        /// <summary>
+        /// Sets and gets the AllowEstimateEdits property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        public bool AllowEstimateEdits
+        {
+            get
+            {
+                return allowEstimateEdits;
+            }
+
+            set
+            {
+                if (allowEstimateEdits == value)
+                {
+                    return;
+                }
+
+                allowEstimateEdits = value;
+                RaisePropertyChanged(AllowEstimateEditsPropertyName);
             }
         }
 
