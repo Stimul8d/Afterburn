@@ -10,11 +10,22 @@ namespace Afterburn.ViewModel
 {
     public class TaskViewModel : ViewModelBase
     {
+        static readonly Random rand = new Random();
+
         public ObservableCollection<TaskUpdateViewModel> Updates { get; set; }
         public RelayCommand DeleteTaskCommand { get; set; }
 
         public TaskViewModel()
+            : this("DISTRACTIONS", "FEATURE", "NAME", rand.Next(4,24)) { }
+
+        public TaskViewModel(string reference, string feature,
+            string name, double hours)
         {
+            this.reference = reference;
+            this.feature = feature;
+            this.name = name;
+            this.hours = hours;
+
             Updates = new ObservableCollection<TaskUpdateViewModel>();
 
             DeleteTaskCommand = new RelayCommand(() =>

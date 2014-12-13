@@ -266,12 +266,7 @@
                                         <TextBox HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Stretch" Width="Auto" Margin="0,0,5,0" BorderThickness="0" Padding="0" Background="#3FFFFFFF" IsEnabled="False" IsUndoEnabled="False" Text="Total Remaining" TextAlignment="Center" BorderBrush="{x:Null}"/>
                                         <TextBox HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Stretch" Width="Auto" BorderThickness="0" Padding="0" Background="#3FFFFFFF" IsEnabled="False" IsUndoEnabled="False" Text="{Binding TotalEstimatedHours}" TextAlignment="Center" Grid.Column="1" BorderBrush="{x:Null}"/>
                                     </Grid>
-                                    <Grid x:Name="grid_Copy" Margin="0,0,5,10" ClipToBounds="True">
-                                        <TextBox HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Stretch" Width="Auto" BorderThickness="0" Padding="0" Background="#3FFFFFFF" IsEnabled="False" IsUndoEnabled="False" Text="Ideal Total Remaining" TextAlignment="Center" BorderBrush="{x:Null}" />
-                                    </Grid>
-                                    <Grid x:Name="grid_Copy1" Margin="0,0,5,10" ClipToBounds="True">
-                                        <TextBox HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Stretch" Width="Auto" BorderThickness="0" Padding="0" Background="#3FFFFFFF" IsEnabled="False" IsUndoEnabled="False" Text="Projected Total - Other Tasks &amp; Distractions" TextAlignment="Center" BorderBrush="{x:Null}" Margin="0,0,0,10"/>
-                                    </Grid>
+                                    <Grid x:Name="grid_Copy1" Margin="0,0,5,10" ClipToBounds="True"/>
                                 </StackPanel>
                                 <GridSplitter HorizontalAlignment="Stretch" Grid.Column="1" Margin="5,0" Width="5" Background="#3F5BAFDE"/>
                                 <DockPanel Grid.Column="2" Margin="5,5,0,0">
@@ -312,16 +307,6 @@
                                                 </ItemsPanelTemplate>
                                             </ItemsControl.ItemsPanel>
                                         </ItemsControl>
-                                        <ItemsControl x:Name="itemsControl1_Copy2" 
-											FontSize="16" Foreground="#FF464646" 
-											ItemsSource="{Binding ProjectedTotal.Updates}" 
-											ItemTemplate="{DynamicResource TaskUpdateTemplate}" VerticalAlignment="Top" Margin="0,10,0,0" HorizontalAlignment="Left" IsHitTestVisible="False">
-                                            <ItemsControl.ItemsPanel>
-                                                <ItemsPanelTemplate>
-                                                    <StackPanel Orientation="Horizontal"/>
-                                                </ItemsPanelTemplate>
-                                            </ItemsControl.ItemsPanel>
-                                        </ItemsControl>
                                         <ItemsControl x:Name="itemsControl1_Copy3" 
                                         	FontSize="16" Foreground="#FF464646" 
                                         	ItemsSource="{Binding ProjectedTotalMinusDistractions.Updates}" 
@@ -353,17 +338,14 @@
                     <Grid>
                         <dvc:Chart UseLayoutRounding="False">
                             <dvc:Chart.Axes>
-                                
-                                <!--<dvc:DateTimeAxis Orientation="X" IntervalType="Days" Interval="1">
-                                    <dvc:DateTimeAxis.AxisLabelStyle>
-                                        <Style TargetType="dvc:DateTimeAxisLabel">
-                                            <Setter Property="StringFormat" Value="{}{0:MMM dd}"/>
-                                        </Style>
-                                    </dvc:DateTimeAxis.AxisLabelStyle>
-                                </dvc:DateTimeAxis>-->
                                 <dvc:CategoryAxis Orientation="X"/>
                                 <dvc:LinearAxis Orientation="Y"/>
                             </dvc:Chart.Axes>
+                            <dvc:LineSeries Title="Ideal Hours"
+								IndependentValueBinding="{Binding DateString}"
+								DependentValueBinding="{Binding Hours}" 
+                                ItemsSource="{Binding ProjectedTotal.Updates}" AnimationSequence="FirstToLast"/>
+
                             <dvc:LineSeries Title="Remaining Hours"
 								IndependentValueBinding="{Binding DateString}"
 								DependentValueBinding="{Binding Hours}" 

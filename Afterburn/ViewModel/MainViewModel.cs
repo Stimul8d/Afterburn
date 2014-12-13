@@ -13,16 +13,11 @@ namespace Afterburn.ViewModel
 
     public class MainViewModel : ViewModelBase
     {
-        const int NumOfUpdates = 3;
-        const int NumOfTasks = 1;
-
-        static readonly Random rand = new Random();
-
         public ObservableCollection<TaskViewModel> Tasks { get; set; }
+
         public TaskViewModel Distractions { get; set; }
         public TaskViewModel RemainingHours { get; set; }
         public TaskViewModel ProjectedTotal { get; set; }
-        public TaskViewModel ProjectedTotalMinusDistractions { get; set; }
         public TaskViewModel TotalWorked { get; set; }
 
         public RelayCommand AddTaskCommand { get; set; }
@@ -34,18 +29,10 @@ namespace Afterburn.ViewModel
             Distractions = new TaskViewModel();
             RemainingHours = new TaskViewModel();
             ProjectedTotal = new TaskViewModel();
-            ProjectedTotalMinusDistractions = new TaskViewModel();
             TotalWorked = new TaskViewModel();
 
-            //AddDummyTask();
-
-            CreateTasks();
+            AddDummyTask();
             CalculateTotals();
-            //CreateRollup();
-            //CreateProjectedTotal();
-            //CreateProjectedTotalMinusDistractions();
-            //CreateTotalWorked();
-
 
             AddTaskCommand = new RelayCommand(() =>
                 {
@@ -150,6 +137,10 @@ namespace Afterburn.ViewModel
 
         private void CalculateTotals()
         {
+            if (!Tasks.Any())
+                AddDummyTask();
+
+            TotalEstimatedHours = Tasks.Sum(t => t.Hours);
             Distractions.Updates.Clear();
             RemainingHours.Updates.Clear();
             TotalWorked.Updates.Clear();
@@ -192,7 +183,28 @@ namespace Afterburn.ViewModel
                     Hours = remaining
                 });
 
-                TotalEstimatedHours = Tasks.Sum(t => t.Hours);
+            }
+
+            //generate ideal burndown
+            ProjectedTotal.Updates.Clear();
+            var remainingTotal = TotalEstimatedHours;
+            var currrentDay = DateTime.Today;
+
+            if (Tasks.First().Updates.Any())
+            {
+                currrentDay = Tasks.First().Updates.First().Date;
+            }
+
+            while (remainingTotal > -HoursPerDay)
+            {
+                var update = new TaskUpdateViewModel(false)
+                {
+                    Hours = remainingTotal,
+                    Date = currrentDay
+                };
+                ProjectedTotal.Updates.Add(update);
+                currrentDay = AddDays(currrentDay, 1, SkipWeekends);
+                remainingTotal -= HoursPerDay;
             }
         }
 
@@ -233,76 +245,8 @@ namespace Afterburn.ViewModel
 
         private void AddDummyTask()
         {
-            var t = new TaskViewModel()
-            {
-                Reference = "Task-1",
-                Feature = "Homepage",
-                Name = "Complete the login form",
-                Hours = rand.Next(2, 16)
-            };
+            var t = new TaskViewModel();
             Tasks.Add(t);
-        }
-
-        private void CreateTotalWorked()
-        {
-            for (int i = 0; i < NumOfUpdates; i++)
-            {
-                var date = DateTime.Now.AddDays(i).Date;
-                var update = new TaskUpdateViewModel
-                {
-                    Date = date,
-                    Hours = rand.Next(0, (int)HoursPerDay)
-                };
-                TotalWorked.Updates.Add(update);
-            }
-        }
-
-        private void CreateTasks()
-        {
-            for (int i = 0; i < NumOfTasks; i++)
-            {
-                var t = new TaskViewModel()
-                {
-                    Reference = "PRJSBO-" + rand.Next(10),
-                    Feature = "Custom Coupon",
-                    Name = "Sort coupons by fixture start time",
-                    Hours = rand.Next(2, 16)
-                };
-
-                if (IsInDesignMode)
-                {
-                    for (int j = 0; j < NumOfUpdates; j++)
-                    {
-                        var previousHours =
-                            j == 0 ? t.Hours : t.Updates[j - 1].Hours;
-
-                        var date = DateTime.Now.AddDays(j - NumOfUpdates);
-                        var update = new TaskUpdateViewModel
-                        {
-                            Date = date,
-                            Hours = previousHours - rand.Next(0, 3)
-                        };
-                        t.Updates.Add(update);
-                    }
-                }
-                Tasks.Add(t);
-            }
-
-            CreateRollup();
-        }
-
-        private void CreateRollup()
-        {
-            var dateTotals = GetDayUpdates();
-
-            foreach (var item in dateTotals)
-            {
-                RemainingHours.Updates.Add(new TaskUpdateViewModel
-                {
-                    Date = item.Date,
-                    Hours = item.Hours
-                });
-            }
         }
 
         private List<DayUpdate> GetDayUpdates()
@@ -319,52 +263,7 @@ namespace Afterburn.ViewModel
             return dateTotals;
         }
 
-        private void CreateDistractions()
-        {
-            for (int i = 0; i < NumOfUpdates; i++)
-            {
-                var date = DateTime.Now.AddDays(i).Date;
-                var update = new TaskUpdateViewModel
-                {
-                    Date = date,
-                    Hours = rand.Next(0, (int)HoursPerDay)
-                };
-                Distractions.Updates.Add(update);
-            }
-        }
-
-        private void CreateProjectedTotal()
-        {
-            var total = TotalEstimatedHours - HoursPerDay;
-            for (int i = 0; i < NumOfUpdates; i++)
-            {
-                var date = DateTime.Now.AddDays(i);
-                var update = new TaskUpdateViewModel
-                {
-                    Date = date,
-                    Hours = total
-                };
-                update.Hours *= NumOfTasks;
-                ProjectedTotal.Updates.Add(update);
-                total -= HoursPerDay;
-            }
-        }
-
-        private void CreateProjectedTotalMinusDistractions()
-        {
-            for (int i = 0; i < NumOfUpdates; i++)
-            {
-                var date = DateTime.Now.AddDays(i);
-                var update = new TaskUpdateViewModel
-                {
-                    Date = date,
-                    Hours = NumOfUpdates - i
-                };
-                update.Hours *= NumOfTasks;
-                ProjectedTotalMinusDistractions.Updates.Add(update);
-            }
-        }
-
+        #region INPC
         /// <summary>
         /// The <see cref="SkipWeekends" /> property's name.
         /// </summary>
@@ -515,6 +414,8 @@ namespace Afterburn.ViewModel
                 RaisePropertyChanged(AnalysisVisibilityPropertyName);
             }
         }
+
+        #endregion
 
         class DayUpdate
         {
