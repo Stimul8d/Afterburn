@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
+using Afterburn.Extensions;
+using Afterburn.Messages;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
-using Afterburn.Messages;
 
 namespace Afterburn.ViewModel
 {
@@ -20,16 +21,27 @@ namespace Afterburn.ViewModel
         public TaskViewModel ProjectedTotal { get; set; }
         public TaskViewModel TotalWorked { get; set; }
 
+        public TaskViewModel AnalysisDistractions { get; set; }
+        public TaskViewModel AnalysisRemainingHours { get; set; }
+        public TaskViewModel AnalysisProjectedTotal { get; set; }
+        public TaskViewModel AnalysisTotalWorked { get; set; }
+
         public RelayCommand AddTaskCommand { get; set; }
         public RelayCommand AddDayCommand { get; set; }
 
         public MainViewModel()
         {
             Tasks = new ObservableCollection<TaskViewModel>();
+
             Distractions = new TaskViewModel();
             RemainingHours = new TaskViewModel();
             ProjectedTotal = new TaskViewModel();
             TotalWorked = new TaskViewModel();
+
+            AnalysisDistractions = new TaskViewModel();
+            AnalysisRemainingHours = new TaskViewModel();
+            AnalysisProjectedTotal = new TaskViewModel();
+            AnalysisTotalWorked = new TaskViewModel();
 
             AddDummyTask();
             CalculateTotals();
@@ -88,7 +100,7 @@ namespace Afterburn.ViewModel
                     if (!m.Task.Updates.Any())
                         return;
 
-                    if(m.Task.Updates.First().Hours > 0)
+                    if (m.Task.Updates.First().Hours > 0)
                     {
                         foreach (var update in m.Task.Updates)
                         {
@@ -209,6 +221,7 @@ namespace Afterburn.ViewModel
 
             while (remainingTotal > -HoursPerDay)
             {
+                remainingTotal -= HoursPerDay;
                 var update = new TaskUpdateViewModel(false)
                 {
                     Hours = remainingTotal,
@@ -216,43 +229,104 @@ namespace Afterburn.ViewModel
                 };
                 ProjectedTotal.Updates.Add(update);
                 currrentDay = AddDays(currrentDay, 1, SkipWeekends);
-                remainingTotal -= HoursPerDay;
             }
+
+            if (Tasks.Any() && Tasks.First().Updates.Any())
+            {
+                AnalysisDistractions.Updates.Clear();
+                AnalysisProjectedTotal.Updates.Clear();
+                AnalysisRemainingHours.Updates.Clear();
+                AnalysisTotalWorked.Updates.Clear();
+
+                //add day one to the analysis
+                var dayOne = GetDayUpdates().First().Date;
+                var dayZero = AddDays(dayOne, -1, skipWeekends);
+                AnalysisDistractions.Updates.Add(new TaskUpdateViewModel(false)
+                {
+                    Date = dayZero
+                });
+
+                AnalysisProjectedTotal.Updates.Add(new TaskUpdateViewModel(false)
+                {
+                    Hours = Tasks.Sum(t => t.Hours),
+                    Date = dayZero
+                });
+
+                AnalysisRemainingHours.Updates.Add(new TaskUpdateViewModel(false)
+                {
+                    Hours = Tasks.Sum(t => t.Hours),
+                    Date = dayZero
+                });
+
+                AnalysisTotalWorked.Updates.Add(new TaskUpdateViewModel(false)
+                {
+                    Hours = 0,
+                    Date = dayZero
+                });
+
+                AnalysisDistractions.Updates.AddRange(Distractions.Updates);
+                AnalysisProjectedTotal.Updates.AddRange(ProjectedTotal.Updates);
+                AnalysisRemainingHours.Updates.AddRange(RemainingHours.Updates);
+                AnalysisTotalWorked.Updates.AddRange(TotalWorked.Updates);
+            }
+
         }
 
-        public static DateTime AddDays(DateTime date, int days, bool ignoreWeekends)
+        public static DateTime AddDays(DateTime date, int days, bool skipWeekends)
         {
-            if (!ignoreWeekends)
-                return date.AddDays(days);
-
-            if (days < 0)
+            DateTime tmpDate = date;
+            while (days != 0)
             {
-                throw new ArgumentException("days cannot be negative", "days");
+                var sign = Math.Sign(days);
+                
+                tmpDate = tmpDate.AddDays(sign);
+                if ((tmpDate.DayOfWeek < DayOfWeek.Saturday &&
+                    tmpDate.DayOfWeek > DayOfWeek.Sunday))
+                    days -= sign;
             }
+            return tmpDate;
 
-            if (days == 0) return date;
+            //if (days < 0)
+            //{
+            //    throw new ArgumentException("days cannot be negative", "days");
+            //}
 
-            if (date.DayOfWeek == DayOfWeek.Saturday)
+            //if (days == 0) return date;
+
+            //if (date.DayOfWeek == DayOfWeek.Saturday)
+            //{
+            //    date = date.AddDays(2);
+            //    days -= 1;
+            //}
+            //else if (date.DayOfWeek == DayOfWeek.Sunday)
+            //{
+            //    date = date.AddDays(1);
+            //    days -= 1;
+            //}
+
+            //date = date.AddDays(days / 5 * 7);
+            //int extraDays = days % 5;
+
+            //if ((int)date.DayOfWeek + extraDays > 5)
+            //{
+            //    extraDays += 2;
+            //}
+
+            //return date.AddDays(extraDays);
+
+        }
+
+        public DateTime AddWorkdays(DateTime originalDate, int workDays)
+        {
+            DateTime tmpDate = originalDate;
+            while (workDays > 0)
             {
-                date = date.AddDays(2);
-                days -= 1;
+                tmpDate = tmpDate.AddDays(1);
+                if (tmpDate.DayOfWeek < DayOfWeek.Saturday &&
+                    tmpDate.DayOfWeek > DayOfWeek.Sunday)
+                    workDays--;
             }
-            else if (date.DayOfWeek == DayOfWeek.Sunday)
-            {
-                date = date.AddDays(1);
-                days -= 1;
-            }
-
-            date = date.AddDays(days / 5 * 7);
-            int extraDays = days % 5;
-
-            if ((int)date.DayOfWeek + extraDays > 5)
-            {
-                extraDays += 2;
-            }
-
-            return date.AddDays(extraDays);
-
+            return tmpDate;
         }
 
         private void AddDummyTask()

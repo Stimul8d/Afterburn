@@ -474,15 +474,11 @@
                                     <RowDefinition Height="*"/>
                                 </Grid.RowDefinitions>
                                 <Grid Margin="0,15" Grid.Row="1">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="Auto"/>
-                                    </Grid.ColumnDefinitions>
-                                    <dv:Legend x:Name="Legend" Grid.Column="1" Style="{TemplateBinding LegendStyle}" Title="{TemplateBinding LegendTitle}" Background="#7FFFFFFF" VerticalAlignment="Stretch" Margin="0"/>
                                     <Primitives:EdgePanel x:Name="ChartArea" Style="{TemplateBinding ChartAreaStyle}">
                                         <Grid Style="{TemplateBinding PlotAreaStyle}" Panel.ZIndex="-1" Background="#7FFFFFFF"/>
                                         <Border BorderBrush="#FF919191" BorderThickness="1" Panel.ZIndex="10"/>
                                     </Primitives:EdgePanel>
+                                    <dv:Legend x:Name="Legend" Grid.Column="1" Style="{TemplateBinding LegendStyle}" Title="{TemplateBinding LegendTitle}" VerticalAlignment="Stretch" Margin="0" HorizontalAlignment="Right" Background="{x:Null}" BorderBrush="{x:Null}"/>
                                 </Grid>
                             </Grid>
                         </Border>
@@ -672,7 +668,7 @@
                     </Grid>
 
                 </Controls:MetroTabItem>
-                <Controls:MetroTabItem Header="Analysis" DataContext="{Binding Main, Mode=OneWay}">
+                <Controls:MetroTabItem Header="Analysis" DataContext="{Binding Main, Mode=OneWay}" Visibility="{Binding AnalysisVisibility}">
                     <Grid>
                         <dvc:Chart UseLayoutRounding="False" Style="{DynamicResource ChartStyle}">
                             <dvc:Chart.Axes>
@@ -682,26 +678,20 @@
                             <dvc:AreaSeries Title="Other Tasks &amp; Distractions"
 								IndependentValueBinding="{Binding DateString}"
 								DependentValueBinding="{Binding Hours}"
-								ItemsSource="{Binding Distractions.Updates}"/>
+								ItemsSource="{Binding AnalysisDistractions.Updates}"/>
                             <dvc:AreaSeries Title="Hours Worked"
 								IndependentValueBinding="{Binding DateString}"
 								DependentValueBinding="{Binding Hours}" 
-								ItemsSource="{Binding TotalWorked.Updates}"/>
-                            <dvc:LineSeries Title="Ideal Hours"
+								ItemsSource="{Binding AnalysisTotalWorked.Updates}"/>
+                            <dvc:LineSeries Title="Estimated Progress"
 								IndependentValueBinding="{Binding DateString}"
 								DependentValueBinding="{Binding Hours}" 
-								ItemsSource="{Binding ProjectedTotal.Updates}" Background="#FF37C329"/>
+								ItemsSource="{Binding AnalysisProjectedTotal.Updates}" Background="#FF37C329"/>
 
                             <dvc:LineSeries Title="Remaining Hours"
 								IndependentValueBinding="{Binding DateString}"
 								DependentValueBinding="{Binding Hours}" 
-								ItemsSource="{Binding RemainingHours.Updates}"/>
-                            <!--<dvc:LineSeries Title="Ideal Remaining Hours"
-                            	IndependentValueBinding="{Binding Date}"
-                            	DependentValueBinding="{Binding Hours}" ItemsSource="{Binding ProjectedTotal.Updates}"/>
-                            <dvc:LineSeries Title="Ideal Remaining Hours - Distractions"
-                            	IndependentValueBinding="{Binding Date}"
-                            	DependentValueBinding="{Binding Hours}" ItemsSource="{Binding ProjectedTotalMinusDistractions.Updates}"/>-->
+								ItemsSource="{Binding AnalysisRemainingHours.Updates}"/>
                         </dvc:Chart>
                     </Grid>
 
