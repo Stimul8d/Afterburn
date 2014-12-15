@@ -7,12 +7,25 @@
         xmlns:dv="clr-namespace:System.Windows.Controls.DataVisualization;assembly=System.Windows.Controls.DataVisualization.Toolkit"
         xmlns:dvc="clr-namespace:System.Windows.Controls.DataVisualization.Charting;assembly=System.Windows.Controls.DataVisualization.Toolkit"
         xmlns:ignore="http://www.ignore.com"
-        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity" xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions" x:Class="Afterburn.MainWindow"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity" xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions" xmlns:Primitives="clr-namespace:System.Windows.Controls.DataVisualization.Charting.Primitives;assembly=System.Windows.Controls.DataVisualization.Toolkit" x:Class="Afterburn.MainWindow"
         mc:Ignorable="d ignore"
         MinWidth="1024"
         MinHeight="600"
         Title="Afterburn">
     <Controls:MetroWindow.Resources>
+
+        <Style x:Key="HiddenPointStyle" TargetType="{x:Type dvc:LineDataPoint}">
+            <Setter Property="Template" Value="{x:Null}"/>
+        </Style>
+
+        <ControlTemplate TargetType="dvc:LineSeries" x:Key="lineTemplate">
+            <Canvas x:Name="PlotArea">
+                <Polyline x:Name="polyline" 
+                          Points="{TemplateBinding Points}" 
+                          Stroke="{TemplateBinding Background}" 
+                          Style="{TemplateBinding PolylineStyle}" />
+            </Canvas>
+        </ControlTemplate>
 
         <Style x:Key="NoHoverButtonStyle" TargetType="{x:Type Button}">
             <Setter Property="OverridesDefaultStyle" Value="True"/>
@@ -63,8 +76,8 @@
                 <TextBox HorizontalAlignment="Stretch" Height="Auto" TextWrapping="NoWrap" Text="{Binding Name}" VerticalAlignment="Stretch" Width="Auto" Margin="0,0,5,0" BorderThickness="0" Grid.Column="2" Padding="0" Background="#7FFFFFFF"/>
                 <TextBox HorizontalAlignment="Stretch" Height="Auto" TextWrapping="NoWrap" Text="{Binding Hours}" VerticalAlignment="Stretch" Width="Auto" BorderThickness="0" Grid.Column="3" Padding="0" Grid.ColumnSpan="2" MaxLength="5" Background="#7FFFFFFF" TextAlignment="Center" IsEnabled="{Binding AllowEdits}"/>
                 <Button x:Name="deleteButton"
-                        VerticalAlignment="Stretch" Width="Auto" Grid.Column="4" BorderThickness="0" 
-                        Style="{DynamicResource NoHoverButtonStyle}" Opacity="0.005" Command="{Binding DeleteTaskCommand}">
+        			VerticalAlignment="Stretch" Width="Auto" Grid.Column="4" BorderThickness="0" 
+        			Style="{DynamicResource NoHoverButtonStyle}" Opacity="0.005" Command="{Binding DeleteTaskCommand}">
                     <Button.Background>
                         <ImageBrush ImageSource="Assets/Delete.png"/>
                     </Button.Background>
@@ -100,36 +113,36 @@
             <TextBox Text="{Binding Hours}" Margin="0,0,10,0" BorderBrush="{x:Null}" Background="#7FFFFFFF" TextAlignment="Center" MaxLength="6" Width="41" Padding="-4,0,0,0"/>
         </DataTemplate>
         <DataTemplate x:Key="TaskUpdateDatesTemplate">
-        	<DataTemplate.Resources>
-        		<Storyboard x:Key="ShowDeleteDate">
-        			<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="button">
-        				<EasingDoubleKeyFrame KeyTime="0" Value="0"/>
-        				<EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="1"/>
-        			</DoubleAnimationUsingKeyFrames>
-        			<BooleanAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.IsHitTestVisible)" Storyboard.TargetName="button">
-        				<DiscreteBooleanKeyFrame KeyTime="0" Value="False"/>
-        				<DiscreteBooleanKeyFrame KeyTime="0:0:0.2" Value="True"/>
-        			</BooleanAnimationUsingKeyFrames>
-        			<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="stackPanel">
-        				<EasingDoubleKeyFrame KeyTime="0" Value="1"/>
-        				<EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="0.1"/>
-        			</DoubleAnimationUsingKeyFrames>
-        		</Storyboard>
-        		<Storyboard x:Key="HideDeleteDate">
-        			<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="button">
-        				<EasingDoubleKeyFrame KeyTime="0" Value="1"/>
-        				<EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="0"/>
-        			</DoubleAnimationUsingKeyFrames>
-        			<BooleanAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.IsHitTestVisible)" Storyboard.TargetName="button">
-        				<DiscreteBooleanKeyFrame KeyTime="0" Value="True"/>
-        				<DiscreteBooleanKeyFrame KeyTime="0:0:0.2" Value="False"/>
-        			</BooleanAnimationUsingKeyFrames>
-        			<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="stackPanel">
-        				<EasingDoubleKeyFrame KeyTime="0" Value="0.1"/>
-        				<EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="1"/>
-        			</DoubleAnimationUsingKeyFrames>
-        		</Storyboard>
-        	</DataTemplate.Resources>
+            <DataTemplate.Resources>
+                <Storyboard x:Key="ShowDeleteDate">
+                    <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="button">
+                        <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+                        <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="1"/>
+                    </DoubleAnimationUsingKeyFrames>
+                    <BooleanAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.IsHitTestVisible)" Storyboard.TargetName="button">
+                        <DiscreteBooleanKeyFrame KeyTime="0" Value="False"/>
+                        <DiscreteBooleanKeyFrame KeyTime="0:0:0.2" Value="True"/>
+                    </BooleanAnimationUsingKeyFrames>
+                    <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="stackPanel">
+                        <EasingDoubleKeyFrame KeyTime="0" Value="1"/>
+                        <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="0.1"/>
+                    </DoubleAnimationUsingKeyFrames>
+                </Storyboard>
+                <Storyboard x:Key="HideDeleteDate">
+                    <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="button">
+                        <EasingDoubleKeyFrame KeyTime="0" Value="1"/>
+                        <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="0"/>
+                    </DoubleAnimationUsingKeyFrames>
+                    <BooleanAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.IsHitTestVisible)" Storyboard.TargetName="button">
+                        <DiscreteBooleanKeyFrame KeyTime="0" Value="True"/>
+                        <DiscreteBooleanKeyFrame KeyTime="0:0:0.2" Value="False"/>
+                    </BooleanAnimationUsingKeyFrames>
+                    <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="stackPanel">
+                        <EasingDoubleKeyFrame KeyTime="0" Value="0.1"/>
+                        <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="1"/>
+                    </DoubleAnimationUsingKeyFrames>
+                </Storyboard>
+            </DataTemplate.Resources>
             <Grid Height="Auto" Margin="0,-15,20,0">
                 <StackPanel x:Name="stackPanel" Orientation="Vertical" Margin="0">
                     <TextBlock Text="{Binding Date, StringFormat=\{0:ddd\}}" FontSize="12" FontWeight="Bold" Foreground="#FF464646" Margin="0" HorizontalAlignment="Center"/>
@@ -141,17 +154,342 @@
                     </Button.Background>
                 </Button>
             </Grid>
-        	<DataTemplate.Triggers>
-        		<Trigger Property="IsMouseOver" Value="True">
-        			<Trigger.ExitActions>
-        				<BeginStoryboard x:Name="HideDeleteDate_BeginStoryboard" Storyboard="{StaticResource HideDeleteDate}"/>
-        			</Trigger.ExitActions>
-        			<Trigger.EnterActions>
-        				<BeginStoryboard x:Name="ShowDeleteDate_BeginStoryboard" Storyboard="{StaticResource ShowDeleteDate}"/>
-        			</Trigger.EnterActions>
-        		</Trigger>
-        	</DataTemplate.Triggers>
+            <DataTemplate.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Trigger.ExitActions>
+                        <BeginStoryboard x:Name="HideDeleteDate_BeginStoryboard" Storyboard="{StaticResource HideDeleteDate}"/>
+                    </Trigger.ExitActions>
+                    <Trigger.EnterActions>
+                        <BeginStoryboard x:Name="ShowDeleteDate_BeginStoryboard" Storyboard="{StaticResource ShowDeleteDate}"/>
+                    </Trigger.EnterActions>
+                </Trigger>
+            </DataTemplate.Triggers>
         </DataTemplate>
+        <Style x:Key="ChartStyle" TargetType="{x:Type dvc:Chart}">
+            <Setter Property="BorderBrush" Value="Black"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="IsTabStop" Value="False"/>
+            <Setter Property="Padding" Value="10"/>
+            <Setter Property="SnapsToDevicePixels" Value="True"/>
+            <Setter Property="Palette">
+                <Setter.Value>
+                    <dv:ResourceDictionaryCollection>
+                        <ResourceDictionary>
+                            <Style x:Key="DataPointStyle" TargetType="{x:Type Control}">
+                                <Setter Property="Background">
+                                    <Setter.Value>
+                                        <RadialGradientBrush Center="0.075,0.015" GradientOrigin="-0.1,-0.1" RadiusY="0.9" RadiusX="1.05">
+                                            <GradientStop Color="#FFB9D6F7"/>
+                                            <GradientStop Color="#FF284B70" Offset="1"/>
+                                        </RadialGradientBrush>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                            <RadialGradientBrush x:Key="Background" Center="0.075,0.015" GradientOrigin="-0.1,-0.1" RadiusY="0.9" RadiusX="1.05">
+                                <GradientStop Color="#FFB9D6F7"/>
+                                <GradientStop Color="#FF284B70" Offset="1"/>
+                            </RadialGradientBrush>
+                        </ResourceDictionary>
+                        <ResourceDictionary>
+                            <Style x:Key="DataPointStyle" TargetType="{x:Type Control}">
+                                <Setter Property="Background">
+                                    <Setter.Value>
+                                        <RadialGradientBrush Center="0.075,0.015" GradientOrigin="-0.1,-0.1" RadiusY="0.9" RadiusX="1.05">
+                                            <GradientStop Color="#FFFBB7B5"/>
+                                            <GradientStop Color="#FF702828" Offset="1"/>
+                                        </RadialGradientBrush>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                            <RadialGradientBrush x:Key="Background" Center="0.075,0.015" GradientOrigin="-0.1,-0.1" RadiusY="0.9" RadiusX="1.05">
+                                <GradientStop Color="#FFFBB7B5"/>
+                                <GradientStop Color="#FF702828" Offset="1"/>
+                            </RadialGradientBrush>
+                        </ResourceDictionary>
+                        <ResourceDictionary>
+                            <Style x:Key="DataPointStyle" TargetType="{x:Type Control}">
+                                <Setter Property="Background">
+                                    <Setter.Value>
+                                        <RadialGradientBrush Center="0.075,0.015" GradientOrigin="-0.1,-0.1" RadiusY="0.9" RadiusX="1.05">
+                                            <GradientStop Color="#FFB8C0AC"/>
+                                            <GradientStop Color="#FF5F7143" Offset="1"/>
+                                        </RadialGradientBrush>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                            <RadialGradientBrush x:Key="Background" Center="0.075,0.015" GradientOrigin="-0.1,-0.1" RadiusY="0.9" RadiusX="1.05">
+                                <GradientStop Color="#FFB8C0AC"/>
+                                <GradientStop Color="#FF5F7143" Offset="1"/>
+                            </RadialGradientBrush>
+                        </ResourceDictionary>
+                        <ResourceDictionary>
+                            <Style x:Key="DataPointStyle" TargetType="{x:Type Control}">
+                                <Setter Property="Background">
+                                    <Setter.Value>
+                                        <RadialGradientBrush Center="0.075,0.015" GradientOrigin="-0.1,-0.1" RadiusY="0.9" RadiusX="1.05">
+                                            <GradientStop Color="#FFFDE79C"/>
+                                            <GradientStop Color="#FFF6BC0C" Offset="1"/>
+                                        </RadialGradientBrush>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                            <RadialGradientBrush x:Key="Background" Center="0.075,0.015" GradientOrigin="-0.1,-0.1" RadiusY="0.9" RadiusX="1.05">
+                                <GradientStop Color="#FFFDE79C"/>
+                                <GradientStop Color="#FFF6BC0C" Offset="1"/>
+                            </RadialGradientBrush>
+                        </ResourceDictionary>
+                        <ResourceDictionary>
+                            <Style x:Key="DataPointStyle" TargetType="{x:Type Control}">
+                                <Setter Property="Background">
+                                    <Setter.Value>
+                                        <RadialGradientBrush Center="0.075,0.015" GradientOrigin="-0.1,-0.1" RadiusY="0.9" RadiusX="1.05">
+                                            <GradientStop Color="#FFA9A3BD"/>
+                                            <GradientStop Color="#FF382C6C" Offset="1"/>
+                                        </RadialGradientBrush>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                            <RadialGradientBrush x:Key="Background" Center="0.075,0.015" GradientOrigin="-0.1,-0.1" RadiusY="0.9" RadiusX="1.05">
+                                <GradientStop Color="#FFA9A3BD"/>
+                                <GradientStop Color="#FF382C6C" Offset="1"/>
+                            </RadialGradientBrush>
+                        </ResourceDictionary>
+                        <ResourceDictionary>
+                            <Style x:Key="DataPointStyle" TargetType="{x:Type Control}">
+                                <Setter Property="Background">
+                                    <Setter.Value>
+                                        <RadialGradientBrush Center="0.075,0.015" GradientOrigin="-0.1,-0.1" RadiusY="0.9" RadiusX="1.05">
+                                            <GradientStop Color="#FFB1A1B1"/>
+                                            <GradientStop Color="#FF50224F" Offset="1"/>
+                                        </RadialGradientBrush>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                            <RadialGradientBrush x:Key="Background" Center="0.075,0.015" GradientOrigin="-0.1,-0.1" RadiusY="0.9" RadiusX="1.05">
+                                <GradientStop Color="#FFB1A1B1"/>
+                                <GradientStop Color="#FF50224F" Offset="1"/>
+                            </RadialGradientBrush>
+                        </ResourceDictionary>
+                        <ResourceDictionary>
+                            <Style x:Key="DataPointStyle" TargetType="{x:Type Control}">
+                                <Setter Property="Background">
+                                    <Setter.Value>
+                                        <RadialGradientBrush Center="0.075,0.015" GradientOrigin="-0.1,-0.1" RadiusY="0.9" RadiusX="1.05">
+                                            <GradientStop Color="#FF9DC2B3"/>
+                                            <GradientStop Color="#FF1D7554" Offset="1"/>
+                                        </RadialGradientBrush>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                            <RadialGradientBrush x:Key="Background" Center="0.075,0.015" GradientOrigin="-0.1,-0.1" RadiusY="0.9" RadiusX="1.05">
+                                <GradientStop Color="#FF9DC2B3"/>
+                                <GradientStop Color="#FF1D7554" Offset="1"/>
+                            </RadialGradientBrush>
+                        </ResourceDictionary>
+                        <ResourceDictionary>
+                            <Style x:Key="DataPointStyle" TargetType="{x:Type Control}">
+                                <Setter Property="Background">
+                                    <Setter.Value>
+                                        <RadialGradientBrush Center="0.075,0.015" GradientOrigin="-0.1,-0.1" RadiusY="0.9" RadiusX="1.05">
+                                            <GradientStop Color="#FFB5B5B5"/>
+                                            <GradientStop Color="#FF4C4C4C" Offset="1"/>
+                                        </RadialGradientBrush>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                            <RadialGradientBrush x:Key="Background" Center="0.075,0.015" GradientOrigin="-0.1,-0.1" RadiusY="0.9" RadiusX="1.05">
+                                <GradientStop Color="#FFB5B5B5"/>
+                                <GradientStop Color="#FF4C4C4C" Offset="1"/>
+                            </RadialGradientBrush>
+                        </ResourceDictionary>
+                        <ResourceDictionary>
+                            <Style x:Key="DataPointStyle" TargetType="{x:Type Control}">
+                                <Setter Property="Background">
+                                    <Setter.Value>
+                                        <RadialGradientBrush Center="0.075,0.015" GradientOrigin="-0.1,-0.1" RadiusY="0.9" RadiusX="1.05">
+                                            <GradientStop Color="#FF98C1DC"/>
+                                            <GradientStop Color="#FF0271AE" Offset="1"/>
+                                        </RadialGradientBrush>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                            <RadialGradientBrush x:Key="Background" Center="0.075,0.015" GradientOrigin="-0.1,-0.1" RadiusY="0.9" RadiusX="1.05">
+                                <GradientStop Color="#FF98C1DC"/>
+                                <GradientStop Color="#FF0271AE" Offset="1"/>
+                            </RadialGradientBrush>
+                        </ResourceDictionary>
+                        <ResourceDictionary>
+                            <Style x:Key="DataPointStyle" TargetType="{x:Type Control}">
+                                <Setter Property="Background">
+                                    <Setter.Value>
+                                        <RadialGradientBrush Center="0.075,0.015" GradientOrigin="-0.1,-0.1" RadiusY="0.9" RadiusX="1.05">
+                                            <GradientStop Color="#FFC1C0AE"/>
+                                            <GradientStop Color="#FF706E41" Offset="1"/>
+                                        </RadialGradientBrush>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                            <RadialGradientBrush x:Key="Background" Center="0.075,0.015" GradientOrigin="-0.1,-0.1" RadiusY="0.9" RadiusX="1.05">
+                                <GradientStop Color="#FFC1C0AE"/>
+                                <GradientStop Color="#FF706E41" Offset="1"/>
+                            </RadialGradientBrush>
+                        </ResourceDictionary>
+                        <ResourceDictionary>
+                            <Style x:Key="DataPointStyle" TargetType="{x:Type Control}">
+                                <Setter Property="Background">
+                                    <Setter.Value>
+                                        <RadialGradientBrush Center="0.075,0.015" GradientOrigin="-0.1,-0.1" RadiusY="0.9" RadiusX="1.05">
+                                            <GradientStop Color="#FFADBDC0"/>
+                                            <GradientStop Color="#FF446A73" Offset="1"/>
+                                        </RadialGradientBrush>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                            <RadialGradientBrush x:Key="Background" Center="0.075,0.015" GradientOrigin="-0.1,-0.1" RadiusY="0.9" RadiusX="1.05">
+                                <GradientStop Color="#FFADBDC0"/>
+                                <GradientStop Color="#FF446A73" Offset="1"/>
+                            </RadialGradientBrush>
+                        </ResourceDictionary>
+                        <ResourceDictionary>
+                            <Style x:Key="DataPointStyle" TargetType="{x:Type Control}">
+                                <Setter Property="Background">
+                                    <Setter.Value>
+                                        <RadialGradientBrush Center="0.075,0.015" GradientOrigin="-0.1,-0.1" RadiusY="0.9" RadiusX="1.05">
+                                            <GradientStop Color="#FF2F8CE2"/>
+                                            <GradientStop Color="#FF0C3E69" Offset="1"/>
+                                        </RadialGradientBrush>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                            <RadialGradientBrush x:Key="Background" Center="0.075,0.015" GradientOrigin="-0.1,-0.1" RadiusY="0.9" RadiusX="1.05">
+                                <GradientStop Color="#FF2F8CE2"/>
+                                <GradientStop Color="#FF0C3E69" Offset="1"/>
+                            </RadialGradientBrush>
+                        </ResourceDictionary>
+                        <ResourceDictionary>
+                            <Style x:Key="DataPointStyle" TargetType="{x:Type Control}">
+                                <Setter Property="Background">
+                                    <Setter.Value>
+                                        <RadialGradientBrush Center="0.075,0.015" GradientOrigin="-0.1,-0.1" RadiusY="0.9" RadiusX="1.05">
+                                            <GradientStop Color="Gainsboro"/>
+                                            <GradientStop Color="#FF757575" Offset="1"/>
+                                        </RadialGradientBrush>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                            <RadialGradientBrush x:Key="Background" Center="0.075,0.015" GradientOrigin="-0.1,-0.1" RadiusY="0.9" RadiusX="1.05">
+                                <GradientStop Color="Gainsboro"/>
+                                <GradientStop Color="#FF757575" Offset="1"/>
+                            </RadialGradientBrush>
+                        </ResourceDictionary>
+                        <ResourceDictionary>
+                            <Style x:Key="DataPointStyle" TargetType="{x:Type Control}">
+                                <Setter Property="Background">
+                                    <Setter.Value>
+                                        <RadialGradientBrush Center="0.075,0.015" GradientOrigin="-0.1,-0.1" RadiusY="0.9" RadiusX="1.05">
+                                            <GradientStop Color="#FFF4F4F4"/>
+                                            <GradientStop Color="#FFB7B7B7" Offset="1"/>
+                                        </RadialGradientBrush>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                            <RadialGradientBrush x:Key="Background" Center="0.075,0.015" GradientOrigin="-0.1,-0.1" RadiusY="0.9" RadiusX="1.05">
+                                <GradientStop Color="#FFF4F4F4"/>
+                                <GradientStop Color="#FFB7B7B7" Offset="1"/>
+                            </RadialGradientBrush>
+                        </ResourceDictionary>
+                        <ResourceDictionary>
+                            <Style x:Key="DataPointStyle" TargetType="{x:Type Control}">
+                                <Setter Property="Background">
+                                    <Setter.Value>
+                                        <RadialGradientBrush Center="0.075,0.015" GradientOrigin="-0.1,-0.1" RadiusY="0.9" RadiusX="1.05">
+                                            <GradientStop Color="#FFF4F4F4"/>
+                                            <GradientStop Color="#FFA3A3A3" Offset="1"/>
+                                        </RadialGradientBrush>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                            <RadialGradientBrush x:Key="Background" Center="0.075,0.015" GradientOrigin="-0.1,-0.1" RadiusY="0.9" RadiusX="1.05">
+                                <GradientStop Color="#FFF4F4F4"/>
+                                <GradientStop Color="#FFA3A3A3" Offset="1"/>
+                            </RadialGradientBrush>
+                        </ResourceDictionary>
+                    </dv:ResourceDictionaryCollection>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="TitleStyle">
+                <Setter.Value>
+                    <Style TargetType="{x:Type dv:Title}">
+                        <Setter Property="FontSize" Value="16"/>
+                        <Setter Property="HorizontalAlignment" Value="Center"/>
+                        <Setter Property="Margin" Value="0,10"/>
+                    </Style>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="LegendStyle">
+                <Setter.Value>
+                    <Style TargetType="{x:Type dv:Legend}">
+                        <Setter Property="Margin" Value="15,0"/>
+                        <Setter Property="VerticalAlignment" Value="Center"/>
+                        <Setter Property="BorderBrush" Value="#FFDBDBDB"/>
+                        <Setter Property="Background">
+                            <Setter.Value>
+                                <LinearGradientBrush EndPoint="0.442,0.005" StartPoint="0.558,0.995">
+                                    <GradientStop Color="#FFDBDBDB"/>
+                                    <GradientStop Color="White" Offset="1"/>
+                                </LinearGradientBrush>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="ChartAreaStyle">
+                <Setter.Value>
+                    <Style TargetType="{x:Type Panel}">
+                        <Setter Property="MinWidth" Value="100"/>
+                        <Setter Property="MinHeight" Value="75"/>
+                    </Style>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="PlotAreaStyle">
+                <Setter.Value>
+                    <Style TargetType="{x:Type Grid}">
+                        <Setter Property="Background">
+                            <Setter.Value>
+                                <LinearGradientBrush EndPoint="0.457,0.296" StartPoint="0.459,1.296">
+                                    <GradientStop Color="#FFCBCBCB"/>
+                                    <GradientStop Color="White" Offset="1"/>
+                                </LinearGradientBrush>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type dvc:Chart}">
+                        <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <Grid Margin="0,15" Grid.Row="1">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <dv:Legend x:Name="Legend" Grid.Column="1" Style="{TemplateBinding LegendStyle}" Title="{TemplateBinding LegendTitle}" Background="#7FFFFFFF" VerticalAlignment="Stretch" Margin="0"/>
+                                    <Primitives:EdgePanel x:Name="ChartArea" Style="{TemplateBinding ChartAreaStyle}">
+                                        <Grid Style="{TemplateBinding PlotAreaStyle}" Panel.ZIndex="-1" Background="#7FFFFFFF"/>
+                                        <Border BorderBrush="#FF919191" BorderThickness="1" Panel.ZIndex="10"/>
+                                    </Primitives:EdgePanel>
+                                </Grid>
+                            </Grid>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Controls:MetroWindow.Resources>
     <Grid x:Name="LayoutRoot" DataContext="{Binding Source={StaticResource Locator}}">
         <Grid.Background>
@@ -238,7 +576,7 @@
                                 <StackPanel >
                                     <ItemsControl x:Name="itemsControl" ItemsSource="{Binding Tasks}" ItemTemplate="{DynamicResource TaskEstimateTemplate}" VerticalAlignment="Top" Margin="0,5,5,0"/>
                                     <Button VerticalAlignment="Top" HorizontalAlignment="Left" Padding="0" BorderThickness="0" Style="{DynamicResource NoHoverButtonStyle}" Width="32" Height="32" Margin="-5,0,0,5" 
-                                            Command="{Binding AddTaskCommand}" >
+										Command="{Binding AddTaskCommand}" >
                                         <Button.Background>
                                             <ImageBrush ImageSource="Assets/Add.png" Stretch="None">
                                                 <ImageBrush.RelativeTransform>
@@ -279,8 +617,8 @@
 											FontSize="16" Foreground="#FF464646" 
 											ItemsSource="{Binding Distractions.Updates}" 
 											ItemTemplate="{DynamicResource TaskUpdateTemplate}" 
-                                                      VerticalAlignment="Top" Margin="0,37,0,0" 
-                                                      HorizontalAlignment="Left" IsHitTestVisible="False">
+											VerticalAlignment="Top" Margin="0,37,0,0" 
+											HorizontalAlignment="Left" IsHitTestVisible="False">
                                             <ItemsControl.ItemsPanel>
                                                 <ItemsPanelTemplate>
                                                     <StackPanel Orientation="Horizontal"/>
@@ -288,9 +626,9 @@
                                             </ItemsControl.ItemsPanel>
                                         </ItemsControl>
                                         <ItemsControl x:Name="itemsControl1_Copy4" 
-                                        	FontSize="16" Foreground="#FF464646" 
-                                        	ItemsSource="{Binding TotalWorked.Updates}" 
-                                        	ItemTemplate="{DynamicResource TaskUpdateTemplate}" VerticalAlignment="Top" Margin="0,10,0,0" HorizontalAlignment="Left" IsHitTestVisible="False">
+											FontSize="16" Foreground="#FF464646" 
+											ItemsSource="{Binding TotalWorked.Updates}" 
+											ItemTemplate="{DynamicResource TaskUpdateTemplate}" VerticalAlignment="Top" Margin="0,10,0,0" HorizontalAlignment="Left" IsHitTestVisible="False">
                                             <ItemsControl.ItemsPanel>
                                                 <ItemsPanelTemplate>
                                                     <StackPanel Orientation="Horizontal"/>
@@ -308,9 +646,9 @@
                                             </ItemsControl.ItemsPanel>
                                         </ItemsControl>
                                         <ItemsControl x:Name="itemsControl1_Copy3" 
-                                        	FontSize="16" Foreground="#FF464646" 
-                                        	ItemsSource="{Binding ProjectedTotalMinusDistractions.Updates}" 
-                                        	ItemTemplate="{DynamicResource TaskUpdateTemplate}" VerticalAlignment="Top" Margin="0,10,0,0" HorizontalAlignment="Left" IsHitTestVisible="False">
+											FontSize="16" Foreground="#FF464646" 
+											ItemsSource="{Binding ProjectedTotalMinusDistractions.Updates}" 
+											ItemTemplate="{DynamicResource TaskUpdateTemplate}" VerticalAlignment="Top" Margin="0,10,0,0" HorizontalAlignment="Left" IsHitTestVisible="False">
                                             <ItemsControl.ItemsPanel>
                                                 <ItemsPanelTemplate>
                                                     <StackPanel Orientation="Horizontal"/>
@@ -319,9 +657,9 @@
                                         </ItemsControl>
                                     </StackPanel>
                                     <Button 
-                                            HorizontalAlignment="Left" VerticalAlignment="Top" 
-                                            Style="{DynamicResource NoHoverButtonStyle}" Height="32"
-                                            Width="32" Margin="0,-5,0,0" Command="{Binding AddDayCommand}">
+										HorizontalAlignment="Left" VerticalAlignment="Top" 
+										Style="{DynamicResource NoHoverButtonStyle}" Height="32"
+										Width="32" Margin="0,-5,0,0" Command="{Binding AddDayCommand}">
                                         <Button.Background>
                                             <ImageBrush ImageSource="Assets/Add.png"/>
                                         </Button.Background>
@@ -334,30 +672,30 @@
                     </Grid>
 
                 </Controls:MetroTabItem>
-                <Controls:MetroTabItem Header="Analysis" DataContext="{Binding Main, Mode=OneWay}" Visibility="{Binding AnalysisVisibility}">
+                <Controls:MetroTabItem Header="Analysis" DataContext="{Binding Main, Mode=OneWay}">
                     <Grid>
-                        <dvc:Chart UseLayoutRounding="False">
+                        <dvc:Chart UseLayoutRounding="False" Style="{DynamicResource ChartStyle}">
                             <dvc:Chart.Axes>
                                 <dvc:CategoryAxis Orientation="X"/>
                                 <dvc:LinearAxis Orientation="Y"/>
                             </dvc:Chart.Axes>
+                            <dvc:AreaSeries Title="Other Tasks &amp; Distractions"
+								IndependentValueBinding="{Binding DateString}"
+								DependentValueBinding="{Binding Hours}"
+								ItemsSource="{Binding Distractions.Updates}"/>
+                            <dvc:AreaSeries Title="Hours Worked"
+								IndependentValueBinding="{Binding DateString}"
+								DependentValueBinding="{Binding Hours}" 
+								ItemsSource="{Binding TotalWorked.Updates}"/>
                             <dvc:LineSeries Title="Ideal Hours"
 								IndependentValueBinding="{Binding DateString}"
 								DependentValueBinding="{Binding Hours}" 
-                                ItemsSource="{Binding ProjectedTotal.Updates}" AnimationSequence="FirstToLast"/>
+								ItemsSource="{Binding ProjectedTotal.Updates}" Background="#FF37C329"/>
 
                             <dvc:LineSeries Title="Remaining Hours"
 								IndependentValueBinding="{Binding DateString}"
 								DependentValueBinding="{Binding Hours}" 
-                                ItemsSource="{Binding RemainingHours.Updates}" AnimationSequence="FirstToLast"/>
-                            <dvc:LineSeries Title="Other Tasks &amp; Distractions"
-								IndependentValueBinding="{Binding DateString}"
-								DependentValueBinding="{Binding Hours}"
-								ItemsSource="{Binding Distractions.Updates}"/>
-                            <dvc:LineSeries Title="Total Worked"
-                            	IndependentValueBinding="{Binding DateString}"
-                            	DependentValueBinding="{Binding Hours}" 
-                                ItemsSource="{Binding TotalWorked.Updates}" AnimationSequence="FirstToLast"/>
+								ItemsSource="{Binding RemainingHours.Updates}"/>
                             <!--<dvc:LineSeries Title="Ideal Remaining Hours"
                             	IndependentValueBinding="{Binding Date}"
                             	DependentValueBinding="{Binding Hours}" ItemsSource="{Binding ProjectedTotal.Updates}"/>

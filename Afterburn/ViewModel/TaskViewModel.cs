@@ -179,10 +179,10 @@ namespace Afterburn.ViewModel
                 {
                     return;
                 }
-
+                var previous = hours;
                 hours = value;
                 RaisePropertyChanged(HoursPropertyName);
-                Messenger.Default.Send<EstimateUpdatedMessage>(new EstimateUpdatedMessage(this));
+                Messenger.Default.Send<EstimateUpdatedMessage>(new EstimateUpdatedMessage(this, previous));
             }
         }
         #endregion

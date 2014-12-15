@@ -85,6 +85,18 @@ namespace Afterburn.ViewModel
             Messenger.Default.Register<EstimateUpdatedMessage>(this,
                 (m) =>
                 {
+                    if (!m.Task.Updates.Any())
+                        return;
+
+                    if(m.Task.Updates.First().Hours > 0)
+                    {
+                        foreach (var update in m.Task.Updates)
+                        {
+                            update.Hours += m.Task.Hours - m.Previous;
+                        }
+                        return;
+                    }
+
                     foreach (var update in m.Task.Updates)
                     {
                         update.Hours = m.Task.Hours;
@@ -106,13 +118,13 @@ namespace Afterburn.ViewModel
         {
             foreach (var task in Tasks)
             {
-                task.AllowEdits = false;
+                task.AllowEdits = true;
                 var lasthours = task.Updates.LastOrDefault() == null
                                 ? task.Hours
                                 : task.Updates.Last().Hours;
 
                 var lastDate = AddDays(task.Updates.LastOrDefault() == null
-                                       ? DateTime.Today
+                                       ? DateTime.Today.AddDays(-1)
                                        : task.Updates.Last().Date, 1, skipWeekends);
 
                 task.Updates.Add(new TaskUpdateViewModel
