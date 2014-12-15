@@ -29,6 +29,8 @@ namespace Afterburn.ViewModel
         public RelayCommand AddTaskCommand { get; set; }
         public RelayCommand AddDayCommand { get; set; }
 
+        public RelayCommand NewCommand { get; set; }
+
         public MainViewModel()
         {
             Tasks = new ObservableCollection<TaskViewModel>();
@@ -45,6 +47,11 @@ namespace Afterburn.ViewModel
 
             AddDummyTask();
             CalculateTotals();
+
+            NewCommand = new RelayCommand(()=>
+            {
+                Reset();
+            });
 
             AddTaskCommand = new RelayCommand(() =>
                 {
@@ -126,6 +133,12 @@ namespace Afterburn.ViewModel
 
         }
 
+        private void Reset()
+        {
+            Tasks.Clear();
+            CalculateTotals();
+        }
+
         private void AddDay()
         {
             foreach (var task in Tasks)
@@ -147,7 +160,6 @@ namespace Afterburn.ViewModel
             }
 
             CalculateTotals();
-            ShowHideAnalysis();
         }
 
         void ShowHideAnalysis()
@@ -157,6 +169,7 @@ namespace Afterburn.ViewModel
                     ? Visibility.Visible
                     : Visibility.Collapsed)
                 : Visibility.Collapsed;
+            SelectedTabIndex = 0;
         }
 
         private void CalculateTotals()
@@ -269,7 +282,7 @@ namespace Afterburn.ViewModel
                 AnalysisRemainingHours.Updates.AddRange(RemainingHours.Updates);
                 AnalysisTotalWorked.Updates.AddRange(TotalWorked.Updates);
             }
-
+            ShowHideAnalysis();
         }
 
         public static DateTime AddDays(DateTime date, int days, bool skipWeekends)
@@ -498,6 +511,36 @@ namespace Afterburn.ViewModel
 
                 analysisVisibility = value;
                 RaisePropertyChanged(AnalysisVisibilityPropertyName);
+            }
+        }
+
+        /// <summary>
+        /// The <see cref="SelectedTabIndex" /> property's name.
+        /// </summary>
+        public const string SelectedTabIndexPropertyName = "SelectedTabIndex";
+
+        private int selectedTabIndex = 0;
+
+        /// <summary>
+        /// Sets and gets the SelectedTabIndex property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        public int SelectedTabIndex
+        {
+            get
+            {
+                return selectedTabIndex;
+            }
+
+            set
+            {
+                if (selectedTabIndex == value)
+                {
+                    return;
+                }
+
+                selectedTabIndex = value;
+                RaisePropertyChanged(SelectedTabIndexPropertyName);
             }
         }
 
