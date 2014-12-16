@@ -528,7 +528,7 @@
             <Button Style="{DynamicResource NoHoverButtonStyle}" Grid.Column="5" Width="41" Opacity="0.75" Margin="5" Command="{Binding Main.SaveCommand}">
                 <Image Source="Assets/Save.png"/>
             </Button>
-            <Button Grid.Column="4"  Style="{DynamicResource NoHoverButtonStyle}" Opacity="0.75" Margin="5">
+            <Button Grid.Column="4"  Style="{DynamicResource NoHoverButtonStyle}" Opacity="0.75" Margin="5" Command="{Binding Main.LoadCommand}">
                 <Image Source="Assets/Open.png" Margin="0"/>
             </Button>
             <Button Grid.Column="3"  Style="{DynamicResource NoHoverButtonStyle}" Opacity="0.75" Margin="5" Command="{Binding Main.NewCommand}">

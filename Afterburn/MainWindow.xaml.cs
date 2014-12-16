@@ -1,5 +1,6 @@
 ﻿using Afterburn.Messages;
 using Afterburn.ViewModel;
+using GalaSoft.MvvmLight.Ioc;
 using GalaSoft.MvvmLight.Messaging;
 using MahApps.Metro.Controls;
 using Microsoft.Win32;
@@ -24,7 +25,7 @@ namespace Afterburn
                 var dialog = new SaveFileDialog();
                 dialog.DefaultExt = ".afterburn";
                 var result = dialog.ShowDialog();
-                if(result.HasValue && result.Value)
+                if (result.HasValue && result.Value)
                 {
                     var filename = dialog.FileName;
                     var data = JsonConvert.SerializeObject(this.DataContext);
@@ -32,6 +33,22 @@ namespace Afterburn
                     System.IO.File.WriteAllText(filename, data);
                 };
             });
+            Messenger.Default.Register<LoadMessage>(this, (m) =>
+                {
+                    var dialog = new OpenFileDialog();
+                    dialog.DefaultExt = ".afterburn";
+                    var result = dialog.ShowDialog();
+                    if (result.HasValue && result.Value)
+                    {
+                        var filename = dialog.FileName;
+                        var data = System.IO.File.ReadAllText(filename);
+
+                        var mvm = JsonConvert.DeserializeObject<MainViewModel>(data);
+
+                        var main = SimpleIoc.Default.GetInstance<ViewModelLocator>().Main;
+                        main.LoadState(mvm);
+                    };
+                });
         }
     }
 }

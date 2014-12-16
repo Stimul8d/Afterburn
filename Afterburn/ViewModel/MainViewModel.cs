@@ -31,6 +31,7 @@ namespace Afterburn.ViewModel
 
         public RelayCommand NewCommand { get; set; }
         public RelayCommand SaveCommand { get; set; }
+        public RelayCommand LoadCommand { get; set; }
 
         public MainViewModel()
         {
@@ -58,6 +59,12 @@ namespace Afterburn.ViewModel
             {
                 Messenger.Default.Send<SaveMessage>(new SaveMessage());
             });
+
+            LoadCommand = new RelayCommand(() =>
+            {
+                Messenger.Default.Send<LoadMessage>(new LoadMessage());
+            });
+
 
             AddTaskCommand = new RelayCommand(() =>
                 {
@@ -551,6 +558,11 @@ namespace Afterburn.ViewModel
         }
 
         #endregion
+
+        internal void LoadState(MainViewModel mvm)
+        {
+            throw new NotImplementedException();
+        }
 
         class DayUpdate
         {

@@ -92,6 +92,7 @@
     <Compile Include="Messages\DeleteDateMessage.cs" />
     <Compile Include="Messages\DeleteTaskMessage.cs" />
     <Compile Include="Messages\EstimateUpdatedMessage.cs" />
+    <Compile Include="Messages\LoadMessage.cs" />
     <Compile Include="Messages\SaveMessage.cs" />
     <Compile Include="Messages\UpdateModifiedMessage.cs" />
     <Compile Include="ViewModel\DayUpdateViewModel.cs" />
