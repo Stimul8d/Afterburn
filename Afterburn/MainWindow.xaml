@@ -487,6 +487,9 @@
             </Setter>
         </Style>
     </Controls:MetroWindow.Resources>
+    <Controls:MetroWindow.DataContext>
+        <Binding Mode="OneWay" Path="Main" Source="{StaticResource Locator}"/>
+    </Controls:MetroWindow.DataContext>
     <Grid x:Name="LayoutRoot" DataContext="{Binding Source={StaticResource Locator}}">
         <Grid.Background>
             <ImageBrush ImageSource="Assets/Background.png" 

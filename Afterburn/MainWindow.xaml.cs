@@ -3,6 +3,7 @@ using Afterburn.ViewModel;
 using GalaSoft.MvvmLight.Messaging;
 using MahApps.Metro.Controls;
 using Microsoft.Win32;
+using Newtonsoft.Json;
 
 namespace Afterburn
 {
@@ -22,7 +23,14 @@ namespace Afterburn
             {
                 var dialog = new SaveFileDialog();
                 dialog.DefaultExt = ".afterburn";
-                dialog.ShowDialog();
+                var result = dialog.ShowDialog();
+                if(result.HasValue && result.Value)
+                {
+                    var filename = dialog.FileName;
+                    var data = JsonConvert.SerializeObject(this.DataContext);
+
+                    System.IO.File.WriteAllText(filename, data);
+                };
             });
         }
     }
