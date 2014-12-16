@@ -522,7 +522,7 @@
                 </i:Interaction.Triggers>
                 <Image Source="Assets/Settings.png"/>
             </Button>
-            <Button Style="{DynamicResource NoHoverButtonStyle}" Grid.Column="5" Width="41" Opacity="0.75" Margin="5">
+            <Button Style="{DynamicResource NoHoverButtonStyle}" Grid.Column="5" Width="41" Opacity="0.75" Margin="5" Command="{Binding Main.SaveCommand}">
                 <Image Source="Assets/Save.png"/>
             </Button>
             <Button Grid.Column="4"  Style="{DynamicResource NoHoverButtonStyle}" Opacity="0.75" Margin="5">

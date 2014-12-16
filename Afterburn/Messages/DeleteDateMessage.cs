@@ -3,9 +3,9 @@ using System.Linq;
 
 namespace Afterburn.Messages
 {
-    public class DeleteDateCommand
+    public class DeleteDateMessage
     {
-        public DeleteDateCommand(DateTime date)
+        public DeleteDateMessage(DateTime date)
         {
             this.Date = date;
         }

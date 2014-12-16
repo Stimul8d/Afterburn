@@ -1,5 +1,8 @@
-﻿using Afterburn.ViewModel;
+﻿using Afterburn.Messages;
+using Afterburn.ViewModel;
+using GalaSoft.MvvmLight.Messaging;
 using MahApps.Metro.Controls;
+using Microsoft.Win32;
 
 namespace Afterburn
 {
@@ -15,6 +18,12 @@ namespace Afterburn
         {
             InitializeComponent();
             Closing += (s, e) => ViewModelLocator.Cleanup();
+            Messenger.Default.Register<SaveMessage>(this, (m) =>
+            {
+                var dialog = new SaveFileDialog();
+                dialog.DefaultExt = ".afterburn";
+                dialog.ShowDialog();
+            });
         }
     }
 }

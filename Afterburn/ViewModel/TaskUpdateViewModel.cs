@@ -18,8 +18,8 @@ namespace Afterburn.ViewModel
             this.notifyOnUpdates = notifyOnUpdates;
             DeleteDateCommand = new RelayCommand(() =>
             {
-                Messenger.Default.Send<DeleteDateCommand>(
-                    new DeleteDateCommand(this.Date));
+                Messenger.Default.Send<DeleteDateMessage>(
+                    new DeleteDateMessage(this.Date));
             });
         }
 

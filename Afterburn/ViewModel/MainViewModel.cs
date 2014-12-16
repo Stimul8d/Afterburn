@@ -30,6 +30,7 @@ namespace Afterburn.ViewModel
         public RelayCommand AddDayCommand { get; set; }
 
         public RelayCommand NewCommand { get; set; }
+        public RelayCommand SaveCommand { get; set; }
 
         public MainViewModel()
         {
@@ -51,6 +52,11 @@ namespace Afterburn.ViewModel
             NewCommand = new RelayCommand(()=>
             {
                 Reset();
+            });
+
+            SaveCommand = new RelayCommand(() =>
+            {
+                Messenger.Default.Send<SaveMessage>(new SaveMessage());
             });
 
             AddTaskCommand = new RelayCommand(() =>
@@ -84,7 +90,7 @@ namespace Afterburn.ViewModel
                     CalculateTotals();
                 });
 
-            Messenger.Default.Register<DeleteDateCommand>(this,
+            Messenger.Default.Register<DeleteDateMessage>(this,
                 (m) =>
                 {
                     foreach (var task in Tasks)
