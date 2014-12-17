@@ -1,21 +1,24 @@
-﻿using Afterburn.Messages;
+﻿using System;
+using System.Collections.ObjectModel;
+using System.Linq;
+using Afterburn.Messages;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
-using System;
-using System.Collections.ObjectModel;
-using System.Linq;
 
 namespace Afterburn.ViewModel
 {
     public class TaskViewModel : ViewModelBase
     {
         public Guid Id { get; private set; }
+
         public ObservableCollection<TaskUpdateViewModel> Updates { get; set; }
+
         public RelayCommand DeleteTaskCommand { get; set; }
 
-        public TaskViewModel()
-            : this("REFERENCE", "FEATURE", "NAME", 0) { }
+        public TaskViewModel() : this("REFERENCE", "FEATURE", "NAME", 0)
+        {
+        }
 
         public TaskViewModel(string reference, string feature,
             string name, double hours)
@@ -26,9 +29,9 @@ namespace Afterburn.ViewModel
             this.name = name;
             this.hours = hours;
 
-            Updates = new ObservableCollection<TaskUpdateViewModel>();
+            this.Updates = new ObservableCollection<TaskUpdateViewModel>();
 
-            DeleteTaskCommand = new RelayCommand(() =>
+            this.DeleteTaskCommand = new RelayCommand(() =>
             {
                 Messenger.Default.Send<DeleteTaskMessage>(
                     new DeleteTaskMessage(this));
@@ -52,18 +55,18 @@ namespace Afterburn.ViewModel
         {
             get
             {
-                return allowEdits;
+                return this.allowEdits;
             }
 
             set
             {
-                if (allowEdits == value)
+                if (this.allowEdits == value)
                 {
                     return;
                 }
 
-                allowEdits = value;
-                RaisePropertyChanged(AllowEditsPropertyName);
+                this.allowEdits = value;
+                this.RaisePropertyChanged(AllowEditsPropertyName);
             }
         }
 
@@ -82,18 +85,18 @@ namespace Afterburn.ViewModel
         {
             get
             {
-                return reference;
+                return this.reference;
             }
 
             set
             {
-                if (reference == value)
+                if (this.reference == value)
                 {
                     return;
                 }
 
-                reference = value;
-                RaisePropertyChanged(ReferencePropertyName);
+                this.reference = value;
+                this.RaisePropertyChanged(ReferencePropertyName);
             }
         }
 
@@ -112,18 +115,18 @@ namespace Afterburn.ViewModel
         {
             get
             {
-                return feature;
+                return this.feature;
             }
 
             set
             {
-                if (feature == value)
+                if (this.feature == value)
                 {
                     return;
                 }
 
-                feature = value;
-                RaisePropertyChanged(FeaturePropertyName);
+                this.feature = value;
+                this.RaisePropertyChanged(FeaturePropertyName);
             }
         }
 
@@ -142,18 +145,18 @@ namespace Afterburn.ViewModel
         {
             get
             {
-                return name;
+                return this.name;
             }
 
             set
             {
-                if (name == value)
+                if (this.name == value)
                 {
                     return;
                 }
 
-                name = value;
-                RaisePropertyChanged(NamePropertyName);
+                this.name = value;
+                this.RaisePropertyChanged(NamePropertyName);
             }
         }
 
@@ -172,18 +175,18 @@ namespace Afterburn.ViewModel
         {
             get
             {
-                return hours;
+                return this.hours;
             }
 
             set
             {
-                if (hours == value)
+                if (this.hours == value)
                 {
                     return;
                 }
-                var previous = hours;
-                hours = value;
-                RaisePropertyChanged(HoursPropertyName);
+                var previous = this.hours;
+                this.hours = value;
+                this.RaisePropertyChanged(HoursPropertyName);
                 Messenger.Default.Send<EstimateUpdatedMessage>(new EstimateUpdatedMessage(this, previous));
             }
         }

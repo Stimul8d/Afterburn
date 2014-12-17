@@ -1,36 +1,45 @@
-﻿using Afterburn.Messages;
+﻿using System;
+using System.Linq;
+using Afterburn.Messages;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
-using System;
-using System.Linq;
 
 namespace Afterburn.ViewModel
 {
     public class TaskUpdateViewModel : ViewModelBase
     {
-        public RelayCommand DeleteDateCommand { get; set; }
+        /// <summary>
+        /// The <see cref="Date" /> property's name.
+        /// </summary>
+        public const string DatePropertyName = "Date";
 
-        public TaskUpdateViewModel() : this(true) { }
+        /// <summary>
+        /// The <see cref="Hours" /> property's name.
+        /// </summary>
+        public const string HoursPropertyName = "Hours";
+
+        private readonly bool notifyOnUpdates;
+
+        private DateTime date = DateTime.Now;
+
+        private double hours = 0;
+
+        public TaskUpdateViewModel() : this(true)
+        {
+        }
 
         public TaskUpdateViewModel(bool notifyOnUpdates)
         {
             this.notifyOnUpdates = notifyOnUpdates;
-            DeleteDateCommand = new RelayCommand(() =>
+            this.DeleteDateCommand = new RelayCommand(() =>
             {
                 Messenger.Default.Send<DeleteDateMessage>(
                     new DeleteDateMessage(this.Date));
             });
         }
 
-        private readonly bool notifyOnUpdates;
-
-        /// <summary>
-        /// The <see cref="Date" /> property's name.
-        /// </summary>
-        public const string DatePropertyName = "Date";
-
-        private DateTime date = DateTime.Now;
+        public RelayCommand DeleteDateCommand { get; set; }
 
         /// <summary>
         /// Sets and gets the Date property.
@@ -40,33 +49,29 @@ namespace Afterburn.ViewModel
         {
             get
             {
-                return date;
+                return this.date;
             }
 
             set
             {
-                if (date == value)
+                if (this.date == value)
                 {
                     return;
                 }
 
-                date = value;
-                RaisePropertyChanged(DatePropertyName);
-                RaisePropertyChanged("DateString");
+                this.date = value;
+                this.RaisePropertyChanged(DatePropertyName);
+                this.RaisePropertyChanged("DateString");
             }
         }
 
-        public string DateString { get
+        public string DateString
         {
-            return Date.ToString("ddd dd/MM");
-        } }
-
-        /// <summary>
-        /// The <see cref="Hours" /> property's name.
-        /// </summary>
-        public const string HoursPropertyName = "Hours";
-
-        private double hours = 0;
+            get
+            {
+                return this.Date.ToString("ddd dd/MM");
+            }
+        }
 
         /// <summary>
         /// Sets and gets the Hours property.
@@ -76,23 +81,27 @@ namespace Afterburn.ViewModel
         {
             get
             {
-                return hours;
+                return this.hours;
             }
 
             set
             {
-                if (hours == value)
+                if (this.hours == value)
                 {
                     return;
                 }
 
-                hours = value;
-                if (hours < 0)
-                    hours = 0;
-                RaisePropertyChanged(HoursPropertyName);
-                if (notifyOnUpdates)
+                this.hours = value;
+                if (this.hours < 0)
+                {
+                    this.hours = 0;
+                }
+                this.RaisePropertyChanged(HoursPropertyName);
+                if (this.notifyOnUpdates)
+                {
                     Messenger.Default.Send<UpdateModifiedMessage>(
-                    new UpdateModifiedMessage(this));
+                        new UpdateModifiedMessage(this));
+                }
             }
         }
     }

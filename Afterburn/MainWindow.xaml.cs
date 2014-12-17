@@ -19,8 +19,8 @@ namespace Afterburn
         /// </summary>
         public MainWindow()
         {
-            InitializeComponent();
-            Closing += (s, e) => ViewModelLocator.Cleanup();
+            this.InitializeComponent();
+
             Messenger.Default.Register<SaveMessage>(this, (m) =>
             {
                 var dialog = new SaveFileDialog();
@@ -35,26 +35,26 @@ namespace Afterburn
                     var json = JsonConvert.SerializeObject(data);
 
                     System.IO.File.WriteAllText(filename, json);
-                };
+                }
             });
             Messenger.Default.Register<LoadMessage>(this, (m) =>
+            {
+                var dialog = new OpenFileDialog();
+                dialog.DefaultExt = ".afterburn";
+                dialog.Filter = "Afterburn files (.afterburn)|*.afterburn";
+
+                var result = dialog.ShowDialog();
+                if (result.HasValue && result.Value)
                 {
-                    var dialog = new OpenFileDialog();
-                    dialog.DefaultExt = ".afterburn";
-                    dialog.Filter = "Afterburn files (.afterburn)|*.afterburn";
+                    var filename = dialog.FileName;
+                    var data = System.IO.File.ReadAllText(filename);
 
-                    var result = dialog.ShowDialog();
-                    if (result.HasValue && result.Value)
-                    {
-                        var filename = dialog.FileName;
-                        var data = System.IO.File.ReadAllText(filename);
+                    var file = JsonConvert.DeserializeObject<AfterburnFile>(data);
 
-                        var file = JsonConvert.DeserializeObject<AfterburnFile>(data);
-
-                        var main = SimpleIoc.Default.GetInstance<ViewModelLocator>().Main;
-                        main.LoadState(file);
-                    };
-                });
+                    var main = SimpleIoc.Default.GetInstance<ViewModelLocator>().Main;
+                    main.LoadState(file);
+                }
+            });
         }
     }
 }

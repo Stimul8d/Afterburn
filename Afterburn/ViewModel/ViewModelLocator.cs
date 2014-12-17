@@ -1,12 +1,12 @@
 ﻿/*
-  In App.xaml:
-  <Application.Resources>
-      <vm:ViewModelLocatorTemplate xmlns:vm="clr-namespace:Afterburn.ViewModel"
-                                   x:Key="Locator" />
-  </Application.Resources>
+In App.xaml:
+<Application.Resources>
+<vm:ViewModelLocatorTemplate xmlns:vm="clr-namespace:Afterburn.ViewModel"
+x:Key="Locator" />
+</Application.Resources>
   
-  In the View:
-  DataContext="{Binding Source={StaticResource Locator}, Path=ViewModelName}"
+In the View:
+DataContext="{Binding Source={StaticResource Locator}, Path=ViewModelName}"
 */
 
 using GalaSoft.MvvmLight;
@@ -24,13 +24,9 @@ namespace Afterburn.ViewModel
     /// </summary>
     public class ViewModelLocator : ViewModelBase
     {
-        public ViewModelLocator()
-        {
-            ServiceLocator.SetLocatorProvider(() => SimpleIoc.Default);
-            SimpleIoc.Default.Register<MainViewModel>();
-            SimpleIoc.Default.Register<ViewModelLocator>(() => this);
-        }
-
+        /// <summary>
+        /// The <see cref="Main" /> property's name.
+        /// </summary>
         /// <summary>
         /// Gets the Main property.
         /// </summary>
@@ -38,12 +34,16 @@ namespace Afterburn.ViewModel
             "CA1822:MarkMembersAsStatic",
             Justification = "This non-static member is needed for data binding purposes.")]
 
-        /// <summary>
-        /// The <see cref="Main" /> property's name.
-        /// </summary>
         public const string MainPropertyName = "Main";
 
         private MainViewModel mainViewModel = null;
+
+        public ViewModelLocator()
+        {
+            ServiceLocator.SetLocatorProvider(() => SimpleIoc.Default);
+            SimpleIoc.Default.Register<MainViewModel>();
+            SimpleIoc.Default.Register<ViewModelLocator>(() => this);
+        }
 
         /// <summary>
         /// Sets and gets the Main property.
@@ -53,29 +53,24 @@ namespace Afterburn.ViewModel
         {
             get
             {
-                if (mainViewModel == null)
-                    mainViewModel =
+                if (this.mainViewModel == null)
+                {
+                    this.mainViewModel =
                         ServiceLocator.Current.GetInstance<MainViewModel>();
-                return mainViewModel;
+                }
+                return this.mainViewModel;
             }
 
             set
             {
-                if (mainViewModel == value)
+                if (this.mainViewModel == value)
                 {
                     return;
                 }
 
-                mainViewModel = value;
-                RaisePropertyChanged(MainPropertyName);
+                this.mainViewModel = value;
+                this.RaisePropertyChanged(MainPropertyName);
             }
-        }
-
-        /// <summary>
-        /// Cleans up all the resources.
-        /// </summary>
-        public static void Cleanup()
-        {
         }
     }
 }

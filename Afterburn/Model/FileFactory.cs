@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using Afterburn.ViewModel;
 
@@ -33,20 +32,6 @@ namespace Afterburn.Model
             }
 
             return file;
-        }
-
-        private List<DayUpdate> GetDayUpdates(MainViewModel mvm)
-        {
-            var dateTotals = mvm.Tasks.SelectMany(t => t.Updates)
-                                  .GroupBy(t => t.Date.Date)
-                                  .Select(g => new DayUpdate
-                                  {
-                                      Date = g.Key,
-                                      Hours = g.Sum(x => x.Hours)
-                                  })
-                                  .OrderBy(x => x.Date)
-                                  .ToList();
-            return dateTotals;
         }
     }
 }

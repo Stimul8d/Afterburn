@@ -6,10 +6,11 @@ namespace Afterburn.Model
 {
     public class AfterburnFile
     {
-        public IList<Task> Tasks { get; set; }
         public AfterburnFile()
         {
-            Tasks = new List<Task>();
+            this.Tasks = new List<Task>();
         }
+
+        public IList<Task> Tasks { get; set; }
     }
 }

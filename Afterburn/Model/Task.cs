@@ -1,9 +1,15 @@
 using System;
 using System.Collections.Generic;
+
 namespace Afterburn.Model
 {
     public class Task
     {
+        public Task()
+        {
+            this.Updates = new List<DayUpdate>();
+        }
+
         public Guid Id { get; set; }
 
         public string Reference { get; set; }
@@ -15,10 +21,5 @@ namespace Afterburn.Model
         public double Hours { get; set; }
 
         public List<DayUpdate> Updates { get; set; }
-
-        public Task()
-        {
-            Updates = new List<DayUpdate>();
-        }
     }
 }

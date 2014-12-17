@@ -1,6 +1,6 @@
-﻿using Afterburn.ViewModel;
-using System;
+﻿using System;
 using System.Linq;
+using Afterburn.ViewModel;
 
 namespace Afterburn.Messages
 {
