@@ -1,4 +1,5 @@
 ﻿using Afterburn.Messages;
+using Afterburn.Model;
 using Afterburn.ViewModel;
 using GalaSoft.MvvmLight.Ioc;
 using GalaSoft.MvvmLight.Messaging;
@@ -28,9 +29,10 @@ namespace Afterburn
                 if (result.HasValue && result.Value)
                 {
                     var filename = dialog.FileName;
-                    var data = JsonConvert.SerializeObject(this.DataContext);
+                    var data = new FileFactory().Create((MainViewModel)this.DataContext);
+                    var json = JsonConvert.SerializeObject(data);
 
-                    System.IO.File.WriteAllText(filename, data);
+                    System.IO.File.WriteAllText(filename, json);
                 };
             });
             Messenger.Default.Register<LoadMessage>(this, (m) =>
@@ -43,10 +45,10 @@ namespace Afterburn
                         var filename = dialog.FileName;
                         var data = System.IO.File.ReadAllText(filename);
 
-                        var mvm = JsonConvert.DeserializeObject<MainViewModel>(data);
+                        var file = JsonConvert.DeserializeObject<AfterburnFile>(data);
 
                         var main = SimpleIoc.Default.GetInstance<ViewModelLocator>().Main;
-                        main.LoadState(mvm);
+                        main.LoadState(file);
                     };
                 });
         }

@@ -10,6 +10,7 @@ namespace Afterburn.ViewModel
 {
     public class TaskViewModel : ViewModelBase
     {
+        public Guid Id { get; private set; }
         public ObservableCollection<TaskUpdateViewModel> Updates { get; set; }
         public RelayCommand DeleteTaskCommand { get; set; }
 
@@ -19,6 +20,7 @@ namespace Afterburn.ViewModel
         public TaskViewModel(string reference, string feature,
             string name, double hours)
         {
+            this.Id = Guid.NewGuid();
             this.reference = reference;
             this.feature = feature;
             this.name = name;

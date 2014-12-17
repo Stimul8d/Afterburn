@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Data;
 using System.Linq;
 using System.Windows;
 using Afterburn.Extensions;
 using Afterburn.Messages;
+using Afterburn.Model;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
@@ -50,7 +52,7 @@ namespace Afterburn.ViewModel
             AddDummyTask();
             CalculateTotals();
 
-            NewCommand = new RelayCommand(()=>
+            NewCommand = new RelayCommand(() =>
             {
                 Reset();
             });
@@ -150,6 +152,7 @@ namespace Afterburn.ViewModel
         {
             Tasks.Clear();
             CalculateTotals();
+            Tasks.Clear();
         }
 
         private void AddDay()
@@ -304,7 +307,7 @@ namespace Afterburn.ViewModel
             while (days != 0)
             {
                 var sign = Math.Sign(days);
-                
+
                 tmpDate = tmpDate.AddDays(sign);
                 if ((tmpDate.DayOfWeek < DayOfWeek.Saturday &&
                     tmpDate.DayOfWeek > DayOfWeek.Sunday))
@@ -559,15 +562,30 @@ namespace Afterburn.ViewModel
 
         #endregion
 
-        internal void LoadState(MainViewModel mvm)
+        internal void LoadState(AfterburnFile file)
         {
-            throw new NotImplementedException();
-        }
+            Reset();
+            foreach (var task in file.Tasks)
+            {
+                var vm = new TaskViewModel
+                {
+                    Reference = task.Reference,
+                    Feature = task.Feature,
+                    Name = task.Name,
+                    Hours = task.Hours
+                };
 
-        class DayUpdate
-        {
-            public DateTime Date { get; set; }
-            public double Hours { get; set; }
+                Tasks.Add(vm);
+
+                foreach (var update in task.Updates)
+                {
+                    vm.Updates.Add(new TaskUpdateViewModel
+                    {
+                        Date = update.Date,
+                        Hours = update.Hours
+                    });
+                }
+            }
         }
     }
 }
