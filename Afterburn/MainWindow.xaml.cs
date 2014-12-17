@@ -24,7 +24,9 @@ namespace Afterburn
             Messenger.Default.Register<SaveMessage>(this, (m) =>
             {
                 var dialog = new SaveFileDialog();
+                dialog.FileName = "New Project";
                 dialog.DefaultExt = ".afterburn";
+                dialog.Filter = "Afterburn files (.afterburn)|*.afterburn";
                 var result = dialog.ShowDialog();
                 if (result.HasValue && result.Value)
                 {
@@ -39,6 +41,8 @@ namespace Afterburn
                 {
                     var dialog = new OpenFileDialog();
                     dialog.DefaultExt = ".afterburn";
+                    dialog.Filter = "Afterburn files (.afterburn)|*.afterburn";
+
                     var result = dialog.ShowDialog();
                     if (result.HasValue && result.Value)
                     {
