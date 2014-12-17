@@ -13,20 +13,6 @@
     MinHeight="600"
     Title="Afterburn">
     <Controls:MetroWindow.Resources>
-
-        <Style x:Key="HiddenPointStyle" TargetType="{x:Type dvc:LineDataPoint}">
-            <Setter Property="Template" Value="{x:Null}"/>
-        </Style>
-
-        <ControlTemplate TargetType="dvc:LineSeries" x:Key="lineTemplate">
-            <Canvas x:Name="PlotArea">
-                <Polyline x:Name="polyline" 
-                          Points="{TemplateBinding Points}" 
-                          Stroke="{TemplateBinding Background}" 
-                          Style="{TemplateBinding PolylineStyle}" />
-            </Canvas>
-        </ControlTemplate>
-
         <Style x:Key="NoHoverButtonStyle" TargetType="{x:Type Button}">
             <Setter Property="OverridesDefaultStyle" Value="True"/>
             <Setter Property="Template">
@@ -94,7 +80,6 @@
                 </Trigger>
             </DataTemplate.Triggers>
         </DataTemplate>
-
         <DataTemplate x:Key="TaskUpdatesTemplate">
             <StackPanel Orientation="Vertical" Width="Auto">
                 <ItemsControl 
