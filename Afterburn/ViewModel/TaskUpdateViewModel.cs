@@ -25,7 +25,8 @@ namespace Afterburn.ViewModel
 
         private double hours = 0;
 
-        public TaskUpdateViewModel() : this(true)
+        public TaskUpdateViewModel()
+            : this(true)
         {
         }
 
@@ -81,20 +82,24 @@ namespace Afterburn.ViewModel
         {
             get
             {
-                return this.hours;
+                return hours;
             }
 
             set
             {
-                if (this.hours == value)
+                if (hours == value)
                 {
                     return;
                 }
 
-                this.hours = value;
-                if (this.hours < 0)
+                hours = value;
+                if (hours < 0)
                 {
-                    this.hours = 0;
+                    hours = 0;
+                }
+                if (hours > 40)
+                {
+                    hours = 40;
                 }
                 this.RaisePropertyChanged(HoursPropertyName);
                 if (this.notifyOnUpdates)
