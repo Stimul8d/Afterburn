@@ -100,6 +100,7 @@
     <Compile Include="Model\FileFactory.cs" />
     <Compile Include="Model\Task.cs" />
     <Compile Include="Model\Update.cs" />
+    <Compile Include="ViewModel\AnalysisViewModel.cs" />
     <Compile Include="ViewModel\DayUpdateViewModel.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\TaskUpdateViewModel.cs" />
