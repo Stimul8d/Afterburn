@@ -14,6 +14,9 @@ namespace Afterburn.ViewModel
         public TaskViewModel AnalysisProjectedTotal { get; set; }
         public TaskViewModel AnalysisTotalWorked { get; set; }
         public TaskViewModel AnalysisProjectedAverage { get; set; }
+        public TaskViewModel AnalysisProjectedMinimum { get; set; }
+        public TaskViewModel AnalysisProjectedMaximum { get; set; }
+
 
         public TaskViewModel Distractions { get; set; }
         public TaskViewModel RemainingHours { get; set; }
@@ -32,6 +35,9 @@ namespace Afterburn.ViewModel
             this.AnalysisProjectedTotal = new TaskViewModel();
             this.AnalysisTotalWorked = new TaskViewModel();
             this.AnalysisProjectedAverage = new TaskViewModel();
+            this.AnalysisProjectedMaximum = new TaskViewModel();
+            this.AnalysisProjectedMinimum = new TaskViewModel();
+
         }
 
         public void CalculateTotals(IEnumerable<TaskViewModel> tasks,
@@ -52,7 +58,9 @@ namespace Afterburn.ViewModel
 
             CreateIdealBurndown(totalEstimatedHours, tasks, hoursPerDay, skipWeekends);
 
-            CreateDeviatedBurndown(totalEstimatedHours, tasks, hoursPerDay, skipWeekends);
+            CreateAverageBurndown(totalEstimatedHours, tasks, hoursPerDay, skipWeekends);
+
+            //CreateDeviatedBurndowns(totalEstimatedHours, tasks, hoursPerDay, skipWeekends);
 
             GenerateChartFriendlyValues(tasks, skipWeekends);
         }
@@ -125,7 +133,7 @@ namespace Afterburn.ViewModel
             }
         }
 
-        private void CreateDeviatedBurndown(double totalEstimatedHours, IEnumerable<TaskViewModel> tasks, double hoursPerDay, bool skipWeekends)
+        private void CreateAverageBurndown(double totalEstimatedHours, IEnumerable<TaskViewModel> tasks, double hoursPerDay, bool skipWeekends)
         {
             if (!TotalWorked.Updates.Any())
                 return;
@@ -145,6 +153,16 @@ namespace Afterburn.ViewModel
                 currrentDay = tasks.First().Updates.First().Date;
             }
 
+            var dayOne = this.GetDayUpdates(tasks).First().Date;
+            var dayZero = AddDays(dayOne, -1, skipWeekends);
+
+            AnalysisProjectedAverage.Updates.Add(
+                new TaskUpdateViewModel(false)
+                {
+                    Date = dayZero,
+                    Hours = totalEstimatedHours
+                });
+
             while (remainingTotal > -hoursPerDay)
             {
                 remainingTotal -= avg;
@@ -156,13 +174,40 @@ namespace Afterburn.ViewModel
                 this.AnalysisProjectedAverage.Updates.Add(update);
                 currrentDay = AddDays(currrentDay, 1, skipWeekends);
             }
+        }
+
+        private void CreateDeviatedMaximum(double totalEstimatedHours, IEnumerable<TaskViewModel> tasks, double hoursPerDay, bool skipWeekends)
+        {
+            if (!TotalWorked.Updates.Any())
+                return;
 
             //find the stddev
+            var stdDev = TotalWorked.Updates.Select(u=>u.Hours).StdDev();
+            if (stdDev <= 0)
+                return;
 
+            //draw max deviated burndown
+            this.AnalysisProjectedMaximum.Updates.Clear();
 
-            //draw avg - 1 stddev
+            var remainingTotal = totalEstimatedHours;
+            var currrentDay = DateTime.Today;
 
-            //draw avg + 1 stddev
+            if (tasks.First().Updates.Any())
+            {
+                currrentDay = tasks.First().Updates.First().Date;
+            }
+
+            while (remainingTotal > -hoursPerDay)
+            {
+                remainingTotal -= 0;// avg;
+                var update = new TaskUpdateViewModel(false)
+                {
+                    Hours = remainingTotal,
+                    Date = currrentDay
+                };
+                this.AnalysisProjectedAverage.Updates.Add(update);
+                currrentDay = AddDays(currrentDay, 1, skipWeekends);
+            }
         }
 
 
