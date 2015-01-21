@@ -656,6 +656,10 @@
                     Header="Analysis" DataContext="{Binding Main.Analysis}" 
                                        Visibility="{Binding AnalysisVisibility}">
                     <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1.681*"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
                         <dvc:Chart UseLayoutRounding="False" Style="{DynamicResource ChartStyle}">
                             <dvc:Chart.Axes>
                                 <dvc:CategoryAxis Orientation="X"/>
@@ -673,7 +677,10 @@
                                             IndependentValueBinding="{Binding DateString}"
                                             DependentValueBinding="{Binding Hours}" 
                                             ItemsSource="{Binding AnalysisProjectedTotal.Updates}" Background="#FF37C329"/>
-
+                            <dvc:LineSeries Title="Projected Average"
+                                            IndependentValueBinding="{Binding DateString}"
+                                            DependentValueBinding="{Binding Hours}" 
+                                            ItemsSource="{Binding AnalysisProjectedAverage.Updates}" Background="#FF37C329"/>
                             <dvc:LineSeries Title="Remaining Hours"
                                             IndependentValueBinding="{Binding DateString}"
                                             DependentValueBinding="{Binding Hours}" 

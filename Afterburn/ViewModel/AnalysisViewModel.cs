@@ -13,6 +13,7 @@ namespace Afterburn.ViewModel
         public TaskViewModel AnalysisRemainingHours { get; set; }
         public TaskViewModel AnalysisProjectedTotal { get; set; }
         public TaskViewModel AnalysisTotalWorked { get; set; }
+        public TaskViewModel AnalysisProjectedAverage { get; set; }
 
         public TaskViewModel Distractions { get; set; }
         public TaskViewModel RemainingHours { get; set; }
@@ -30,6 +31,7 @@ namespace Afterburn.ViewModel
             this.AnalysisRemainingHours = new TaskViewModel();
             this.AnalysisProjectedTotal = new TaskViewModel();
             this.AnalysisTotalWorked = new TaskViewModel();
+            this.AnalysisProjectedAverage = new TaskViewModel();
         }
 
         public void CalculateTotals(IEnumerable<TaskViewModel> tasks,
@@ -50,9 +52,11 @@ namespace Afterburn.ViewModel
 
             CreateIdealBurndown(totalEstimatedHours, tasks, hoursPerDay, skipWeekends);
 
+            CreateDeviatedBurndown(totalEstimatedHours, tasks, hoursPerDay, skipWeekends);
+
             GenerateChartFriendlyValues(tasks, skipWeekends);
         }
-  
+
         private void GenerateChartFriendlyValues
             (IEnumerable<TaskViewModel> tasks, bool skipWeekends)
         {
@@ -95,7 +99,7 @@ namespace Afterburn.ViewModel
                 this.AnalysisTotalWorked.Updates.AddRange(this.TotalWorked.Updates);
             }
         }
-  
+
         private void CreateIdealBurndown(double totalEstimatedHours, IEnumerable<TaskViewModel> tasks, double hoursPerDay, bool skipWeekends)
         {
             //generate ideal burndown
@@ -120,7 +124,48 @@ namespace Afterburn.ViewModel
                 currrentDay = AddDays(currrentDay, 1, skipWeekends);
             }
         }
-  
+
+        private void CreateDeviatedBurndown(double totalEstimatedHours, IEnumerable<TaskViewModel> tasks, double hoursPerDay, bool skipWeekends)
+        {
+            if (!TotalWorked.Updates.Any())
+                return;
+
+            //find the avg
+            var avg = TotalWorked.Updates.Average(u => u.Hours);
+            if (avg <= 0)
+                return;
+
+            //draw avg burndown
+            this.AnalysisProjectedAverage.Updates.Clear();
+            var remainingTotal = totalEstimatedHours;
+            var currrentDay = DateTime.Today;
+
+            if (tasks.First().Updates.Any())
+            {
+                currrentDay = tasks.First().Updates.First().Date;
+            }
+
+            while (remainingTotal > -hoursPerDay)
+            {
+                remainingTotal -= avg;
+                var update = new TaskUpdateViewModel(false)
+                {
+                    Hours = remainingTotal,
+                    Date = currrentDay
+                };
+                this.AnalysisProjectedAverage.Updates.Add(update);
+                currrentDay = AddDays(currrentDay, 1, skipWeekends);
+            }
+
+            //find the stddev
+
+
+            //draw avg - 1 stddev
+
+            //draw avg + 1 stddev
+        }
+
+
         private DayUpdate CreateRemainingAndTotalAndDistractions(List<DayUpdate> updates, IEnumerable<TaskViewModel> tasks, double hoursPerDay)
         {
             DayUpdate previousUpdate = null;

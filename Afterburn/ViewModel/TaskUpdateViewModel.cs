@@ -4,9 +4,11 @@ using Afterburn.Messages;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
+using System.Diagnostics;
 
 namespace Afterburn.ViewModel
 {
+    [DebuggerDisplay("{Date},{Hours}")]
     public class TaskUpdateViewModel : ViewModelBase
     {
         /// <summary>
