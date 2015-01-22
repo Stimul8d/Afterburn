@@ -156,8 +156,6 @@ namespace Afterburn.ViewModel
                 var previous = this.hours;
                 this.hours = value;
 
-                if (hours > 40)
-                    hours = 40;
                 this.RaisePropertyChanged(HoursPropertyName);
                 Messenger.Default.Send<EstimateUpdatedMessage>(new EstimateUpdatedMessage(this, previous));
             }

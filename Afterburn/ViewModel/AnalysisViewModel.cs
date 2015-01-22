@@ -121,7 +121,7 @@ namespace Afterburn.ViewModel
                 currrentDay = tasks.First().Updates.First().Date;
             }
 
-            while (remainingTotal > -hoursPerDay)
+            while (true)
             {
                 remainingTotal -= hoursPerDay;
                 var update = new TaskTotalUpdateViewModel
@@ -131,6 +131,8 @@ namespace Afterburn.ViewModel
                 };
                 this.ProjectedTotal.Updates.Add(update);
                 currrentDay = AddDays(currrentDay, 1, skipWeekends);
+                if (update.Hours <= 0)
+                    return;
             }
         }
 

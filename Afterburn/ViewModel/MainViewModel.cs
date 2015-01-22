@@ -24,7 +24,7 @@ namespace Afterburn.ViewModel
 
         public MainViewModel()
         {
-                this.Analysis = new AnalysisViewModel();
+            this.Analysis = new AnalysisViewModel();
             this.Tasks = new ObservableCollection<TaskViewModel>();
 
             this.AddDummyTask();
@@ -33,9 +33,9 @@ namespace Afterburn.ViewModel
             SetupCommands();
 
             SetupMessages();
-                
-            }
-  
+
+        }
+
         private void SetupMessages()
         {
             Messenger.Default.Register<DeleteTaskMessage>(this,
@@ -65,7 +65,7 @@ namespace Afterburn.ViewModel
                     this.CalculateTotals();
                 });
         }
-  
+
         private void SetupCommands()
         {
             this.NewCommand = new RelayCommand(() =>
@@ -89,12 +89,13 @@ namespace Afterburn.ViewModel
 
         private bool UpdateEstimates(EstimateUpdatedMessage m)
         {
-            if (!m.Task.Updates.Any())
-            {
-                return true;
-            }
+            //if (!m.Task.Updates.Any())
+            //{
+            //    return true;
+            //}
 
-            if (m.Task.Updates.First().Hours > 0)
+            if (m.Task.Updates.Any() &&
+                m.Task.Updates.First().Hours > 0)
             {
                 foreach (var update in m.Task.Updates)
                 {
@@ -110,7 +111,7 @@ namespace Afterburn.ViewModel
             this.CalculateTotals();
             return false;
         }
-  
+
         private void DeleteDate(DeleteDateMessage m)
         {
             foreach (var task in this.Tasks)
@@ -127,7 +128,7 @@ namespace Afterburn.ViewModel
             this.CalculateTotals();
             this.ShowHideAnalysis();
         }
-  
+
         private void DeleteTask(DeleteTaskMessage m)
         {
             this.Tasks.Remove(m.Task);
@@ -138,7 +139,7 @@ namespace Afterburn.ViewModel
 
             this.CalculateTotals();
         }
-  
+
         private void AddTask()
         {
             var newTask = new TaskViewModel();
@@ -221,6 +222,7 @@ namespace Afterburn.ViewModel
         private void CalculateTotals()
         {
             Analysis.CalculateTotals(Tasks, HoursPerDay, SkipWeekends);
+            this.TotalEstimatedHours = Tasks.Sum(t => t.Hours);
         }
 
         public DateTime AddWorkdays(DateTime originalDate, int workDays)

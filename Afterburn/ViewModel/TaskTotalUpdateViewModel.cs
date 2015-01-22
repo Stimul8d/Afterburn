@@ -74,16 +74,10 @@ namespace Afterburn.ViewModel
                 {
                     return;
                 }
-
                 hours = value;
+
                 if (hours < 0)
-                {
                     hours = 0;
-                }
-                if (hours > 40)
-                {
-                    hours = 40;
-                }
                 this.RaisePropertyChanged(HoursPropertyName);
             }
         }

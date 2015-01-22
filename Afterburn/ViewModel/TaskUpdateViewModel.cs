@@ -91,10 +91,7 @@ namespace Afterburn.ViewModel
                 {
                     hours = 0;
                 }
-                if (hours > 40)
-                {
-                    hours = 40;
-                }
+
                 this.RaisePropertyChanged(HoursPropertyName);
                 Messenger.Default.Send<UpdateModifiedMessage>(
                     new UpdateModifiedMessage(this));
