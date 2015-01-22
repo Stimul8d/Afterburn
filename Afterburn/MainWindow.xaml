@@ -679,8 +679,8 @@
                         </Grid.ColumnDefinitions>
                         <dvc:Chart UseLayoutRounding="False" Style="{DynamicResource ChartStyle}" BorderThickness="0" Grid.ColumnSpan="2" Margin="0,0,20,10">
                             <dvc:Chart.Axes>
-                                <dvc:CategoryAxis Orientation="X"/>
-                                <dvc:LinearAxis Orientation="Y"/>
+                                <dvc:CategoryAxis FontSize="16" Opacity="0.6" Orientation="X"/>
+                                <dvc:LinearAxis FontSize="16" Opacity="0.6" Orientation="Y"/>
                             </dvc:Chart.Axes>
                             <dvc:Chart.Palette>
                                 <dv:ResourceDictionaryCollection>
@@ -717,7 +717,10 @@
                         </dvc:Chart>
                         <dvc:Chart UseLayoutRounding="False"
                                    Style="{DynamicResource ChartStyle}" BorderThickness="0" Grid.Row="1" Grid.ColumnSpan="2" Margin="0,0,20,0">
-
+                            <dvc:Chart.Axes>
+                                <dvc:CategoryAxis FontSize="16" Opacity="0.6" Orientation="X"/>
+                                <dvc:LinearAxis FontSize="16" Opacity="0.6" Orientation="Y"/>
+                            </dvc:Chart.Axes>
                             <dvc:Chart.Palette>
                                 <dv:ResourceDictionaryCollection>
                                     <ResourceDictionary>
