@@ -54,15 +54,29 @@ namespace Afterburn.ViewModel
 
             var updates = this.GetDayUpdates(tasks);
 
+            CalculateAverages();
+
             CreateRemainingAndTotalAndDistractions(updates, tasks, hoursPerDay);
 
             CreateIdealBurndown(totalEstimatedHours, tasks, hoursPerDay, skipWeekends);
 
             CreateAverageBurndown(totalEstimatedHours, tasks, hoursPerDay, skipWeekends);
 
-            //CreateDeviatedBurndowns(totalEstimatedHours, tasks, hoursPerDay, skipWeekends);
+            CreateDeviatedMaximum(totalEstimatedHours, tasks, hoursPerDay, skipWeekends);
+            CreateDeviatedMinimum(totalEstimatedHours, tasks, hoursPerDay, skipWeekends);
 
             GenerateChartFriendlyValues(tasks, skipWeekends);
+        }
+
+        private void CalculateAverages(double hoursPerDay)
+        {
+            if (!TotalWorked.Updates.Any())
+                return;
+            AverageWorked = TotalWorked.Updates.Average(u => u.Hours);
+            AverageWorkedMinusOneStdDev = AverageWorked - TotalWorked.Updates
+                .Select(u => hoursPerDay - u.Hours).StdDev();
+            AverageWorkedPlusOneStdDev = AverageWorked + TotalWorked.Updates
+                .Select(u => hoursPerDay - u.Hours).StdDev();
         }
 
         private void GenerateChartFriendlyValues
@@ -163,7 +177,7 @@ namespace Afterburn.ViewModel
                     Hours = totalEstimatedHours
                 });
 
-            while (remainingTotal > -hoursPerDay)
+            while (true)
             {
                 remainingTotal -= avg;
                 var update = new TaskUpdateViewModel(false)
@@ -173,6 +187,8 @@ namespace Afterburn.ViewModel
                 };
                 this.AnalysisProjectedAverage.Updates.Add(update);
                 currrentDay = AddDays(currrentDay, 1, skipWeekends);
+                if (update.Hours == 0)
+                    return;
             }
         }
 
@@ -182,7 +198,9 @@ namespace Afterburn.ViewModel
                 return;
 
             //find the stddev
-            var stdDev = TotalWorked.Updates.Select(u=>u.Hours).StdDev();
+            //this should be the variance from hours per day
+            var stdDev = TotalWorked.Updates
+                .Select(u => hoursPerDay - u.Hours).StdDev();
             if (stdDev <= 0)
                 return;
 
@@ -197,16 +215,87 @@ namespace Afterburn.ViewModel
                 currrentDay = tasks.First().Updates.First().Date;
             }
 
-            while (remainingTotal > -hoursPerDay)
+            var dayOne = this.GetDayUpdates(tasks).First().Date;
+            var dayZero = AddDays(dayOne, -1, skipWeekends);
+            var avg = TotalWorked.Updates.Average(u => u.Hours);
+
+            AnalysisProjectedMaximum.Updates.Add(
+                new TaskUpdateViewModel(false)
+                {
+                    Date = dayZero,
+                    Hours = totalEstimatedHours
+                });
+
+            while (true)
             {
-                remainingTotal -= 0;// avg;
+                var movement = avg - stdDev;
+                if (movement <= 0)
+                    return;
+                remainingTotal -= movement;
+
                 var update = new TaskUpdateViewModel(false)
                 {
                     Hours = remainingTotal,
                     Date = currrentDay
                 };
-                this.AnalysisProjectedAverage.Updates.Add(update);
+                this.AnalysisProjectedMaximum.Updates.Add(update);
                 currrentDay = AddDays(currrentDay, 1, skipWeekends);
+                if (update.Hours == 0)
+                    return;
+            }
+        }
+
+        private void CreateDeviatedMinimum(double totalEstimatedHours, IEnumerable<TaskViewModel> tasks, double hoursPerDay, bool skipWeekends)
+        {
+            if (!TotalWorked.Updates.Any())
+                return;
+
+            //find the stddev
+            //this should be the variance from hours per day
+            var stdDev = TotalWorked.Updates
+                .Select(u => hoursPerDay - u.Hours).StdDev();
+            if (stdDev <= 0)
+                return;
+
+            //draw max deviated burndown
+            this.AnalysisProjectedMinimum.Updates.Clear();
+
+            var remainingTotal = totalEstimatedHours;
+            var currrentDay = DateTime.Today;
+
+            if (tasks.First().Updates.Any())
+            {
+                currrentDay = tasks.First().Updates.First().Date;
+            }
+
+            var dayOne = this.GetDayUpdates(tasks).First().Date;
+            var dayZero = AddDays(dayOne, -1, skipWeekends);
+            var avg = TotalWorked.Updates.Average(u => u.Hours);
+
+            AnalysisProjectedMinimum.Updates.Add(
+                new TaskUpdateViewModel(false)
+                {
+                    Date = dayZero,
+                    Hours = totalEstimatedHours
+                });
+
+            //while (remainingTotal > -hoursPerDay)
+            while (true)
+            {
+                var movement = avg + stdDev;
+                if (movement <= 0)
+                    return;
+                remainingTotal -= movement;
+
+                var update = new TaskUpdateViewModel(false)
+                {
+                    Hours = remainingTotal,
+                    Date = currrentDay
+                };
+                this.AnalysisProjectedMinimum.Updates.Add(update);
+                currrentDay = AddDays(currrentDay, 1, skipWeekends);
+                if (update.Hours == 0)
+                    return;
             }
         }
 
@@ -283,6 +372,96 @@ namespace Afterburn.ViewModel
                 }
             }
             return tmpDate;
+        }
+
+        /// <summary>
+        /// The <see cref="AverageWorked" /> property's name.
+        /// </summary>
+        public const string AverageWorkedPropertyName = "AverageWorked";
+
+        private double averageWorked = 0;
+
+        /// <summary>
+        /// Sets and gets the AverageWorked property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        public double AverageWorked
+        {
+            get
+            {
+                return averageWorked;
+            }
+
+            set
+            {
+                if (averageWorked == value)
+                {
+                    return;
+                }
+
+                averageWorked = value;
+                RaisePropertyChanged(AverageWorkedPropertyName);
+            }
+        }
+
+        /// <summary>
+        /// The <see cref="AverageWorkedPlusOneStdDev" /> property's name.
+        /// </summary>
+        public const string AverageWorkedPlusOneStdDevPropertyName = "AverageWorkedPlusOneStdDev";
+
+        private double averageWorkedPlusOneStdDev = 0;
+
+        /// <summary>
+        /// Sets and gets the AverageWorkedPlusOneStdDev property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        public double AverageWorkedPlusOneStdDev
+        {
+            get
+            {
+                return averageWorkedPlusOneStdDev;
+            }
+
+            set
+            {
+                if (averageWorkedPlusOneStdDev == value)
+                {
+                    return;
+                }
+
+                averageWorkedPlusOneStdDev = value;
+                RaisePropertyChanged(AverageWorkedPlusOneStdDevPropertyName);
+            }
+        }
+
+        /// <summary>
+        /// The <see cref="AverageWorkedMinusOneStdDev" /> property's name.
+        /// </summary>
+        public const string AverageWorkedMinusOneStdDevPropertyName = "AverageWorkedMinusOneStdDev";
+
+        private double averageWorkedMinusOneStdDev = 0;
+
+        /// <summary>
+        /// Sets and gets the AverageWorkedMinusOneStdDev property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        public double AverageWorkedMinusOneStdDev
+        {
+            get
+            {
+                return averageWorkedMinusOneStdDev;
+            }
+
+            set
+            {
+                if (averageWorkedMinusOneStdDev == value)
+                {
+                    return;
+                }
+
+                averageWorkedMinusOneStdDev = value;
+                RaisePropertyChanged(AverageWorkedMinusOneStdDevPropertyName);
+            }
         }
     }
 }

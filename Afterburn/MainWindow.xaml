@@ -665,26 +665,34 @@
                                 <dvc:CategoryAxis Orientation="X"/>
                                 <dvc:LinearAxis Orientation="Y"/>
                             </dvc:Chart.Axes>
-                            <dvc:AreaSeries Title="Other Tasks &amp; Distractions"
+                            <!--<dvc:AreaSeries Title="Other Tasks &amp; Distractions"
                                             IndependentValueBinding="{Binding DateString}"
                                             DependentValueBinding="{Binding Hours}"
                                             ItemsSource="{Binding AnalysisDistractions.Updates}"/>
                             <dvc:AreaSeries Title="Hours Worked"
                                             IndependentValueBinding="{Binding DateString}"
                                             DependentValueBinding="{Binding Hours}" 
-                                            ItemsSource="{Binding AnalysisTotalWorked.Updates}"/>
-                            <dvc:LineSeries Title="Estimated Progress"
+                                            ItemsSource="{Binding AnalysisTotalWorked.Updates}"/>-->
+                            <dvc:LineSeries Title="Ideal Progress"
                                             IndependentValueBinding="{Binding DateString}"
                                             DependentValueBinding="{Binding Hours}" 
                                             ItemsSource="{Binding AnalysisProjectedTotal.Updates}" Background="#FF37C329"/>
-                            <dvc:LineSeries Title="Projected Average"
-                                            IndependentValueBinding="{Binding DateString}"
-                                            DependentValueBinding="{Binding Hours}" 
-                                            ItemsSource="{Binding AnalysisProjectedAverage.Updates}" Background="#FF37C329"/>
                             <dvc:LineSeries Title="Remaining Hours"
                                             IndependentValueBinding="{Binding DateString}"
                                             DependentValueBinding="{Binding Hours}" 
                                             ItemsSource="{Binding AnalysisRemainingHours.Updates}"/>
+                            <dvc:LineSeries Title="Projected Average"
+                                            IndependentValueBinding="{Binding DateString}"
+                                            DependentValueBinding="{Binding Hours}" 
+                                            ItemsSource="{Binding AnalysisProjectedAverage.Updates}" Background="#FF37C329"/>
+                            <dvc:LineSeries Title="Worst Case"
+                                            IndependentValueBinding="{Binding DateString}"
+                                            DependentValueBinding="{Binding Hours}" 
+                                            ItemsSource="{Binding AnalysisProjectedMaximum.Updates}" Background="#FF37C329"/>
+                            <dvc:LineSeries Title="Best Case"
+                                            IndependentValueBinding="{Binding DateString}"
+                                            DependentValueBinding="{Binding Hours}" 
+                                            ItemsSource="{Binding AnalysisProjectedMinimum}" Background="#FF37C329"/>
                         </dvc:Chart>
                     </Grid>
 
