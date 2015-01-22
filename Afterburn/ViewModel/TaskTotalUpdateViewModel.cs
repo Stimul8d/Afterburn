@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Linq;
-using Afterburn.Messages;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
-using GalaSoft.MvvmLight.Messaging;
 using System.Diagnostics;
 
 namespace Afterburn.ViewModel
 {
     [DebuggerDisplay("{Date},{Hours}")]
-    public class TaskUpdateViewModel : ViewModelBase
+    public class TaskTotalUpdateViewModel : ViewModelBase
     {
         /// <summary>
         /// The <see cref="Date" /> property's name.
@@ -24,15 +22,6 @@ namespace Afterburn.ViewModel
         private DateTime date = DateTime.Now;
 
         private double hours = 0;
-
-        public TaskUpdateViewModel()
-        {
-            this.DeleteDateCommand = new RelayCommand(() =>
-            {
-                Messenger.Default.Send<DeleteDateMessage>(
-                    new DeleteDateMessage(this.Date));
-            });
-        }
 
         public RelayCommand DeleteDateCommand { get; set; }
 
@@ -96,8 +85,6 @@ namespace Afterburn.ViewModel
                     hours = 40;
                 }
                 this.RaisePropertyChanged(HoursPropertyName);
-                Messenger.Default.Send<UpdateModifiedMessage>(
-                    new UpdateModifiedMessage(this));
             }
         }
     }

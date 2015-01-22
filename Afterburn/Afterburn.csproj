@@ -104,7 +104,9 @@
     <Compile Include="ViewModel\AnalysisViewModel.cs" />
     <Compile Include="ViewModel\DayUpdateViewModel.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
+    <Compile Include="ViewModel\TaskTotalUpdateViewModel.cs" />
     <Compile Include="ViewModel\TaskUpdateViewModel.cs" />
+    <Compile Include="ViewModel\TaskTotalViewModel.cs" />
     <Compile Include="ViewModel\TaskViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
     <Page Include="MainWindow.xaml">

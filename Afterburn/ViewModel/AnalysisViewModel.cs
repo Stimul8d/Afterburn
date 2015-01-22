@@ -9,27 +9,27 @@ namespace Afterburn.ViewModel
 {
     public class AnalysisViewModel : ViewModelBase
     {
-        public TaskViewModel AnalysisDistractions { get; set; }
-        public TaskViewModel AnalysisRemainingHours { get; set; }
-        public TaskViewModel AnalysisProjectedTotal { get; set; }
-        public TaskViewModel AnalysisTotalWorked { get; set; }
-
-        public TaskViewModel Distractions { get; set; }
-        public TaskViewModel RemainingHours { get; set; }
-        public TaskViewModel ProjectedTotal { get; set; }
-        public TaskViewModel TotalWorked { get; set; }
+        public TaskTotalViewModel AnalysisDistractions { get; set; }
+        public TaskTotalViewModel AnalysisRemainingHours { get; set; }
+        public TaskTotalViewModel AnalysisProjectedTotal { get; set; }
+        public TaskTotalViewModel AnalysisTotalWorked { get; set; }
+               
+        public TaskTotalViewModel Distractions { get; set; }
+        public TaskTotalViewModel RemainingHours { get; set; }
+        public TaskTotalViewModel ProjectedTotal { get; set; }
+        public TaskTotalViewModel TotalWorked { get; set; }
 
         public AnalysisViewModel()
         {
-            this.Distractions = new TaskViewModel();
-            this.RemainingHours = new TaskViewModel();
-            this.ProjectedTotal = new TaskViewModel();
-            this.TotalWorked = new TaskViewModel();
+            this.Distractions = new TaskTotalViewModel();
+            this.RemainingHours = new TaskTotalViewModel();
+            this.ProjectedTotal = new TaskTotalViewModel();
+            this.TotalWorked = new TaskTotalViewModel();
 
-            this.AnalysisDistractions = new TaskViewModel();
-            this.AnalysisRemainingHours = new TaskViewModel();
-            this.AnalysisProjectedTotal = new TaskViewModel();
-            this.AnalysisTotalWorked = new TaskViewModel();
+            this.AnalysisDistractions = new TaskTotalViewModel();
+            this.AnalysisRemainingHours = new TaskTotalViewModel();
+            this.AnalysisProjectedTotal = new TaskTotalViewModel();
+            this.AnalysisTotalWorked = new TaskTotalViewModel();
         }
 
         public void CalculateTotals(IEnumerable<TaskViewModel> tasks,
@@ -79,24 +79,24 @@ namespace Afterburn.ViewModel
                 //add day one to the analysis
                 var dayOne = this.GetDayUpdates(tasks).First().Date;
                 var dayZero = AddDays(dayOne, -1, skipWeekends);
-                this.AnalysisDistractions.Updates.Add(new TaskUpdateViewModel(false)
+                this.AnalysisDistractions.Updates.Add(new TaskTotalUpdateViewModel
                 {
                     Date = dayZero
                 });
 
-                this.AnalysisProjectedTotal.Updates.Add(new TaskUpdateViewModel(false)
-                {
-                    Hours = tasks.Sum(t => t.Hours),
-                    Date = dayZero
-                });
-
-                this.AnalysisRemainingHours.Updates.Add(new TaskUpdateViewModel(false)
+                this.AnalysisProjectedTotal.Updates.Add(new TaskTotalUpdateViewModel
                 {
                     Hours = tasks.Sum(t => t.Hours),
                     Date = dayZero
                 });
 
-                this.AnalysisTotalWorked.Updates.Add(new TaskUpdateViewModel(false)
+                this.AnalysisRemainingHours.Updates.Add(new TaskTotalUpdateViewModel
+                {
+                    Hours = tasks.Sum(t => t.Hours),
+                    Date = dayZero
+                });
+
+                this.AnalysisTotalWorked.Updates.Add(new TaskTotalUpdateViewModel
                 {
                     Hours = 0,
                     Date = dayZero
@@ -124,7 +124,7 @@ namespace Afterburn.ViewModel
             while (remainingTotal > -hoursPerDay)
             {
                 remainingTotal -= hoursPerDay;
-                var update = new TaskUpdateViewModel(false)
+                var update = new TaskTotalUpdateViewModel
                 {
                     Hours = remainingTotal,
                     Date = currrentDay
@@ -156,19 +156,19 @@ namespace Afterburn.ViewModel
                 var worked = previousUpdate.Hours - update.Hours;
                 var remaining = hoursPerDay - worked;
 
-                this.RemainingHours.Updates.Add(new TaskUpdateViewModel(false)
+                this.RemainingHours.Updates.Add(new TaskTotalUpdateViewModel
                 {
                     Date = update.Date.Date,
                     Hours = update.Hours
                 });
 
-                this.TotalWorked.Updates.Add(new TaskUpdateViewModel(false)
+                this.TotalWorked.Updates.Add(new TaskTotalUpdateViewModel
                 {
                     Date = update.Date.Date,
                     Hours = worked
                 });
 
-                this.Distractions.Updates.Add(new TaskUpdateViewModel(false)
+                this.Distractions.Updates.Add(new TaskTotalUpdateViewModel
                 {
                     Date = update.Date.Date,
                     Hours = remaining
