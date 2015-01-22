@@ -53,7 +53,7 @@ namespace Afterburn.ViewModel
         {
             get
             {
-                return this.Date.ToString("ddd dd/MM");
+                return this.Date.ToString("dd/MM");
             }
         }
 

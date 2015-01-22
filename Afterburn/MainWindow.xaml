@@ -458,8 +458,8 @@
                                 </Grid.RowDefinitions>
                                 <Grid Margin="0,15" Grid.Row="1">
                                     <Primitives:EdgePanel x:Name="ChartArea" Style="{TemplateBinding ChartAreaStyle}">
-                                        <Grid Style="{TemplateBinding PlotAreaStyle}" Panel.ZIndex="-1" Background="#7FFFFFFF"/>
-                                        <Border BorderBrush="#FF919191" BorderThickness="1" Panel.ZIndex="10"/>
+                                        <Grid Style="{TemplateBinding PlotAreaStyle}" Panel.ZIndex="-1" Background="#7FFFFFFF" Margin="5,0,0,5"/>
+                                        <Border BorderBrush="#FF919191" BorderThickness="0" Panel.ZIndex="10"/>
                                     </Primitives:EdgePanel>
                                     <dv:Legend x:Name="Legend" Grid.Column="1" Style="{TemplateBinding LegendStyle}" Title="{TemplateBinding LegendTitle}" VerticalAlignment="Stretch" Margin="0" HorizontalAlignment="Right" Background="{x:Null}" BorderBrush="{x:Null}"/>
                                 </Grid>
@@ -656,7 +656,7 @@
                             <ColumnDefinition Width="1.681*"/>
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
-                        <dvc:Chart UseLayoutRounding="False" Style="{DynamicResource ChartStyle}">
+                        <dvc:Chart UseLayoutRounding="False" Style="{DynamicResource ChartStyle}" BorderThickness="0">
                             <dvc:Chart.Axes>
                                 <dvc:CategoryAxis Orientation="X"/>
                                 <dvc:LinearAxis Orientation="Y"/>
