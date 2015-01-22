@@ -54,7 +54,7 @@ namespace Afterburn.ViewModel
 
             var updates = this.GetDayUpdates(tasks);
 
-            CalculateAverages();
+            CalculateAverages(hoursPerDay);
 
             CreateRemainingAndTotalAndDistractions(updates, tasks, hoursPerDay);
 
