@@ -10,8 +10,8 @@
     <Application.Resources>
         <!--Global View Model Locator-->
         <ResourceDictionary>
-            <!--<vm:ViewModelLocator x:Key="Locator"
-                                 d:IsDataSource="True" />-->
+            <vm:ViewModelLocator x:Key="Locator"
+                                 d:IsDataSource="True" />
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
