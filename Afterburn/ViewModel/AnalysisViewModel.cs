@@ -13,7 +13,8 @@ namespace Afterburn.ViewModel
         public TaskTotalViewModel AnalysisRemainingHours { get; set; }
         public TaskTotalViewModel AnalysisProjectedTotal { get; set; }
         public TaskTotalViewModel AnalysisTotalWorked { get; set; }
-               
+        public TaskTotalViewModel AnalysisAverageExtrapolation { get; set; }
+
         public TaskTotalViewModel Distractions { get; set; }
         public TaskTotalViewModel RemainingHours { get; set; }
         public TaskTotalViewModel ProjectedTotal { get; set; }
@@ -30,6 +31,7 @@ namespace Afterburn.ViewModel
             this.AnalysisRemainingHours = new TaskTotalViewModel();
             this.AnalysisProjectedTotal = new TaskTotalViewModel();
             this.AnalysisTotalWorked = new TaskTotalViewModel();
+            this.AnalysisAverageExtrapolation = new TaskTotalViewModel();
         }
 
         public void CalculateTotals(IEnumerable<TaskViewModel> tasks,
@@ -53,6 +55,38 @@ namespace Afterburn.ViewModel
             CreateIdealBurndown(totalEstimatedHours, tasks, hoursPerDay, skipWeekends);
 
             GenerateChartFriendlyValues(tasks, skipWeekends);
+
+            CreateAverageExtrapolation(totalEstimatedHours, tasks, hoursPerDay, skipWeekends);
+        }
+
+        private void CreateAverageExtrapolation(double totalEstimatedHours, IEnumerable<TaskViewModel> tasks, double hoursPerDay, bool skipWeekends)
+        {
+            if (!tasks.First().Updates.Any())
+                return;
+
+            this.AnalysisAverageExtrapolation.Updates.Clear();
+            var currrentDay = tasks.First().Updates.Last().Date;
+            var remainingTotal = tasks.First().Updates.Last().Hours;
+
+            var avg = TotalWorked.Updates.Average(u => u.Hours);
+            if (avg <= 0)
+                return;
+
+            while (true)
+            {
+                var update = new TaskTotalUpdateViewModel
+                {
+                    Hours = remainingTotal,
+                    Date = currrentDay
+                };
+                this.AnalysisAverageExtrapolation.Updates.Add(update);
+
+                currrentDay = AddDays(currrentDay, 1, skipWeekends);
+                remainingTotal -= avg;
+                
+                if (update.Hours <= 0)
+                    return;
+            }
         }
 
         private void CalculateAverages(double hoursPerDay)
