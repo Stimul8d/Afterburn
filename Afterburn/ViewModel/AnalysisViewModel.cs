@@ -71,18 +71,14 @@ namespace Afterburn.ViewModel
         {
             if (tasks.Any() && tasks.First().Updates.Any())
             {
-                this.AnalysisDistractions.Updates.Clear();
                 this.AnalysisProjectedTotal.Updates.Clear();
                 this.AnalysisRemainingHours.Updates.Clear();
                 this.AnalysisTotalWorked.Updates.Clear();
+                this.AnalysisDistractions.Updates.Clear();
 
                 //add day one to the analysis
                 var dayOne = this.GetDayUpdates(tasks).First().Date;
                 var dayZero = AddDays(dayOne, -1, skipWeekends);
-                this.AnalysisDistractions.Updates.Add(new TaskTotalUpdateViewModel
-                {
-                    Date = dayZero
-                });
 
                 this.AnalysisProjectedTotal.Updates.Add(new TaskTotalUpdateViewModel
                 {
@@ -93,12 +89,6 @@ namespace Afterburn.ViewModel
                 this.AnalysisRemainingHours.Updates.Add(new TaskTotalUpdateViewModel
                 {
                     Hours = tasks.Sum(t => t.Hours),
-                    Date = dayZero
-                });
-
-                this.AnalysisTotalWorked.Updates.Add(new TaskTotalUpdateViewModel
-                {
-                    Hours = 0,
                     Date = dayZero
                 });
 

@@ -459,7 +459,7 @@
                                 <Grid Margin="0,15" Grid.Row="1">
                                     <Primitives:EdgePanel x:Name="ChartArea" Style="{TemplateBinding ChartAreaStyle}">
                                         <Grid Style="{TemplateBinding PlotAreaStyle}" Panel.ZIndex="-1" Background="#7FFFFFFF" Margin="5,0,0,5"/>
-                                        <Border BorderBrush="#FF919191" BorderThickness="0" Panel.ZIndex="10"/>
+                                        <Border BorderBrush="#FF919191" BorderThickness="0" Panel.ZIndex="10" Margin="0,0,0,5"/>
                                     </Primitives:EdgePanel>
                                     <dv:Legend x:Name="Legend" Grid.Column="1" Style="{TemplateBinding LegendStyle}" Title="{TemplateBinding LegendTitle}" VerticalAlignment="Stretch" Margin="0" HorizontalAlignment="Right" Background="{x:Null}" BorderBrush="{x:Null}"/>
                                 </Grid>
@@ -652,6 +652,10 @@
                     Header="Analysis" DataContext="{Binding Main.Analysis}" 
                                        Visibility="{Binding AnalysisVisibility}">
                     <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="1.618*"/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="1.681*"/>
                             <ColumnDefinition/>
@@ -661,6 +665,20 @@
                                 <dvc:CategoryAxis Orientation="X"/>
                                 <dvc:LinearAxis Orientation="Y"/>
                             </dvc:Chart.Axes>
+                            <dvc:Chart.Palette>
+                                <dv:ResourceDictionaryCollection>
+                                    <ResourceDictionary>
+                                        <Style x:Key="DataPointStyle" TargetType="Control">
+                                            <Setter Property="Background" Value="LightGreen"/>
+                                        </Style>
+                                    </ResourceDictionary>
+                                    <ResourceDictionary>
+                                        <Style x:Key="DataPointStyle" TargetType="Control">
+                                            <Setter Property="Background" Value="DarkGray"/>
+                                        </Style>
+                                    </ResourceDictionary>
+                                </dv:ResourceDictionaryCollection>
+                            </dvc:Chart.Palette>
                             <dvc:LineSeries Title="Ideal Progress"
                                             IndependentValueBinding="{Binding DateString}"
                                             DependentValueBinding="{Binding Hours}" 
@@ -669,18 +687,39 @@
                                             IndependentValueBinding="{Binding DateString}"
                                             DependentValueBinding="{Binding Hours}" 
                                             ItemsSource="{Binding AnalysisRemainingHours.Updates}"/>
-                            <!--<dvc:LineSeries Title="Projected Average"
-                                            IndependentValueBinding="{Binding DateString}"
-                                            DependentValueBinding="{Binding Hours}" 
-                                            ItemsSource="{Binding AnalysisProjectedAverage.Updates}" Background="#FF37C329"/>-->
-                            <!--<dvc:LineSeries Title="Worst Case"
-                                            IndependentValueBinding="{Binding DateString}"
-                                            DependentValueBinding="{Binding Hours}" 
-                                            ItemsSource="{Binding AnalysisProjectedMaximum.Updates}" Background="#FF37C329"/>
-                            <dvc:LineSeries Title="Best Case"
-                                            IndependentValueBinding="{Binding DateString}"
-                                            DependentValueBinding="{Binding Hours}" 
-                                            ItemsSource="{Binding AnalysisProjectedMinimum}" Background="#FF37C329"/>-->
+                        </dvc:Chart>
+                        <dvc:Chart UseLayoutRounding="False"
+                                   Style="{DynamicResource ChartStyle}" BorderThickness="0" Grid.Row="1">
+
+                            <dvc:Chart.Palette>
+                                <dv:ResourceDictionaryCollection>
+                                    <ResourceDictionary>
+                                        <Style x:Key="DataPointStyle" TargetType="Control">
+                                            <Setter Property="Background" Value="Green"/>
+                                        </Style>
+                                    </ResourceDictionary>
+                                    <ResourceDictionary>
+                                        <Style x:Key="DataPointStyle" TargetType="Control">
+                                            <Setter Property="Background" Value="Red"/>
+                                        </Style>
+                                    </ResourceDictionary>
+                                </dv:ResourceDictionaryCollection>
+                            </dvc:Chart.Palette>
+
+                            <dvc:AreaSeries Title="Hours Worked"
+                        		IndependentValueBinding="{Binding DateString}"
+                        		DependentValueBinding="{Binding Hours}" 
+                        		ItemsSource="{Binding AnalysisTotalWorked.Updates}" Background="#FF37C329">
+                                <!--<dvc:AreaSeries.Style>
+                                    <Style TargetType="Control">
+                                        <Setter Property="Background" Value="Pink" />
+                                    </Style>
+                                </dvc:AreaSeries.Style>-->
+                            </dvc:AreaSeries>
+                            <dvc:AreaSeries Title="Distractions"
+                        		IndependentValueBinding="{Binding DateString}"
+                        		DependentValueBinding="{Binding Hours}" 
+                        		ItemsSource="{Binding AnalysisDistractions.Updates}"/>
                         </dvc:Chart>
                     </Grid>
 
