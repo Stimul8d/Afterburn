@@ -158,6 +158,7 @@ namespace Afterburn.ViewModel
             }
 
             this.Tasks.Add(newTask);
+            this.CalculateTotals();
         }
 
         private void AddDay()
@@ -250,7 +251,6 @@ namespace Afterburn.ViewModel
             {
                 var vm = new TaskViewModel
                 {
-                    Reference = task.Reference,
                     Feature = task.Feature,
                     Name = task.Name,
                     Hours = task.Hours

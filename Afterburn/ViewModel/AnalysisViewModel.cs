@@ -13,10 +13,6 @@ namespace Afterburn.ViewModel
         public TaskViewModel AnalysisRemainingHours { get; set; }
         public TaskViewModel AnalysisProjectedTotal { get; set; }
         public TaskViewModel AnalysisTotalWorked { get; set; }
-        public TaskViewModel AnalysisProjectedAverage { get; set; }
-        public TaskViewModel AnalysisProjectedMinimum { get; set; }
-        public TaskViewModel AnalysisProjectedMaximum { get; set; }
-
 
         public TaskViewModel Distractions { get; set; }
         public TaskViewModel RemainingHours { get; set; }
@@ -34,10 +30,6 @@ namespace Afterburn.ViewModel
             this.AnalysisRemainingHours = new TaskViewModel();
             this.AnalysisProjectedTotal = new TaskViewModel();
             this.AnalysisTotalWorked = new TaskViewModel();
-            this.AnalysisProjectedAverage = new TaskViewModel();
-            this.AnalysisProjectedMaximum = new TaskViewModel();
-            this.AnalysisProjectedMinimum = new TaskViewModel();
-
         }
 
         public void CalculateTotals(IEnumerable<TaskViewModel> tasks,
@@ -59,11 +51,6 @@ namespace Afterburn.ViewModel
             CreateRemainingAndTotalAndDistractions(updates, tasks, hoursPerDay);
 
             CreateIdealBurndown(totalEstimatedHours, tasks, hoursPerDay, skipWeekends);
-
-            CreateAverageBurndown(totalEstimatedHours, tasks, hoursPerDay, skipWeekends);
-
-            CreateDeviatedMaximum(totalEstimatedHours, tasks, hoursPerDay, skipWeekends);
-            CreateDeviatedMinimum(totalEstimatedHours, tasks, hoursPerDay, skipWeekends);
 
             GenerateChartFriendlyValues(tasks, skipWeekends);
         }
@@ -146,159 +133,6 @@ namespace Afterburn.ViewModel
                 currrentDay = AddDays(currrentDay, 1, skipWeekends);
             }
         }
-
-        private void CreateAverageBurndown(double totalEstimatedHours, IEnumerable<TaskViewModel> tasks, double hoursPerDay, bool skipWeekends)
-        {
-            if (!TotalWorked.Updates.Any())
-                return;
-
-            //find the avg
-            var avg = TotalWorked.Updates.Average(u => u.Hours);
-            if (avg <= 0)
-                return;
-
-            //draw avg burndown
-            this.AnalysisProjectedAverage.Updates.Clear();
-            var remainingTotal = totalEstimatedHours;
-            var currrentDay = DateTime.Today;
-
-            if (tasks.First().Updates.Any())
-            {
-                currrentDay = tasks.First().Updates.First().Date;
-            }
-
-            var dayOne = this.GetDayUpdates(tasks).First().Date;
-            var dayZero = AddDays(dayOne, -1, skipWeekends);
-
-            AnalysisProjectedAverage.Updates.Add(
-                new TaskUpdateViewModel(false)
-                {
-                    Date = dayZero,
-                    Hours = totalEstimatedHours
-                });
-
-            while (true)
-            {
-                remainingTotal -= avg;
-                var update = new TaskUpdateViewModel(false)
-                {
-                    Hours = remainingTotal,
-                    Date = currrentDay
-                };
-                this.AnalysisProjectedAverage.Updates.Add(update);
-                currrentDay = AddDays(currrentDay, 1, skipWeekends);
-                if (update.Hours == 0)
-                    return;
-            }
-        }
-
-        private void CreateDeviatedMaximum(double totalEstimatedHours, IEnumerable<TaskViewModel> tasks, double hoursPerDay, bool skipWeekends)
-        {
-            if (!TotalWorked.Updates.Any())
-                return;
-
-            //find the stddev
-            //this should be the variance from hours per day
-            var stdDev = TotalWorked.Updates
-                .Select(u => hoursPerDay - u.Hours).StdDev();
-            if (stdDev <= 0)
-                return;
-
-            //draw max deviated burndown
-            this.AnalysisProjectedMaximum.Updates.Clear();
-
-            var remainingTotal = totalEstimatedHours;
-            var currrentDay = DateTime.Today;
-
-            if (tasks.First().Updates.Any())
-            {
-                currrentDay = tasks.First().Updates.First().Date;
-            }
-
-            var dayOne = this.GetDayUpdates(tasks).First().Date;
-            var dayZero = AddDays(dayOne, -1, skipWeekends);
-            var avg = TotalWorked.Updates.Average(u => u.Hours);
-
-            AnalysisProjectedMaximum.Updates.Add(
-                new TaskUpdateViewModel(false)
-                {
-                    Date = dayZero,
-                    Hours = totalEstimatedHours
-                });
-
-            while (true)
-            {
-                var movement = avg - stdDev;
-                if (movement <= 0)
-                    return;
-                remainingTotal -= movement;
-
-                var update = new TaskUpdateViewModel(false)
-                {
-                    Hours = remainingTotal,
-                    Date = currrentDay
-                };
-                this.AnalysisProjectedMaximum.Updates.Add(update);
-                currrentDay = AddDays(currrentDay, 1, skipWeekends);
-                if (update.Hours == 0)
-                    return;
-            }
-        }
-
-        private void CreateDeviatedMinimum(double totalEstimatedHours, IEnumerable<TaskViewModel> tasks, double hoursPerDay, bool skipWeekends)
-        {
-            if (!TotalWorked.Updates.Any())
-                return;
-
-            //find the stddev
-            //this should be the variance from hours per day
-            var stdDev = TotalWorked.Updates
-                .Select(u => hoursPerDay - u.Hours).StdDev();
-            if (stdDev <= 0)
-                return;
-
-            //draw max deviated burndown
-            this.AnalysisProjectedMinimum.Updates.Clear();
-
-            var remainingTotal = totalEstimatedHours;
-            var currrentDay = DateTime.Today;
-
-            if (tasks.First().Updates.Any())
-            {
-                currrentDay = tasks.First().Updates.First().Date;
-            }
-
-            var dayOne = this.GetDayUpdates(tasks).First().Date;
-            var dayZero = AddDays(dayOne, -1, skipWeekends);
-            var avg = TotalWorked.Updates.Average(u => u.Hours);
-
-            AnalysisProjectedMinimum.Updates.Add(
-                new TaskUpdateViewModel(false)
-                {
-                    Date = dayZero,
-                    Hours = totalEstimatedHours
-                });
-
-            //while (remainingTotal > -hoursPerDay)
-            while (true)
-            {
-                var movement = avg + stdDev;
-                if (movement <= 0)
-                    return;
-                remainingTotal -= movement;
-
-                var update = new TaskUpdateViewModel(false)
-                {
-                    Hours = remainingTotal,
-                    Date = currrentDay
-                };
-                this.AnalysisProjectedMinimum.Updates.Add(update);
-                currrentDay = AddDays(currrentDay, 1, skipWeekends);
-                if (update.Hours == 0)
-                    return;
-            }
-        }
-
 
         private DayUpdate CreateRemainingAndTotalAndDistractions(List<DayUpdate> updates, IEnumerable<TaskViewModel> tasks, double hoursPerDay)
         {

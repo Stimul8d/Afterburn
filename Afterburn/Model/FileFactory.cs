@@ -17,7 +17,6 @@ namespace Afterburn.Model
                     Feature = task.Feature,
                     Hours = task.Hours,
                     Name = task.Name,
-                    Reference = task.Reference
                 };
 
                 file.Tasks.Add(fileTask);

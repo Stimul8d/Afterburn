@@ -16,15 +16,14 @@ namespace Afterburn.ViewModel
 
         public RelayCommand DeleteTaskCommand { get; set; }
 
-        public TaskViewModel() : this("REFERENCE", "FEATURE", "NAME", 0)
+        public TaskViewModel() : this("FEATURE", "NAME", 0)
         {
         }
 
-        public TaskViewModel(string reference, string feature,
+        public TaskViewModel(string feature,
             string name, double hours)
         {
             this.Id = Guid.NewGuid();
-            this.reference = reference;
             this.feature = feature;
             this.name = name;
             this.hours = hours;
@@ -67,36 +66,6 @@ namespace Afterburn.ViewModel
 
                 this.allowEdits = value;
                 this.RaisePropertyChanged(AllowEditsPropertyName);
-            }
-        }
-
-        /// <summary>
-        /// The <see cref="Reference" /> property's name.
-        /// </summary>
-        public const string ReferencePropertyName = "Reference";
-
-        private string reference = "";
-
-        /// <summary>
-        /// Sets and gets the Reference property.
-        /// Changes to that property's value raise the PropertyChanged event. 
-        /// </summary>
-        public string Reference
-        {
-            get
-            {
-                return this.reference;
-            }
-
-            set
-            {
-                if (this.reference == value)
-                {
-                    return;
-                }
-
-                this.reference = value;
-                this.RaisePropertyChanged(ReferencePropertyName);
             }
         }
 

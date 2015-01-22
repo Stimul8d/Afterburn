@@ -52,17 +52,15 @@
             <Grid x:Name="grid" Margin="0,0,0,10">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="100"/>
-                    <ColumnDefinition Width="100"/>
                     <ColumnDefinition/>
                     <ColumnDefinition Width="50"/>
                     <ColumnDefinition Width="20"/>
                 </Grid.ColumnDefinitions>
-                <TextBox HorizontalAlignment="Stretch" TextWrapping="NoWrap" Text="{Binding Reference}" VerticalAlignment="Stretch" Width="Auto" Margin="0,0,5,0" BorderThickness="0" Padding="0" Background="#7FFFFFFF"/>
-                <TextBox HorizontalAlignment="Stretch" Height="Auto" TextWrapping="NoWrap" Text="{Binding Feature}" VerticalAlignment="Stretch" Width="Auto" Margin="0,0,5,0" BorderThickness="0" Grid.Column="1" Padding="0" Background="#7FFFFFFF"/>
-                <TextBox HorizontalAlignment="Stretch" Height="Auto" TextWrapping="NoWrap" Text="{Binding Name}" VerticalAlignment="Stretch" Width="Auto" Margin="0,0,5,0" BorderThickness="0" Grid.Column="2" Padding="0" Background="#7FFFFFFF"/>
-                <TextBox HorizontalAlignment="Stretch" Height="Auto" TextWrapping="NoWrap" Text="{Binding Hours}" VerticalAlignment="Stretch" Width="Auto" BorderThickness="0" Grid.Column="3" Padding="0" Grid.ColumnSpan="2" MaxLength="5" Background="#7FFFFFFF" TextAlignment="Center" IsEnabled="{Binding AllowEdits}"/>
+                <TextBox HorizontalAlignment="Stretch" Height="Auto" TextWrapping="NoWrap" Text="{Binding Feature}" VerticalAlignment="Stretch" Width="Auto" Margin="0,0,5,0" BorderThickness="0" Grid.Column="0" Padding="0" Background="#7FFFFFFF"/>
+                <TextBox HorizontalAlignment="Stretch" Height="Auto" TextWrapping="NoWrap" Text="{Binding Name}" VerticalAlignment="Stretch" Width="Auto" Margin="0,0,5,0" BorderThickness="0" Grid.Column="1" Padding="0" Background="#7FFFFFFF"/>
+                <TextBox HorizontalAlignment="Stretch" Height="Auto" TextWrapping="NoWrap" Text="{Binding Hours}" VerticalAlignment="Stretch" Width="Auto" BorderThickness="0" Grid.Column="2" Padding="0" Grid.ColumnSpan="2" MaxLength="5" Background="#7FFFFFFF" TextAlignment="Center" IsEnabled="{Binding AllowEdits}"/>
                 <Button x:Name="deleteButton"
-                        VerticalAlignment="Stretch" Width="Auto" Grid.Column="4" BorderThickness="0" 
+                        VerticalAlignment="Stretch" Width="Auto" Grid.Column="3" BorderThickness="0" 
                         Style="{DynamicResource NoHoverButtonStyle}" Opacity="0.005" Command="{Binding DeleteTaskCommand}">
                     <Button.Background>
                         <ImageBrush ImageSource="Assets/Delete.png"/>
@@ -532,15 +530,13 @@
                         <Grid x:Name="HeaderGrid" VerticalAlignment="Top" Width="{Binding ActualWidth, ElementName=itemsControl}" HorizontalAlignment="Left" Margin="10,0,0,0">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="100"/>
-                                <ColumnDefinition Width="100"/>
                                 <ColumnDefinition/>
                                 <ColumnDefinition Width="50"/>
                                 <ColumnDefinition Width="20"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="#FF464646" Text="Reference" TextTrimming="CharacterEllipsis" FontWeight="Bold" Margin="0"/>
-                            <TextBlock VerticalAlignment="Top" Grid.Column="1" Foreground="#FF464646" Text="Feature" TextTrimming="CharacterEllipsis" FontWeight="Bold" Margin="0"/>
-                            <TextBlock VerticalAlignment="Top" Grid.Column="2" Foreground="#FF464646" Text="Task" TextTrimming="CharacterEllipsis" FontWeight="Bold" Margin="0"/>
-                            <TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Column="3" Foreground="#FF464646" Text="Hours" TextTrimming="CharacterEllipsis" FontWeight="Bold" Margin="0" Grid.ColumnSpan="2"/>
+                            <TextBlock VerticalAlignment="Top" Grid.Column="0" Foreground="#FF464646" Text="Feature" TextTrimming="CharacterEllipsis" FontWeight="Bold" Margin="0"/>
+                            <TextBlock VerticalAlignment="Top" Grid.Column="1" Foreground="#FF464646" Text="Task" TextTrimming="CharacterEllipsis" FontWeight="Bold" Margin="0"/>
+                            <TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Column="2" Foreground="#FF464646" Text="Hours" TextTrimming="CharacterEllipsis" FontWeight="Bold" Margin="0" Grid.ColumnSpan="2"/>
                         </Grid>
                         <Canvas Margin="40,0,10,0">
                             <Grid x:Name="HeaderGrid_Copy" Canvas.Left="{Binding ActualWidth, ElementName=itemsControl}" HorizontalAlignment="Left" RenderTransformOrigin="0.5,0.5">
