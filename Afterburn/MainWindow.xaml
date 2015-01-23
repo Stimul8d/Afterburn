@@ -9,9 +9,26 @@
     xmlns:ignore="http://www.ignore.com"
     xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity" xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions" xmlns:Primitives="clr-namespace:System.Windows.Controls.DataVisualization.Charting.Primitives;assembly=System.Windows.Controls.DataVisualization.Toolkit" x:Class="Afterburn.MainWindow"
     mc:Ignorable="d ignore"
+    EnableDWMDropShadow="True"
+    SaveWindowPosition="True"
     MinWidth="1024"
     MinHeight="600"
+    ShowTitleBar="True"
     Title="Afterburn">
+    <Controls:MetroWindow.RightWindowCommands>
+        <Controls:WindowCommands>
+            <StackPanel Orientation="Horizontal" DataContext="{Binding Main}">
+                <Button x:Name="button2" Style="{DynamicResource NoHoverButtonStyle}" Opacity="0.75" Margin="5">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Click">
+                            <ei:ChangePropertyAction TargetName="flyout" PropertyName="IsOpen" Value="True"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                    <Image Source="Assets/Settings.png"/>
+                </Button>
+            </StackPanel>
+        </Controls:WindowCommands>
+    </Controls:MetroWindow.RightWindowCommands>
     <Controls:MetroWindow.Resources>
         <Style x:Key="NoHoverButtonStyle" TargetType="{x:Type Button}">
             <Setter Property="OverridesDefaultStyle" Value="True"/>

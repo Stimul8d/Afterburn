@@ -66,7 +66,7 @@ namespace Afterburn.ViewModel
 
             this.AnalysisAverageExtrapolation.Updates.Clear();
             var currrentDay = tasks.First().Updates.Last().Date;
-            var remainingTotal = tasks.First().Updates.Last().Hours;
+            var remainingTotal = RemainingHours.Updates.Last().Hours;
 
             var avg = TotalWorked.Updates.Average(u => u.Hours);
             if (avg <= 0)
