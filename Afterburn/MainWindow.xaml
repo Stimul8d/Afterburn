@@ -666,9 +666,8 @@
 
                 </Controls:MetroTabItem>
                 <Controls:MetroTabItem 
-                    Header="Analysis" DataContext="{Binding Main.Analysis}" 
-                                       Visibility="{Binding AnalysisVisibility}">
-                    <Grid>
+                    Header="Analysis" Visibility="{Binding Main.AnalysisVisibility}">
+                    <Grid DataContext="{Binding Main.Analysis}">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="1.618*"/>
                             <RowDefinition/>

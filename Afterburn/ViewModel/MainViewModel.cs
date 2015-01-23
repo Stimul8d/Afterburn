@@ -89,11 +89,6 @@ namespace Afterburn.ViewModel
 
         private bool UpdateEstimates(EstimateUpdatedMessage m)
         {
-            //if (!m.Task.Updates.Any())
-            //{
-            //    return true;
-            //}
-
             if (m.Task.Updates.Any() &&
                 m.Task.Updates.First().Hours > 0)
             {
@@ -223,6 +218,7 @@ namespace Afterburn.ViewModel
         {
             Analysis.CalculateTotals(Tasks, HoursPerDay, SkipWeekends);
             this.TotalEstimatedHours = Tasks.Sum(t => t.Hours);
+            ShowHideAnalysis();
         }
 
         public DateTime AddWorkdays(DateTime originalDate, int workDays)
