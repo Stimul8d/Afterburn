@@ -14,17 +14,15 @@
     MinWidth="1024"
     MinHeight="600"
     ShowTitleBar="True"
-    Title="Afterburn">
+    ShowIconOnTitleBar="True"
+    Title="Afterburn" Icon="Assets/icon.png">
     <Controls:MetroWindow.RightWindowCommands>
         <Controls:WindowCommands>
-            <StackPanel Orientation="Horizontal" DataContext="{Binding Main}">
-                <Button x:Name="button2" Style="{DynamicResource NoHoverButtonStyle}" Opacity="0.75" Margin="5">
-                    <i:Interaction.Triggers>
-                        <i:EventTrigger EventName="Click">
-                            <ei:ChangePropertyAction TargetName="flyout" PropertyName="IsOpen" Value="True"/>
-                        </i:EventTrigger>
-                    </i:Interaction.Triggers>
-                    <Image Source="Assets/Settings.png"/>
+            <StackPanel Orientation="Horizontal">
+                <Button Content="Clear" Command="{Binding NewCommand}"/>
+                <Button Content="Open" Command="{Binding LoadCommand}"/>
+                <Button Content="Save" Command="{Binding SaveCommand}"/>
+                <Button x:Name="button" Content="Settings" Click="OpenFlyout">
                 </Button>
             </StackPanel>
         </Controls:WindowCommands>
@@ -516,44 +514,8 @@
                         AlignmentY="Top"
                         TileMode="Tile" Stretch="None"/>
         </Grid.Background>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="40"/>
-            <RowDefinition/>
-        </Grid.RowDefinitions>
-
-        <Grid Background="#B2544CFF">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition/>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto"/>
-            </Grid.ColumnDefinitions>
-            <Image HorizontalAlignment="Left" Source="Assets/icon.png" Margin="5" Opacity="0.75"/>
-            <TextBlock Text="Afterburn" FontFamily="/Afterburn;component/Assets/#Oswald" FontSize="32" Foreground="White" Grid.Column="1" Margin="0,-4,0,0"/>
-
-            <Button x:Name="button" Grid.Column="6"  Style="{DynamicResource NoHoverButtonStyle}" Opacity="0.75" Margin="5">
-                <i:Interaction.Triggers>
-                    <i:EventTrigger EventName="Click">
-                        <ei:ChangePropertyAction TargetName="flyout" PropertyName="IsOpen" Value="True"/>
-                    </i:EventTrigger>
-                </i:Interaction.Triggers>
-                <Image Source="Assets/Settings.png"/>
-            </Button>
-            <Button Style="{DynamicResource NoHoverButtonStyle}" Grid.Column="5" Width="41" Opacity="0.75" Margin="5" Command="{Binding Main.SaveCommand}">
-                <Image Source="Assets/Save.png"/>
-            </Button>
-            <Button Grid.Column="4"  Style="{DynamicResource NoHoverButtonStyle}" Opacity="0.75" Margin="5" Command="{Binding Main.LoadCommand}">
-                <Image Source="Assets/Open.png" Margin="0"/>
-            </Button>
-            <Button Grid.Column="3"  Style="{DynamicResource NoHoverButtonStyle}" Opacity="0.75" Margin="5" Command="{Binding Main.NewCommand}">
-                <Image Source="Assets/New.png" Margin="0,0,5,0"/>
-            </Button>
-        </Grid>
-        <Grid Grid.Row="1">
-            <Controls:MetroAnimatedTabControl Margin="5" SelectedIndex="{Binding Main.SelectedTabIndex}">
+        <Grid>
+            <Controls:MetroAnimatedTabControl Margin="5,0,5,5" SelectedIndex="{Binding Main.SelectedTabIndex}">
                 <Controls:MetroTabItem Header="Estimate &amp; Tracking"
                                        DataContext="{Binding Main, Source={StaticResource Locator}}">
                     <Grid Margin="0,10,0,20">
@@ -684,7 +646,7 @@
                 </Controls:MetroTabItem>
                 <Controls:MetroTabItem 
                     Header="Analysis" Visibility="{Binding Main.AnalysisVisibility}">
-                    <Grid DataContext="{Binding Main.Analysis}">
+                    <Grid DataContext="{Binding Main.Analysis}" Margin="0,5">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="1.618*"/>
                             <RowDefinition/>
@@ -693,7 +655,7 @@
                             <ColumnDefinition Width="1.681*"/>
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
-                        <dvc:Chart UseLayoutRounding="False" Style="{DynamicResource ChartStyle}" BorderThickness="0" Grid.ColumnSpan="2" Margin="0,0,20,10">
+                        <dvc:Chart UseLayoutRounding="False" Style="{DynamicResource ChartStyle}" BorderThickness="0" Grid.ColumnSpan="2" Margin="0,0,10,10">
                             <dvc:Chart.Axes>
                                 <dvc:CategoryAxis FontSize="16" Opacity="0.6" Orientation="X"/>
                                 <dvc:LinearAxis FontSize="16" Opacity="0.6" Orientation="Y"/>
@@ -732,7 +694,7 @@
                                             ItemsSource="{Binding AnalysisRemainingHours.Updates}" LegendItemStyle="{DynamicResource LegendItemStyle}"/>
                         </dvc:Chart>
                         <dvc:Chart UseLayoutRounding="False"
-                                   Style="{DynamicResource ChartStyle}" BorderThickness="0" Grid.Row="1" Grid.ColumnSpan="2" Margin="0,0,20,0">
+                                   Style="{DynamicResource ChartStyle}" BorderThickness="0" Grid.Row="1" Grid.ColumnSpan="2" Margin="0,0,10,0">
                             <dvc:Chart.Axes>
                                 <dvc:CategoryAxis FontSize="16" Opacity="0.6" Orientation="X"/>
                                 <dvc:LinearAxis FontSize="16" Opacity="0.6" Orientation="Y"/>

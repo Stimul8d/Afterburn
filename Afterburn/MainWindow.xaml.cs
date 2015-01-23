@@ -56,5 +56,10 @@ namespace Afterburn
                 }
             });
         }
+
+        private void OpenFlyout(object sender, System.Windows.RoutedEventArgs e)
+        {
+            flyout.IsOpen = !flyout.IsOpen;
+        }
     }
 }

@@ -151,9 +151,6 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Assets\icon.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Assets\Open.png" />
     <Resource Include="Assets\Save.png" />
   </ItemGroup>
@@ -171,6 +168,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Assets\New.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\icon.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
