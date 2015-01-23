@@ -151,10 +151,6 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Assets\Open.png" />
-    <Resource Include="Assets\Save.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Assets\Delete.png" />
   </ItemGroup>
   <ItemGroup>
@@ -162,12 +158,6 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Assets\Background.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Assets\Settings.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Assets\New.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Assets\icon.png" />
