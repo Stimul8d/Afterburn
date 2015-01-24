@@ -530,7 +530,13 @@
                                 <ColumnDefinition Width="50"/>
                                 <ColumnDefinition Width="20"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock VerticalAlignment="Top" Grid.Column="0" Foreground="#FF464646" Text="Feature" TextTrimming="CharacterEllipsis" FontWeight="Bold" Margin="0"/>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock VerticalAlignment="Top" Foreground="#FF464646" Text="Feature" TextTrimming="CharacterEllipsis" FontWeight="Bold" Margin="0"/>
+                                <Button Style="{StaticResource NoHoverButtonStyle}"
+                                        Command="{Binding SortFeaturesCommand}">
+                                    <Image Source="Assets/Sort.png" Height="18" Margin="6,0,0,0"></Image>
+                                </Button>
+                            </StackPanel>
                             <TextBlock VerticalAlignment="Top" Grid.Column="1" Foreground="#FF464646" Text="Task" TextTrimming="CharacterEllipsis" FontWeight="Bold" Margin="0"/>
                             <TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Column="2" Foreground="#FF464646" Text="Hours" TextTrimming="CharacterEllipsis" FontWeight="Bold" Margin="0" Grid.ColumnSpan="2"/>
                         </Grid>

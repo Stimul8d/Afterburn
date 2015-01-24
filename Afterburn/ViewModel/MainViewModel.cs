@@ -7,6 +7,7 @@ using Afterburn.Model;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
+using Afterburn.Extensions;
 
 namespace Afterburn.ViewModel
 {
@@ -21,6 +22,7 @@ namespace Afterburn.ViewModel
         public RelayCommand NewCommand { get; set; }
         public RelayCommand SaveCommand { get; set; }
         public RelayCommand LoadCommand { get; set; }
+        public RelayCommand SortFeaturesCommand { get; set; }
 
         public MainViewModel()
         {
@@ -85,6 +87,13 @@ namespace Afterburn.ViewModel
 
             this.AddTaskCommand = new RelayCommand(AddTask);
             this.AddDayCommand = new RelayCommand(this.AddDay);
+
+            this.SortFeaturesCommand = new RelayCommand(SortFeatures);
+        }
+
+        private void SortFeatures()
+        {
+            Tasks.Sort(x => x.Feature);
         }
 
         private bool UpdateEstimates(EstimateUpdatedMessage m)
