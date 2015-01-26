@@ -6,6 +6,7 @@ using GalaSoft.MvvmLight.Messaging;
 using MahApps.Metro.Controls;
 using Microsoft.Win32;
 using Newtonsoft.Json;
+using System.IO;
 
 namespace Afterburn
 {
@@ -14,6 +15,8 @@ namespace Afterburn
     /// </summary>
     public partial class MainWindow : MetroWindow
     {
+        string title = "";
+
         /// <summary>
         /// Initializes a new instance of the MainWindow class.
         /// </summary>
@@ -24,13 +27,16 @@ namespace Afterburn
             Messenger.Default.Register<SaveMessage>(this, (m) =>
             {
                 var dialog = new SaveFileDialog();
-                dialog.FileName = "New Project";
+                dialog.FileName = string.IsNullOrWhiteSpace(title) 
+                    ? "New Project" : title;
                 dialog.DefaultExt = ".afterburn";
                 dialog.Filter = "Afterburn files (.afterburn)|*.afterburn";
                 var result = dialog.ShowDialog();
                 if (result.HasValue && result.Value)
                 {
                     var filename = dialog.FileName;
+                    title = Path.GetFileNameWithoutExtension(filename);
+                    this.Title = title;
                     var data = new FileFactory().Create((MainViewModel)this.DataContext);
                     var json = JsonConvert.SerializeObject(data);
 
@@ -47,6 +53,8 @@ namespace Afterburn
                 if (result.HasValue && result.Value)
                 {
                     var filename = dialog.FileName;
+                    title = Path.GetFileNameWithoutExtension(filename);
+                    this.Title = "AFTERBURN - " + title;
                     var data = System.IO.File.ReadAllText(filename);
 
                     var file = JsonConvert.DeserializeObject<AfterburnFile>(data);
