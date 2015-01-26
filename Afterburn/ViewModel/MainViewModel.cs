@@ -46,6 +46,11 @@ namespace Afterburn.ViewModel
                     DeleteTask(m);
                 });
 
+            Messenger.Default.Register<FeatureNameUpdatedMessage>(this, (m) =>
+            {
+                Analysis.CalculateTotals(Tasks, hoursPerDay, skipWeekends);
+            });
+
             Messenger.Default.Register<DeleteDateMessage>(this,
                 (m) =>
                 {

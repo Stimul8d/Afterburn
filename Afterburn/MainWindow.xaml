@@ -8,6 +8,7 @@
     xmlns:dvc="clr-namespace:System.Windows.Controls.DataVisualization.Charting;assembly=System.Windows.Controls.DataVisualization.Toolkit"
     xmlns:ignore="http://www.ignore.com"
     xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity" xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions" xmlns:Primitives="clr-namespace:System.Windows.Controls.DataVisualization.Charting.Primitives;assembly=System.Windows.Controls.DataVisualization.Toolkit" x:Class="Afterburn.MainWindow"
+    xmlns:chart="clr-namespace:De.TorstenMandelkow.MetroChart;assembly=De.TorstenMandelkow.MetroChart"
     mc:Ignorable="d ignore"
     EnableDWMDropShadow="True"
     SaveWindowPosition="True"
@@ -28,6 +29,10 @@
         </Controls:WindowCommands>
     </Controls:MetroWindow.RightWindowCommands>
     <Controls:MetroWindow.Resources>
+        <!--<Style x:Key="MinimalChartStyle" TargetType="chart:DoughnutChart">
+            <Setter Property="Width" Value="500"/>
+            <Setter Property="Height" Value="500"/>
+        </Style>-->
         <Style x:Key="NoHoverButtonStyle" TargetType="{x:Type Button}">
             <Setter Property="OverridesDefaultStyle" Value="True"/>
             <Setter Property="Template">
@@ -651,7 +656,7 @@
 
                 </Controls:MetroTabItem>
                 <Controls:MetroTabItem 
-                    Header="Analysis" Visibility="{Binding Main.AnalysisVisibility}">
+                    Header="Analysis" Visibility="{Binding Main.AnalysisVisibility}" HorizontalAlignment="Right" Width="110">
                     <Grid DataContext="{Binding Main.Analysis}" Margin="0,5">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="1.618*"/>
@@ -700,7 +705,7 @@
                                             ItemsSource="{Binding AnalysisRemainingHours.Updates}" LegendItemStyle="{DynamicResource LegendItemStyle}"/>
                         </dvc:Chart>
                         <dvc:Chart UseLayoutRounding="False"
-                                   Style="{DynamicResource ChartStyle}" BorderThickness="0" Grid.Row="1" Grid.ColumnSpan="2" Margin="0,0,10,0">
+                                   Style="{DynamicResource ChartStyle}" BorderThickness="0" Grid.Row="1" Margin="0,0,10,0">
                             <dvc:Chart.Axes>
                                 <dvc:CategoryAxis FontSize="16" Opacity="0.6" Orientation="X"/>
                                 <dvc:LinearAxis FontSize="16" Opacity="0.6" Orientation="Y"/>
@@ -735,6 +740,22 @@
                         		DependentValueBinding="{Binding Hours}" 
                         		ItemsSource="{Binding AnalysisDistractions.Updates}" LegendItemStyle="{DynamicResource LegendItemStyle}" Background="#FFB03D3D"/>
                         </dvc:Chart>
+                        <chart:DoughnutChart  
+                            Grid.Column="1"
+                            Grid.Row="1"  
+                            ChartTitleVisibility="Collapsed"
+                            Height="Auto" HorizontalContentAlignment="Stretch" 
+                            Width="Auto" Margin="0,0,6,0" Background="#7FFFFFFF">
+                            <chart:PieChart.Series>
+                                <chart:ChartSeries
+                                    DisplayMember="Name"
+                                    ValueMember="Hours" 
+                                    SeriesTitle="Feature Spread"
+                                    ItemsSource="{Binding FeatureSpread.Features}">
+                                </chart:ChartSeries>
+                            </chart:PieChart.Series>
+                        </chart:DoughnutChart>
+
                     </Grid>
 
                 </Controls:MetroTabItem>

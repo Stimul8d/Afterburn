@@ -16,7 +16,8 @@ namespace Afterburn.ViewModel
 
         public RelayCommand DeleteTaskCommand { get; set; }
 
-        public TaskViewModel() : this("FEATURE", "NAME", 0)
+        public TaskViewModel()
+            : this("FEATURE", "NAME", 0)
         {
         }
 
@@ -95,6 +96,8 @@ namespace Afterburn.ViewModel
                 }
 
                 this.feature = value;
+                Messenger.Default.Send<FeatureNameUpdatedMessage>(new FeatureNameUpdatedMessage());
+
                 this.RaisePropertyChanged(FeaturePropertyName);
             }
         }
@@ -154,7 +157,7 @@ namespace Afterburn.ViewModel
                     return;
                 }
                 var previous = this.hours;
-                this.hours = value;
+                this.hours = Math.Round(value, 2);
 
                 this.RaisePropertyChanged(HoursPropertyName);
                 Messenger.Default.Send<EstimateUpdatedMessage>(new EstimateUpdatedMessage(this, previous));

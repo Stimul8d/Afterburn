@@ -26,8 +26,12 @@ namespace Afterburn.ViewModel
         public TaskTotalViewModel ProjectedTotal { get; set; }
         public TaskTotalViewModel TotalWorked { get; set; }
 
+        public FeatureSpreadViewModel FeatureSpread { get; set; }
+
         public AnalysisViewModel()
         {
+            this.FeatureSpread = new FeatureSpreadViewModel();
+
             this.Distractions = new TaskTotalViewModel();
             this.RemainingHours = new TaskTotalViewModel();
             this.ProjectedTotal = new TaskTotalViewModel();
@@ -38,6 +42,8 @@ namespace Afterburn.ViewModel
             this.AnalysisProjectedTotal = new TaskTotalViewModel();
             this.AnalysisTotalWorked = new TaskTotalViewModel();
             this.AnalysisAverageExtrapolation = new TaskTotalViewModel();
+
+            this.FeatureSpread = new FeatureSpreadViewModel();
         }
 
         public void CalculateTotals(IEnumerable<TaskViewModel> tasks,
@@ -63,6 +69,27 @@ namespace Afterburn.ViewModel
             GenerateChartFriendlyValues();
 
             CreateAverageExtrapolation();
+
+            CreateFeatureSpread();
+        }
+
+        private void CreateFeatureSpread()
+        {
+            FeatureSpread.Clear();
+            FeatureSpread.Features.AddRange(GetFeatureHours());
+        }
+
+        private IEnumerable<FeatureTotalViewModel> GetFeatureHours()
+        {
+            if (!tasks.Any() || !tasks.All(t => t.Updates.Any()))
+                return Enumerable.Empty<FeatureTotalViewModel>();
+
+            return tasks.GroupBy(t => t.Feature)
+                         .Select(g => new FeatureTotalViewModel
+                         {
+                             Name = g.Key,
+                             Hours = g.Sum(t => t.Updates.Last().Hours)
+                        }).ToList();
         }
 
         private void CreateAverageExtrapolation()
