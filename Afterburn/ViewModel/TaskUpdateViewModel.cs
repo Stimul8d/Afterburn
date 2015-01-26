@@ -27,6 +27,11 @@ namespace Afterburn.ViewModel
 
         public TaskUpdateViewModel()
         {
+            this.EditDateCommand = new RelayCommand(() =>
+            {
+                Messenger.Default.Send<EditDateMessage>(
+                    new EditDateMessage(this));
+            });
             this.DeleteDateCommand = new RelayCommand(() =>
             {
                 Messenger.Default.Send<DeleteDateMessage>(
@@ -34,6 +39,7 @@ namespace Afterburn.ViewModel
             });
         }
 
+        public RelayCommand EditDateCommand { get; set; }
         public RelayCommand DeleteDateCommand { get; set; }
 
         /// <summary>

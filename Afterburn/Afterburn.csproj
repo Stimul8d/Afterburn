@@ -97,6 +97,7 @@
     <Compile Include="Extensions\ObservableCollectionExtensions.cs" />
     <Compile Include="Messages\DeleteDateMessage.cs" />
     <Compile Include="Messages\DeleteTaskMessage.cs" />
+    <Compile Include="Messages\EditDateMessage.cs" />
     <Compile Include="Messages\EstimateUpdatedMessage.cs" />
     <Compile Include="Messages\FeatureNameUpdatedMessage.cs" />
     <Compile Include="Messages\LoadMessage.cs" />
@@ -109,6 +110,7 @@
     <Compile Include="Model\Update.cs" />
     <Compile Include="ViewModel\AnalysisViewModel.cs" />
     <Compile Include="ViewModel\DayUpdateViewModel.cs" />
+    <Compile Include="ViewModel\EditDateViewModel.cs" />
     <Compile Include="ViewModel\FeatureSpreadViewModel.cs" />
     <Compile Include="ViewModel\FeatureTotalViewModel.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />

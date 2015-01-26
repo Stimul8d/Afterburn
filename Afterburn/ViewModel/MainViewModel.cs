@@ -14,6 +14,7 @@ namespace Afterburn.ViewModel
     public class MainViewModel : ViewModelBase
     {
         public AnalysisViewModel Analysis { get; set; }
+        public EditDateViewModel EditDate { get; set; }
 
         public ObservableCollection<TaskViewModel> Tasks { get; set; }
 
@@ -27,6 +28,8 @@ namespace Afterburn.ViewModel
         public MainViewModel()
         {
             this.Analysis = new AnalysisViewModel();
+            this.EditDate = new EditDateViewModel();
+
             this.Tasks = new ObservableCollection<TaskViewModel>();
 
             this.AddDummyTask();
