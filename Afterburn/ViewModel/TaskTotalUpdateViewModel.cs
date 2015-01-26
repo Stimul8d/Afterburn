@@ -74,7 +74,7 @@ namespace Afterburn.ViewModel
                 {
                     return;
                 }
-                hours = value;
+                hours = Math.Round(value, 2);
 
                 if (hours < 0)
                     hours = 0;
