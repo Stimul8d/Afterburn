@@ -23,6 +23,7 @@ namespace Afterburn.ViewModel
             Messenger.Default.Register<EditDateMessage>(this,
             (m) =>
             {
+                BlacklistedDates.Clear();
                 TaskUpdateViewModel = m.Vm;
                 NewDate = m.Vm.Date;
                 ShowEditDate = true;

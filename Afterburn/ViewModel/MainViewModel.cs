@@ -51,7 +51,7 @@ namespace Afterburn.ViewModel
 
             Messenger.Default.Register<EditDateMessage>(this, (m) =>
             {
-                var dates = Tasks.First().Updates.Select(u => u.Date);
+                var dates = Tasks.First().Updates.Select(u => u.Date).ToList();
                 Messenger.Default.Send<BlacklistDatesMessage>(
                     new BlacklistDatesMessage(dates));
             });
