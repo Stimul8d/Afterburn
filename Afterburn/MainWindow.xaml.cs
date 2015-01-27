@@ -36,7 +36,7 @@ namespace Afterburn
                 {
                     var filename = dialog.FileName;
                     title = Path.GetFileNameWithoutExtension(filename);
-                    this.Title = title;
+                    this.Title = "AFTERBURN - " + title;
                     var data = new FileFactory().Create((MainViewModel)this.DataContext);
                     var json = JsonConvert.SerializeObject(data);
 
