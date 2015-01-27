@@ -35,6 +35,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Assets\icon.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="De.TorstenMandelkow.MetroChart">
       <HintPath>lib\De.TorstenMandelkow.MetroChart.dll</HintPath>
@@ -170,6 +173,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Assets\Sort.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\icon.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
