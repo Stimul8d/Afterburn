@@ -153,7 +153,7 @@
                 </StackPanel>
                 <Button x:Name="button" HorizontalAlignment="Left" VerticalAlignment="Top" Width="31" Style="{DynamicResource NoHoverButtonStyle}" Height="31" IsHitTestVisible="False" Opacity="0" Command="{Binding EditDateCommand}">
                     <Button.Background>
-                        <ImageBrush ImageSource="Assets/Delete.png"/>
+                        <ImageBrush ImageSource="Assets/Edit.png"/>
                     </Button.Background>
                 </Button>
             </Grid>
@@ -771,7 +771,7 @@
                 </StackPanel>
             </StackPanel>
         </Controls:Flyout>
-        <Grid x:Name="EditDateOverlay" Background="#4C000000" Opacity="0" IsHitTestVisible="False" DataContext="{Binding Main.EditDate}">
+        <Grid x:Name="EditDateOverlay" Background="#4C000000" Opacity="0" IsHitTestVisible="False" DataContext="{Binding Main.EditDate}" d:IsLocked="True">
             <Grid.Style>
                 <Style>
                     <Style.Triggers>
