@@ -12,6 +12,7 @@ namespace Afterburn.ViewModel
     public class EditDateViewModel : ViewModelBase
     {
         public RelayCommand CancelCommand { get; set; }
+        public RelayCommand ChangeDateCommand { get; set; }
 
         public EditDateViewModel()
         {
@@ -19,6 +20,7 @@ namespace Afterburn.ViewModel
             (m) =>
             {
                 TaskUpdateViewModel = m.Vm;
+                NewDate = m.Vm.Date;
                 ShowEditDate = true;
             });
 
@@ -30,6 +32,12 @@ namespace Afterburn.ViewModel
 
             CancelCommand = new RelayCommand(() =>
             {
+                ShowEditDate = false;
+            });
+
+            ChangeDateCommand = new RelayCommand(() =>
+            {
+                TaskUpdateViewModel.Date = NewDate;
                 ShowEditDate = false;
             });
         }
@@ -62,6 +70,36 @@ namespace Afterburn.ViewModel
 
                 showEditDate = value;
                 RaisePropertyChanged(ShowEditDatePropertyName);
+            }
+        }
+
+        /// <summary>
+        /// The <see cref="NewDate" /> property's name.
+        /// </summary>
+        public const string NewDatePropertyName = "NewDate";
+
+        private DateTime newDate = DateTime.Today;
+
+        /// <summary>
+        /// Sets and gets the NewDate property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        public DateTime NewDate
+        {
+            get
+            {
+                return newDate;
+            }
+
+            set
+            {
+                if (newDate == value)
+                {
+                    return;
+                }
+
+                newDate = value;
+                RaisePropertyChanged(NewDatePropertyName);
             }
         }
 

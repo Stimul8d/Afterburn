@@ -771,7 +771,7 @@
                 </StackPanel>
             </StackPanel>
         </Controls:Flyout>
-        <Grid x:Name="EditDateOverlay" Background="#4C000000" Opacity="0" IsHitTestVisible="False" DataContext="{Binding Main.EditDate}" d:IsLocked="True">
+        <Grid x:Name="EditDateOverlay" Background="#4C000000" Opacity="0" IsHitTestVisible="False" DataContext="{Binding Main.EditDate}">
             <Grid.Style>
                 <Style>
                     <Style.Triggers>
@@ -829,7 +829,7 @@
                         <RowDefinition/>
                     </Grid.RowDefinitions>
                     <TextBlock FontSize="28" Text="Edit Date..." Foreground="#FF2B2B2B" Margin="10,0,0,0"/>
-                    <Calendar Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" SelectedDate="{Binding TaskUpdateViewModel.Date}"/>
+                    <Calendar Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" SelectedDate="{Binding NewDate}"/>
                     <Grid Grid.Column="1" Margin="0,22,0,21" Grid.Row="1" >
                         <Grid.RowDefinitions>
                             <RowDefinition/>
@@ -837,7 +837,7 @@
                             <RowDefinition/>
                         </Grid.RowDefinitions>
                         <Button Margin="10" Content="Delete" Command="{Binding TaskUpdateViewModel.DeleteDateCommand}"/>
-                        <Button Margin="10" Grid.Row="1" Content="Change Date"/>
+                        <Button Margin="10" Grid.Row="1" Content="Change Date" Command="{Binding ChangeDateCommand}"/>
                         <Button Margin="10" Grid.Row="2" Content="Cancel" Command="{Binding CancelCommand}"/>
                     </Grid>
                 </Grid>
