@@ -49,6 +49,13 @@ namespace Afterburn.ViewModel
                     DeleteTask(m);
                 });
 
+            Messenger.Default.Register<EditDateMessage>(this, (m) =>
+            {
+                var dates = Tasks.First().Updates.Select(u => u.Date);
+                Messenger.Default.Send<BlacklistDatesMessage>(
+                    new BlacklistDatesMessage(dates));
+            });
+
             Messenger.Default.Register<FeatureNameUpdatedMessage>(this, (m) =>
             {
                 Analysis.CalculateTotals(Tasks, hoursPerDay, skipWeekends);

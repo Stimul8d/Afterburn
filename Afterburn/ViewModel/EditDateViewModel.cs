@@ -1,11 +1,11 @@
-﻿using Afterburn.Messages;
+﻿using System;
+using System.Collections.ObjectModel;
+using System.Linq;
+using Afterburn.Extensions;
+using Afterburn.Messages;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Afterburn.ViewModel
 {
@@ -14,14 +14,24 @@ namespace Afterburn.ViewModel
         public RelayCommand CancelCommand { get; set; }
         public RelayCommand ChangeDateCommand { get; set; }
 
+        public ObservableCollection<DateTime> BlacklistedDates { get; set; }
+
         public EditDateViewModel()
         {
+            BlacklistedDates = new ObservableCollection<DateTime>();
+
             Messenger.Default.Register<EditDateMessage>(this,
             (m) =>
             {
                 TaskUpdateViewModel = m.Vm;
                 NewDate = m.Vm.Date;
                 ShowEditDate = true;
+            });
+
+            Messenger.Default.Register<BlacklistDatesMessage>(this, (m) =>
+            {
+                BlacklistedDates.Clear();
+                BlacklistedDates.AddRange(m.BlacklistDates);
             });
 
             Messenger.Default.Register<DeleteDateMessage>(this,

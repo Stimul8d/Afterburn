@@ -4,6 +4,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+    xmlns:ap="clr-namespace:Afterburn.AttachedProperties"
     xmlns:dv="clr-namespace:System.Windows.Controls.DataVisualization;assembly=System.Windows.Controls.DataVisualization.Toolkit"
     xmlns:dvc="clr-namespace:System.Windows.Controls.DataVisualization.Charting;assembly=System.Windows.Controls.DataVisualization.Toolkit"
     xmlns:ignore="http://www.ignore.com"
@@ -829,7 +830,11 @@
                         <RowDefinition/>
                     </Grid.RowDefinitions>
                     <TextBlock FontSize="28" Text="Edit Date..." Foreground="#FF2B2B2B" Margin="10,0,0,0"/>
-                    <Calendar Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" SelectedDate="{Binding NewDate}"/>
+                    <Calendar Grid.Row="1" HorizontalAlignment="Center" 
+                              VerticalAlignment="Center" SelectedDate="{Binding NewDate}"
+                              ap:BlackoutDates.BlackOutDates="{Binding BlacklistedDates}">
+                    </Calendar>
+
                     <Grid Grid.Column="1" Margin="0,22,0,21" Grid.Row="1" >
                         <Grid.RowDefinitions>
                             <RowDefinition/>
