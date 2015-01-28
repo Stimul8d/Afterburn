@@ -48,8 +48,9 @@ namespace Afterburn.ViewModel
 
             ChangeDateCommand = new RelayCommand(() =>
             {
-                TaskUpdateViewModel.Date = NewDate;
                 ShowEditDate = false;
+                Messenger.Default.Send<ConfirmDateChangedMessage>(
+                    new ConfirmDateChangedMessage(TaskUpdateViewModel.Date, NewDate));
             });
         }
 

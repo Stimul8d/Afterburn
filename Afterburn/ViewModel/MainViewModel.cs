@@ -56,6 +56,11 @@ namespace Afterburn.ViewModel
                     new BlacklistDatesMessage(dates));
             });
 
+            Messenger.Default.Register<ConfirmDateChangedMessage>(this, (m) =>
+            {
+                ChangeDate(m.From, m.To);
+            });
+
             Messenger.Default.Register<FeatureNameUpdatedMessage>(this, (m) =>
             {
                 Analysis.CalculateTotals(Tasks, hoursPerDay, skipWeekends);
@@ -81,6 +86,19 @@ namespace Afterburn.ViewModel
                 {
                     this.CalculateTotals();
                 });
+        }
+
+        private void ChangeDate(DateTime from, DateTime to)
+        {
+            foreach (var task in Tasks)
+            {
+                var updates = task.Updates.ToList();
+                task.Updates.Clear();
+                updates.Single(u => u.Date == from).Date = to;
+                task.Updates.AddRange(updates.OrderBy(u => u.Date));
+            }
+            Analysis.Clear();
+            Analysis.CalculateTotals(Tasks, HoursPerDay, skipWeekends);
         }
 
         private void SetupCommands()
@@ -206,9 +224,10 @@ namespace Afterburn.ViewModel
 
         private void Reset()
         {
+            Analysis.Clear();
             this.Tasks.Clear();
             this.CalculateTotals();
-            this.Tasks.Clear();
+            AddDummyTask();
         }
 
         public static DateTime AddDays(DateTime date, int days, bool skipWeekends)

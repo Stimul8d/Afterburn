@@ -97,6 +97,7 @@
     <Compile Include="Extensions\IEnumerableExtensions.cs" />
     <Compile Include="Extensions\ObservableCollectionExtensions.cs" />
     <Compile Include="Messages\BlacklistDatesMessage.cs" />
+    <Compile Include="Messages\ConfirmDateChangedMessage.cs" />
     <Compile Include="Messages\DeleteDateMessage.cs" />
     <Compile Include="Messages\DeleteTaskMessage.cs" />
     <Compile Include="Messages\EditDateMessage.cs" />
