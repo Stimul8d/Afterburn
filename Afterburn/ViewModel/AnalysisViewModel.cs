@@ -46,6 +46,21 @@ namespace Afterburn.ViewModel
             this.FeatureSpread = new FeatureSpreadViewModel();
         }
 
+        public void Clear()
+        {
+            AnalysisDistractions.Updates.Clear();
+            AnalysisRemainingHours.Updates.Clear();
+            AnalysisProjectedTotal.Updates.Clear();
+            AnalysisTotalWorked.Updates.Clear();
+            AnalysisAverageExtrapolation.Updates.Clear();
+            
+            Distractions.Updates.Clear();
+            RemainingHours.Updates.Clear();
+            ProjectedTotal.Updates.Clear();
+            TotalWorked.Updates.Clear();
+            FeatureSpread.Clear();
+        }
+
         public void CalculateTotals(IEnumerable<TaskViewModel> tasks,
             double hoursPerDay, bool skipWeekends)
         {

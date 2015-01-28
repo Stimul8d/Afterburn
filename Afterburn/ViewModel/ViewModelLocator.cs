@@ -42,7 +42,10 @@ namespace Afterburn.ViewModel
         {
             ServiceLocator.SetLocatorProvider(() => SimpleIoc.Default);
             SimpleIoc.Default.Register<MainViewModel>();
-            SimpleIoc.Default.Register<ViewModelLocator>(() => this);
+            if (!SimpleIoc.Default.IsRegistered<ViewModelLocator>())
+            {
+                SimpleIoc.Default.Register<ViewModelLocator>(() => this); 
+            }
         }
 
         /// <summary>

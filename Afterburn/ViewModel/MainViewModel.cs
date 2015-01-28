@@ -14,6 +14,7 @@ namespace Afterburn.ViewModel
     public class MainViewModel : ViewModelBase
     {
         public AnalysisViewModel Analysis { get; set; }
+        public EditDateViewModel EditDate { get; set; }
 
         public ObservableCollection<TaskViewModel> Tasks { get; set; }
 
@@ -27,6 +28,8 @@ namespace Afterburn.ViewModel
         public MainViewModel()
         {
             this.Analysis = new AnalysisViewModel();
+            this.EditDate = new EditDateViewModel();
+
             this.Tasks = new ObservableCollection<TaskViewModel>();
 
             this.AddDummyTask();
@@ -45,6 +48,18 @@ namespace Afterburn.ViewModel
                 {
                     DeleteTask(m);
                 });
+
+            Messenger.Default.Register<EditDateMessage>(this, (m) =>
+            {
+                var dates = Tasks.First().Updates.Select(u => u.Date).ToList();
+                Messenger.Default.Send<BlacklistDatesMessage>(
+                    new BlacklistDatesMessage(dates));
+            });
+
+            Messenger.Default.Register<ConfirmDateChangedMessage>(this, (m) =>
+            {
+                ChangeDate(m.From, m.To);
+            });
 
             Messenger.Default.Register<FeatureNameUpdatedMessage>(this, (m) =>
             {
@@ -71,6 +86,19 @@ namespace Afterburn.ViewModel
                 {
                     this.CalculateTotals();
                 });
+        }
+
+        private void ChangeDate(DateTime from, DateTime to)
+        {
+            foreach (var task in Tasks)
+            {
+                var updates = task.Updates.ToList();
+                task.Updates.Clear();
+                updates.Single(u => u.Date == from).Date = to;
+                task.Updates.AddRange(updates.OrderBy(u => u.Date));
+            }
+            Analysis.Clear();
+            Analysis.CalculateTotals(Tasks, HoursPerDay, skipWeekends);
         }
 
         private void SetupCommands()
@@ -196,9 +224,10 @@ namespace Afterburn.ViewModel
 
         private void Reset()
         {
+            Analysis.Clear();
             this.Tasks.Clear();
             this.CalculateTotals();
-            this.Tasks.Clear();
+            AddDummyTask();
         }
 
         public static DateTime AddDays(DateTime date, int days, bool skipWeekends)

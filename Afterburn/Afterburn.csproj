@@ -95,11 +95,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="AttachedProperties\BlackoutDates.cs" />
     <Compile Include="Converters\GridLengthToWidthConverter.cs" />
     <Compile Include="Extensions\IEnumerableExtensions.cs" />
     <Compile Include="Extensions\ObservableCollectionExtensions.cs" />
+    <Compile Include="Messages\BlacklistDatesMessage.cs" />
+    <Compile Include="Messages\ConfirmDateChangedMessage.cs" />
     <Compile Include="Messages\DeleteDateMessage.cs" />
     <Compile Include="Messages\DeleteTaskMessage.cs" />
+    <Compile Include="Messages\EditDateMessage.cs" />
     <Compile Include="Messages\EstimateUpdatedMessage.cs" />
     <Compile Include="Messages\FeatureNameUpdatedMessage.cs" />
     <Compile Include="Messages\LoadMessage.cs" />
@@ -112,6 +116,7 @@
     <Compile Include="Model\Update.cs" />
     <Compile Include="ViewModel\AnalysisViewModel.cs" />
     <Compile Include="ViewModel\DayUpdateViewModel.cs" />
+    <Compile Include="ViewModel\EditDateViewModel.cs" />
     <Compile Include="ViewModel\FeatureSpreadViewModel.cs" />
     <Compile Include="ViewModel\FeatureTotalViewModel.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
@@ -176,6 +181,7 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Assets\icon.ico" />
+    <Resource Include="Assets\Edit.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

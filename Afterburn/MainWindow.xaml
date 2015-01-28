@@ -4,6 +4,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+    xmlns:ap="clr-namespace:Afterburn.AttachedProperties"
     xmlns:dv="clr-namespace:System.Windows.Controls.DataVisualization;assembly=System.Windows.Controls.DataVisualization.Toolkit"
     xmlns:dvc="clr-namespace:System.Windows.Controls.DataVisualization.Charting;assembly=System.Windows.Controls.DataVisualization.Toolkit"
     xmlns:ignore="http://www.ignore.com"
@@ -146,14 +147,14 @@
                     </DoubleAnimationUsingKeyFrames>
                 </Storyboard>
             </DataTemplate.Resources>
-            <Grid Height="Auto" Margin="0,-15,20,0">
+            <Grid x:Name="grid" Height="Auto" Margin="0,-15,20,0" Width="31">
                 <StackPanel x:Name="stackPanel" Orientation="Vertical" Margin="0">
                     <TextBlock Text="{Binding Date, StringFormat=\{0:ddd\}}" FontSize="12" FontWeight="Bold" Foreground="#FF464646" Margin="0" HorizontalAlignment="Center"/>
                     <TextBlock Text="{Binding Date, StringFormat=\{0:dd.M\}}" FontSize="12" FontWeight="Bold" Foreground="#FF464646" Margin="0"/>
                 </StackPanel>
-                <Button x:Name="button" HorizontalAlignment="Left" VerticalAlignment="Top" Width="31" Style="{DynamicResource NoHoverButtonStyle}" Height="31" IsHitTestVisible="False" Opacity="0" Command="{Binding DeleteDateCommand}">
+                <Button x:Name="button" HorizontalAlignment="Left" VerticalAlignment="Top" Width="31" Style="{DynamicResource NoHoverButtonStyle}" Height="31" IsHitTestVisible="False" Opacity="0" Command="{Binding EditDateCommand}">
                     <Button.Background>
-                        <ImageBrush ImageSource="Assets/Delete.png"/>
+                        <ImageBrush ImageSource="Assets/Edit.png"/>
                     </Button.Background>
                 </Button>
             </Grid>
@@ -557,7 +558,6 @@
                             </Grid>
 
                         </Canvas>
-
                         <ScrollViewer VerticalScrollBarVisibility="Auto" Grid.Row="1" Grid.ColumnSpan="2">
                             <Grid x:Name="DetailsGrid" ScrollViewer.VerticalScrollBarVisibility="Disabled" Margin="10,0,10,10">
                                 <Grid.ColumnDefinitions>
@@ -568,7 +568,7 @@
                                 <StackPanel >
                                     <ItemsControl x:Name="itemsControl" ItemsSource="{Binding Tasks}" ItemTemplate="{DynamicResource TaskEstimateTemplate}" VerticalAlignment="Top" Margin="0,5,5,0"/>
                                     <Button VerticalAlignment="Top" HorizontalAlignment="Left" Padding="0" BorderThickness="0" Style="{DynamicResource NoHoverButtonStyle}" Width="32" Height="32" Margin="-5,0,0,5" 
-                                            Command="{Binding AddTaskCommand}" >
+                        				Command="{Binding AddTaskCommand}" >
                                         <Button.Background>
                                             <ImageBrush ImageSource="Assets/Add.png" Stretch="None">
                                                 <ImageBrush.RelativeTransform>
@@ -602,15 +602,15 @@
                                 <DockPanel Grid.Column="2" Margin="5,5,0,0">
                                     <StackPanel Orientation="Vertical" HorizontalAlignment="Left">
                                         <ItemsControl x:Name="itemsControl1" HorizontalAlignment="Left" 
-                                                      VerticalAlignment="Top" 
-                                                      FontSize="16" Foreground="#FF464646" 
-                                                      ItemsSource="{Binding Tasks}" ItemTemplate="{DynamicResource TaskUpdatesTemplate}"/>
+                        					VerticalAlignment="Top" 
+                        					FontSize="16" Foreground="#FF464646" 
+                        					ItemsSource="{Binding Tasks}" ItemTemplate="{DynamicResource TaskUpdatesTemplate}"/>
                                         <ItemsControl x:Name="itemsControl1_Copy" 
-                                                      FontSize="16" Foreground="#FF464646" 
-                                                      ItemsSource="{Binding  Analysis.Distractions.Updates}" 
-                                                      ItemTemplate="{DynamicResource TaskUpdateTemplate}" 
-                                                      VerticalAlignment="Top" Margin="0,37,0,0" 
-                                                      HorizontalAlignment="Left" IsHitTestVisible="False">
+                        					FontSize="16" Foreground="#FF464646" 
+                        					ItemsSource="{Binding Analysis.Distractions.Updates}" 
+                        					ItemTemplate="{DynamicResource TaskUpdateTemplate}" 
+                        					VerticalAlignment="Top" Margin="0,37,0,0" 
+                        					HorizontalAlignment="Left" IsHitTestVisible="False">
                                             <ItemsControl.ItemsPanel>
                                                 <ItemsPanelTemplate>
                                                     <StackPanel Orientation="Horizontal"/>
@@ -618,10 +618,10 @@
                                             </ItemsControl.ItemsPanel>
                                         </ItemsControl>
                                         <ItemsControl x:Name="itemsControl1_Copy4" 
-                                                      FontSize="16" Foreground="#FF464646" 
-                                                      ItemsSource="{Binding Analysis.TotalWorked.Updates}" 
-                                                      ItemTemplate="{DynamicResource TaskUpdateTemplate}" 
-                                                      VerticalAlignment="Top" Margin="0,10,0,0" HorizontalAlignment="Left" IsHitTestVisible="False">
+                        					FontSize="16" Foreground="#FF464646" 
+                        					ItemsSource="{Binding Analysis.TotalWorked.Updates}" 
+                        					ItemTemplate="{DynamicResource TaskUpdateTemplate}" 
+                        					VerticalAlignment="Top" Margin="0,10,0,0" HorizontalAlignment="Left" IsHitTestVisible="False">
                                             <ItemsControl.ItemsPanel>
                                                 <ItemsPanelTemplate>
                                                     <StackPanel Orientation="Horizontal"/>
@@ -629,9 +629,9 @@
                                             </ItemsControl.ItemsPanel>
                                         </ItemsControl>
                                         <ItemsControl x:Name="itemsControl1_Copy1" 
-                                                      FontSize="16" Foreground="#FF464646" 
-                                                      ItemsSource="{Binding Analysis.RemainingHours.Updates}" 
-                                                      ItemTemplate="{DynamicResource TaskUpdateTemplate}" VerticalAlignment="Top" Margin="0,10,0,0" HorizontalAlignment="Left" IsHitTestVisible="False">
+                        					FontSize="16" Foreground="#FF464646" 
+                        					ItemsSource="{Binding Analysis.RemainingHours.Updates}" 
+                        					ItemTemplate="{DynamicResource TaskUpdateTemplate}" VerticalAlignment="Top" Margin="0,10,0,0" HorizontalAlignment="Left" IsHitTestVisible="False">
                                             <ItemsControl.ItemsPanel>
                                                 <ItemsPanelTemplate>
                                                     <StackPanel Orientation="Horizontal"/>
@@ -640,9 +640,9 @@
                                         </ItemsControl>
                                     </StackPanel>
                                     <Button 
-                                        HorizontalAlignment="Left" VerticalAlignment="Top" 
-                                        Style="{DynamicResource NoHoverButtonStyle}" Height="32"
-                                        Width="32" Margin="0,-5,0,0" Command="{Binding AddDayCommand}">
+                        				HorizontalAlignment="Left" VerticalAlignment="Top" 
+                        				Style="{DynamicResource NoHoverButtonStyle}" Height="32"
+                        				Width="32" Margin="0,-5,0,0" Command="{Binding AddDayCommand}">
                                         <Button.Background>
                                             <ImageBrush ImageSource="Assets/Add.png"/>
                                         </Button.Background>
@@ -772,5 +772,81 @@
                 </StackPanel>
             </StackPanel>
         </Controls:Flyout>
+        <Grid x:Name="EditDateOverlay" Background="#4C000000" Opacity="0" IsHitTestVisible="False" DataContext="{Binding Main.EditDate}">
+            <Grid.Style>
+                <Style>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding ShowEditDate}" Value="True">
+                            <DataTrigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <BooleanAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.IsHitTestVisible)">
+                                            <DiscreteBooleanKeyFrame KeyTime="0" Value="False"/>
+                                            <DiscreteBooleanKeyFrame KeyTime="0:0:0.4" Value="True"/>
+                                        </BooleanAnimationUsingKeyFrames>
+                                        <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)">
+                                            <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+                                            <EasingDoubleKeyFrame KeyTime="0:0:0.4" Value="1"/>
+                                        </DoubleAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </DataTrigger.EnterActions>
+                            <DataTrigger.ExitActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <BooleanAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.IsHitTestVisible)">
+                                            <DiscreteBooleanKeyFrame KeyTime="0" Value="True"/>
+                                            <DiscreteBooleanKeyFrame KeyTime="0:0:0.4" Value="False"/>
+                                        </BooleanAnimationUsingKeyFrames>
+                                        <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)">
+                                            <EasingDoubleKeyFrame KeyTime="0" Value="1"/>
+                                            <EasingDoubleKeyFrame KeyTime="0:0:0.4" Value="0"/>
+                                        </DoubleAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </DataTrigger.ExitActions>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Grid.Style>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition Height="275"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Border Grid.Column="1" Grid.Row="1" Padding="10" Background="White">
+                <Grid Background="#FFF7F7F7">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1.618*"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <TextBlock FontSize="28" Text="Edit Date..." Foreground="#FF2B2B2B" Margin="10,0,0,0"/>
+                    <Calendar Grid.Row="1" HorizontalAlignment="Center" 
+                              VerticalAlignment="Center" SelectedDate="{Binding NewDate}"
+                              ap:BlackoutDates.BlackOutDates="{Binding BlacklistedDates}">
+                    </Calendar>
+
+                    <Grid Grid.Column="1" Margin="0,22,0,21" Grid.Row="1" >
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <Button Margin="10" Content="Delete" Command="{Binding TaskUpdateViewModel.DeleteDateCommand}"/>
+                        <Button Margin="10" Grid.Row="1" Content="Change Date" Command="{Binding ChangeDateCommand}"/>
+                        <Button Margin="10" Grid.Row="2" Content="Cancel" Command="{Binding CancelCommand}"/>
+                    </Grid>
+                </Grid>
+            </Border>
+        </Grid>
     </Grid>
 </Controls:MetroWindow>
