@@ -8,6 +8,7 @@ using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
 using Afterburn.Extensions;
+using Ploeh.AutoFixture;
 
 namespace Afterburn.ViewModel
 {
@@ -27,13 +28,22 @@ namespace Afterburn.ViewModel
 
         public MainViewModel()
         {
-            this.Analysis = new AnalysisViewModel();
-            this.EditDate = new EditDateViewModel();
-            this.Tasks = new ObservableCollection<TaskViewModel>();
+            Analysis = new AnalysisViewModel();
+            EditDate = new EditDateViewModel();
+            Tasks = new ObservableCollection<TaskViewModel>();
 
-            this.AddDummyTask();
-     
-            this.CalculateTotals();
+#if DEBUG
+            var fixture = new Fixture();
+            fixture.RepeatCount = 5;
+            var random = new Random(DateTime.Now.Millisecond);
+            var file = fixture.Create<AfterburnFile>();
+
+            LoadState(file);
+#else
+            AddDummyTask();
+#endif
+
+            CalculateTotals();
 
             SetupCommands();
 
@@ -74,16 +84,13 @@ namespace Afterburn.ViewModel
             Messenger.Default.Register<EstimateUpdatedMessage>(this,
                 (m) =>
                 {
-                    if (UpdateEstimates(m))
-                    {
-                        return;
-                    }
+                    UpdateEstimates(m);
                 });
 
             Messenger.Default.Register<UpdateModifiedMessage>(this,
                 (m) =>
                 {
-                    this.CalculateTotals();
+                    CalculateTotals();
                 });
         }
 
@@ -108,25 +115,17 @@ namespace Afterburn.ViewModel
 
         private void SetupCommands()
         {
-            this.NewCommand = new RelayCommand(() =>
-            {
-                this.Reset();
-            });
+            NewCommand = new RelayCommand(() => { Reset(); });
 
-            this.SaveCommand = new RelayCommand(() =>
-            {
-                Messenger.Default.Send<SaveMessage>(new SaveMessage());
-            });
+            SaveCommand = new RelayCommand(() => { Messenger.Default.Send<SaveMessage>(new SaveMessage()); });
 
-            this.LoadCommand = new RelayCommand(() =>
-            {
-                Messenger.Default.Send<LoadMessage>(new LoadMessage());
-            });
+            LoadCommand = new RelayCommand(() => { Messenger.Default.Send<LoadMessage>(new LoadMessage()); });
 
-            this.AddTaskCommand = new RelayCommand(AddTask);
-            this.AddDayCommand = new RelayCommand(this.AddDay);
+            AddTaskCommand = new RelayCommand(AddTask);
 
-            this.SortFeaturesCommand = new RelayCommand(SortFeatures);
+            AddDayCommand = new RelayCommand(AddDay);
+
+            SortFeaturesCommand = new RelayCommand(SortFeatures);
         }
 
         private void SortFeatures()
@@ -134,7 +133,7 @@ namespace Afterburn.ViewModel
             Tasks.Sort(x => x.Feature);
         }
 
-        private bool UpdateEstimates(EstimateUpdatedMessage m)
+        private void UpdateEstimates(EstimateUpdatedMessage m)
         {
             DeferCalculation();
             if (m.Task.Updates.Any() &&
@@ -144,7 +143,9 @@ namespace Afterburn.ViewModel
                 {
                     update.Hours += m.Task.Hours - m.Previous;
                 }
-                return true;
+                AllowCalculation();
+                CalculateTotals();
+                return;
             }
 
             foreach (var update in m.Task.Updates)
@@ -152,14 +153,13 @@ namespace Afterburn.ViewModel
                 update.Hours = m.Task.Hours;
             }
             AllowCalculation();
-            this.CalculateTotals();
-            return false;
+            CalculateTotals();
         }
 
         private void DeleteDate(DeleteDateMessage m)
         {
             DeferCalculation();
-            foreach (var task in this.Tasks)
+            foreach (var task in Tasks)
             {
                 var updateToRemove = task.Updates
                                          .SingleOrDefault(t => t.Date == m.Date);
@@ -171,29 +171,31 @@ namespace Afterburn.ViewModel
                 task.Updates.Remove(updateToRemove);
             }
             AllowCalculation();
-            this.CalculateTotals();
-            this.ShowHideAnalysis();
+            CalculateTotals();
+            ShowHideAnalysis();
         }
 
         private void DeleteTask(DeleteTaskMessage m)
         {
             DeferCalculation();
-            this.Tasks.Remove(m.Task);
-            if (this.Tasks.Count == 0)
+            Tasks.Remove(m.Task);
+            
+            if (Tasks.Count == 0)
             {
-                this.AddDummyTask();
+                AddDummyTask();
             }
+            
             AllowCalculation();
-            this.CalculateTotals();
+            CalculateTotals();
         }
 
         private void AddTask()
         {
             DeferCalculation();
             var newTask = new TaskViewModel();
-            if (this.Tasks.Any(t => t.Updates.Any()))
+            if (Tasks.Any(t => t.Updates.Any()))
             {
-                var existingTask = this.Tasks.First(t => t.Updates.Any());
+                var existingTask = Tasks.First(t => t.Updates.Any());
                 {
                     foreach (var update in existingTask.Updates)
                     {
@@ -206,8 +208,8 @@ namespace Afterburn.ViewModel
                 }
             }
             AllowCalculation();
-            this.Tasks.Add(newTask);
-            this.CalculateTotals();
+            Tasks.Add(newTask);
+            CalculateTotals();
         }
 
         private void AllowCalculation()
@@ -218,7 +220,7 @@ namespace Afterburn.ViewModel
         private void AddDay()
         {
             DeferCalculation();
-            foreach (var task in this.Tasks)
+            foreach (var task in Tasks)
             {
                 task.AllowEdits = true;
                 var lasthours = task.Updates.LastOrDefault() == null
@@ -227,7 +229,7 @@ namespace Afterburn.ViewModel
 
                 var lastDate = AddDays(task.Updates.LastOrDefault() == null
                                        ? DateTime.Today.AddDays(-1)
-                                       : task.Updates.Last().Date, 1, this.skipWeekends);
+                                       : task.Updates.Last().Date, 1, skipWeekends);
 
                 task.Updates.Add(new TaskUpdateViewModel
                 {
@@ -236,14 +238,14 @@ namespace Afterburn.ViewModel
                 });
             }
             AllowCalculation();
-            this.CalculateTotals();
+            CalculateTotals();
         }
 
         private void Reset()
         {
             Analysis.Clear();
-            this.Tasks.Clear();
-            this.CalculateTotals();
+            Tasks.Clear();
+            CalculateTotals();
             AddDummyTask();
         }
 
@@ -266,19 +268,19 @@ namespace Afterburn.ViewModel
 
         private void ShowHideAnalysis()
         {
-            this.AnalysisVisibility = this.Tasks.Any()
-                                      ? (this.Tasks.First().Updates.Any()
+            AnalysisVisibility = Tasks.Any()
+                                      ? (Tasks.First().Updates.Any()
                                          ? Visibility.Visible
                                          : Visibility.Collapsed)
                                       : Visibility.Collapsed;
-            this.SelectedTabIndex = 0;
+            SelectedTabIndex = 0;
         }
 
         private void CalculateTotals()
         {
             if (!allowCalculation) return;
             Analysis.CalculateTotals(Tasks, HoursPerDay, SkipWeekends);
-            this.TotalEstimatedHours = Tasks.Sum(t => t.Hours);
+            TotalEstimatedHours = Tasks.Sum(t => t.Hours);
             ShowHideAnalysis();
         }
 
@@ -300,13 +302,13 @@ namespace Afterburn.ViewModel
         private void AddDummyTask()
         {
             var t = new TaskViewModel();
-            this.Tasks.Add(t);
+            Tasks.Add(t);
         }
 
         internal void LoadState(AfterburnFile file)
         {
             DeferCalculation();
-            this.Reset();
+            Reset();
             foreach (var task in file.Tasks)
             {
                 var vm = new TaskViewModel
@@ -316,7 +318,7 @@ namespace Afterburn.ViewModel
                     Hours = task.Hours
                 };
 
-                this.Tasks.Add(vm);
+                Tasks.Add(vm);
 
                 foreach (var update in task.Updates)
                 {
@@ -348,18 +350,18 @@ namespace Afterburn.ViewModel
         {
             get
             {
-                return this.skipWeekends;
+                return skipWeekends;
             }
 
             set
             {
-                if (this.skipWeekends == value)
+                if (skipWeekends == value)
                 {
                     return;
                 }
 
-                this.skipWeekends = value;
-                this.RaisePropertyChanged(SkipWeekendsPropertyName);
+                skipWeekends = value;
+                RaisePropertyChanged(SkipWeekendsPropertyName);
             }
         }
 
@@ -378,19 +380,19 @@ namespace Afterburn.ViewModel
         {
             get
             {
-                return this.hoursPerDay;
+                return hoursPerDay;
             }
 
             set
             {
-                if (this.hoursPerDay == value)
+                if (hoursPerDay == value)
                 {
                     return;
                 }
 
-                this.hoursPerDay = value;
-                this.RaisePropertyChanged(HoursPerDayPropertyName);
-                this.CalculateTotals();
+                hoursPerDay = value;
+                RaisePropertyChanged(HoursPerDayPropertyName);
+                CalculateTotals();
             }
         }
 
@@ -409,18 +411,18 @@ namespace Afterburn.ViewModel
         {
             get
             {
-                return this.totalEstimatedHours;
+                return totalEstimatedHours;
             }
 
             set
             {
-                if (this.totalEstimatedHours == value)
+                if (totalEstimatedHours == value)
                 {
                     return;
                 }
 
-                this.totalEstimatedHours = value;
-                this.RaisePropertyChanged(TotalEstimatedHoursPropertyName);
+                totalEstimatedHours = value;
+                RaisePropertyChanged(TotalEstimatedHoursPropertyName);
             }
         }
 
@@ -439,18 +441,18 @@ namespace Afterburn.ViewModel
         {
             get
             {
-                return this.allowEstimateEdits;
+                return allowEstimateEdits;
             }
 
             set
             {
-                if (this.allowEstimateEdits == value)
+                if (allowEstimateEdits == value)
                 {
                     return;
                 }
 
-                this.allowEstimateEdits = value;
-                this.RaisePropertyChanged(AllowEstimateEditsPropertyName);
+                allowEstimateEdits = value;
+                RaisePropertyChanged(AllowEstimateEditsPropertyName);
             }
         }
 
@@ -469,18 +471,18 @@ namespace Afterburn.ViewModel
         {
             get
             {
-                return this.analysisVisibility;
+                return analysisVisibility;
             }
 
             set
             {
-                if (this.analysisVisibility == value)
+                if (analysisVisibility == value)
                 {
                     return;
                 }
 
-                this.analysisVisibility = value;
-                this.RaisePropertyChanged(AnalysisVisibilityPropertyName);
+                analysisVisibility = value;
+                RaisePropertyChanged(AnalysisVisibilityPropertyName);
             }
         }
 
@@ -500,18 +502,18 @@ namespace Afterburn.ViewModel
         {
             get
             {
-                return this.selectedTabIndex;
+                return selectedTabIndex;
             }
 
             set
             {
-                if (this.selectedTabIndex == value)
+                if (selectedTabIndex == value)
                 {
                     return;
                 }
 
-                this.selectedTabIndex = value;
-                this.RaisePropertyChanged(SelectedTabIndexPropertyName);
+                selectedTabIndex = value;
+                RaisePropertyChanged(SelectedTabIndexPropertyName);
             }
         }
 

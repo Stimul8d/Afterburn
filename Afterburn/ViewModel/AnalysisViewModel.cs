@@ -31,20 +31,20 @@ namespace Afterburn.ViewModel
 
         public AnalysisViewModel()
         {
-            this.FeatureSpread = new FeatureSpreadViewModel();
+            FeatureSpread = new FeatureSpreadViewModel();
 
-            this.Distractions = new TaskTotalViewModel();
-            this.RemainingHours = new TaskTotalViewModel();
-            this.ProjectedTotal = new TaskTotalViewModel();
-            this.TotalWorked = new TaskTotalViewModel();
+            Distractions = new TaskTotalViewModel();
+            RemainingHours = new TaskTotalViewModel();
+            ProjectedTotal = new TaskTotalViewModel();
+            TotalWorked = new TaskTotalViewModel();
 
-            this.AnalysisDistractions = new TaskTotalViewModel();
-            this.AnalysisRemainingHours = new TaskTotalViewModel();
-            this.AnalysisProjectedTotal = new TaskTotalViewModel();
-            this.AnalysisTotalWorked = new TaskTotalViewModel();
-            this.AnalysisAverageExtrapolation = new TaskTotalViewModel();
+            AnalysisDistractions = new TaskTotalViewModel();
+            AnalysisRemainingHours = new TaskTotalViewModel();
+            AnalysisProjectedTotal = new TaskTotalViewModel();
+            AnalysisTotalWorked = new TaskTotalViewModel();
+            AnalysisAverageExtrapolation = new TaskTotalViewModel();
 
-            this.FeatureSpread = new FeatureSpreadViewModel();
+            FeatureSpread = new FeatureSpreadViewModel();
         }
 
         public void Clear()
@@ -54,7 +54,7 @@ namespace Afterburn.ViewModel
             AnalysisProjectedTotal.Updates.Clear();
             AnalysisTotalWorked.Updates.Clear();
             AnalysisAverageExtrapolation.Updates.Clear();
-            
+
             Distractions.Updates.Clear();
             RemainingHours.Updates.Clear();
             ProjectedTotal.Updates.Clear();
@@ -70,15 +70,15 @@ namespace Afterburn.ViewModel
             this.tasks = tasks;
             this.hoursPerDay = hoursPerDay;
             this.skipWeekends = skipWeekends;
-            this.totalEstimatedHours = tasks.Sum(t => t.Hours);
-            this.updates = this.GetDayUpdates();
+            totalEstimatedHours = tasks.Sum(t => t.Hours);
+            updates = GetDayUpdates();
 
             if (!tasks.Any())
                 return;
 
-            this.Distractions.Updates.Clear();
-            this.RemainingHours.Updates.Clear();
-            this.TotalWorked.Updates.Clear();
+            Distractions.Updates.Clear();
+            RemainingHours.Updates.Clear();
+            TotalWorked.Updates.Clear();
 
             CreateRemainingAndTotalAndDistractions();
 
@@ -107,7 +107,7 @@ namespace Afterburn.ViewModel
                          {
                              Name = g.Key,
                              Hours = g.Sum(t => t.Updates.Last().Hours)
-                        }).ToList();
+                         }).ToList();
         }
 
         private void CreateAverageExtrapolation()
@@ -115,7 +115,7 @@ namespace Afterburn.ViewModel
             if (!tasks.First().Updates.Any())
                 return;
 
-            this.AnalysisAverageExtrapolation.Updates.Clear();
+            AnalysisAverageExtrapolation.Updates.Clear();
             var currrentDay = tasks.First().Updates.Last().Date;
             var remainingTotal = RemainingHours.Updates.Last().Hours;
 
@@ -130,11 +130,11 @@ namespace Afterburn.ViewModel
                     Hours = remainingTotal,
                     Date = currrentDay
                 };
-                this.AnalysisAverageExtrapolation.Updates.Add(update);
+                AnalysisAverageExtrapolation.Updates.Add(update);
 
                 currrentDay = AddDays(currrentDay, 1);
                 remainingTotal -= avg;
-                
+
                 if (update.Hours <= 0)
                     return;
             }
@@ -144,38 +144,38 @@ namespace Afterburn.ViewModel
         {
             if (tasks.Any() && tasks.First().Updates.Any())
             {
-                this.AnalysisProjectedTotal.Updates.Clear();
-                this.AnalysisRemainingHours.Updates.Clear();
-                this.AnalysisTotalWorked.Updates.Clear();
-                this.AnalysisDistractions.Updates.Clear();
+                AnalysisProjectedTotal.Updates.Clear();
+                AnalysisRemainingHours.Updates.Clear();
+                AnalysisTotalWorked.Updates.Clear();
+                AnalysisDistractions.Updates.Clear();
 
                 //add day one to the analysis
-                var dayOne = this.GetDayUpdates().First().Date;
+                var dayOne = GetDayUpdates().First().Date;
                 var dayZero = AddDays(dayOne, -1);
 
-                this.AnalysisProjectedTotal.Updates.Add(new TaskTotalUpdateViewModel
+                AnalysisProjectedTotal.Updates.Add(new TaskTotalUpdateViewModel
                 {
                     Hours = tasks.Sum(t => t.Hours),
                     Date = dayZero
                 });
 
-                this.AnalysisRemainingHours.Updates.Add(new TaskTotalUpdateViewModel
+                AnalysisRemainingHours.Updates.Add(new TaskTotalUpdateViewModel
                 {
                     Hours = tasks.Sum(t => t.Hours),
                     Date = dayZero
                 });
 
-                this.AnalysisDistractions.Updates.AddRange(this.Distractions.Updates);
-                this.AnalysisProjectedTotal.Updates.AddRange(this.ProjectedTotal.Updates);
-                this.AnalysisRemainingHours.Updates.AddRange(this.RemainingHours.Updates);
-                this.AnalysisTotalWorked.Updates.AddRange(this.TotalWorked.Updates);
+                AnalysisDistractions.Updates.AddRange(Distractions.Updates);
+                AnalysisProjectedTotal.Updates.AddRange(ProjectedTotal.Updates);
+                AnalysisRemainingHours.Updates.AddRange(RemainingHours.Updates);
+                AnalysisTotalWorked.Updates.AddRange(TotalWorked.Updates);
             }
         }
 
         private void CreateIdealBurndown()
         {
             //generate ideal burndown
-            this.ProjectedTotal.Updates.Clear();
+            ProjectedTotal.Updates.Clear();
             var remainingTotal = totalEstimatedHours;
             var currrentDay = DateTime.Today;
 
@@ -192,7 +192,7 @@ namespace Afterburn.ViewModel
                     Hours = remainingTotal,
                     Date = currrentDay
                 };
-                this.ProjectedTotal.Updates.Add(update);
+                ProjectedTotal.Updates.Add(update);
                 currrentDay = AddDays(currrentDay, 1);
                 if (update.Hours <= 0)
                     return;
@@ -221,19 +221,19 @@ namespace Afterburn.ViewModel
                 var worked = previousUpdate.Hours - update.Hours;
                 var remaining = hoursPerDay - worked;
 
-                this.RemainingHours.Updates.Add(new TaskTotalUpdateViewModel
+                RemainingHours.Updates.Add(new TaskTotalUpdateViewModel
                 {
                     Date = update.Date.Date,
                     Hours = update.Hours
                 });
 
-                this.TotalWorked.Updates.Add(new TaskTotalUpdateViewModel
+                TotalWorked.Updates.Add(new TaskTotalUpdateViewModel
                 {
                     Date = update.Date.Date,
                     Hours = worked
                 });
 
-                this.Distractions.Updates.Add(new TaskTotalUpdateViewModel
+                Distractions.Updates.Add(new TaskTotalUpdateViewModel
                 {
                     Date = update.Date.Date,
                     Hours = remaining
