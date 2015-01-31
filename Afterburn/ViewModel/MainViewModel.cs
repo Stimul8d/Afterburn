@@ -9,11 +9,14 @@ using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
 using Afterburn.Extensions;
 using Ploeh.AutoFixture;
+using System.Diagnostics;
 
 namespace Afterburn.ViewModel
 {
     public class MainViewModel : ViewModelBase
     {
+        private bool enableCalculation = true;
+
         public AnalysisViewModel Analysis { get; set; }
         public EditDateViewModel EditDate { get; set; }
 
@@ -34,16 +37,26 @@ namespace Afterburn.ViewModel
 
 #if DEBUG
             var fixture = new Fixture();
-            fixture.RepeatCount = 5;
+            fixture.RepeatCount = 15;
             var random = new Random(DateTime.Now.Millisecond);
             var file = fixture.Create<AfterburnFile>();
+
+            for (int t = 0; t < fixture.RepeatCount; t++)
+            {
+                var task = file.Tasks[t];
+                for (int u = 0; u < fixture.RepeatCount; u++)
+                {
+                    var update = task.Updates[u];
+                    update.Date = DateTime.Today.AddDays(u);
+                }
+            }
 
             LoadState(file);
 #else
             AddDummyTask();
+            CalculateTotals();
 #endif
 
-            CalculateTotals();
 
             SetupCommands();
 
@@ -96,7 +109,7 @@ namespace Afterburn.ViewModel
 
         private void ChangeDate(DateTime from, DateTime to)
         {
-            DeferCalculation();
+            DisableCalculation();
             foreach (var task in Tasks)
             {
                 var updates = task.Updates.ToList();
@@ -108,14 +121,15 @@ namespace Afterburn.ViewModel
             CalculateTotals();
         }
 
-        private void DeferCalculation()
+        private void DisableCalculation()
         {
-            allowCalculation = false;
+            Debug.WriteLine("Disabling Calc");
+            enableCalculation = false;
         }
 
         private void SetupCommands()
         {
-            NewCommand = new RelayCommand(() => { Reset(); });
+            NewCommand = new RelayCommand(() => { Reset(); AddDummyTask(); });
 
             SaveCommand = new RelayCommand(() => { Messenger.Default.Send<SaveMessage>(new SaveMessage()); });
 
@@ -135,7 +149,7 @@ namespace Afterburn.ViewModel
 
         private void UpdateEstimates(EstimateUpdatedMessage m)
         {
-            DeferCalculation();
+            DisableCalculation();
             if (m.Task.Updates.Any() &&
                 m.Task.Updates.First().Hours > 0)
             {
@@ -158,7 +172,7 @@ namespace Afterburn.ViewModel
 
         private void DeleteDate(DeleteDateMessage m)
         {
-            DeferCalculation();
+            DisableCalculation();
             foreach (var task in Tasks)
             {
                 var updateToRemove = task.Updates
@@ -177,21 +191,21 @@ namespace Afterburn.ViewModel
 
         private void DeleteTask(DeleteTaskMessage m)
         {
-            DeferCalculation();
+            DisableCalculation();
             Tasks.Remove(m.Task);
-            
+
             if (Tasks.Count == 0)
             {
                 AddDummyTask();
             }
-            
+
             AllowCalculation();
             CalculateTotals();
         }
 
         private void AddTask()
         {
-            DeferCalculation();
+            DisableCalculation();
             var newTask = new TaskViewModel();
             if (Tasks.Any(t => t.Updates.Any()))
             {
@@ -214,12 +228,13 @@ namespace Afterburn.ViewModel
 
         private void AllowCalculation()
         {
-            allowCalculation = true;
+            Debug.WriteLine("Enable Calc");
+            enableCalculation = true;
         }
 
         private void AddDay()
         {
-            DeferCalculation();
+            DisableCalculation();
             foreach (var task in Tasks)
             {
                 task.AllowEdits = true;
@@ -246,7 +261,6 @@ namespace Afterburn.ViewModel
             Analysis.Clear();
             Tasks.Clear();
             CalculateTotals();
-            AddDummyTask();
         }
 
         public static DateTime AddDays(DateTime date, int days, bool skipWeekends)
@@ -278,7 +292,7 @@ namespace Afterburn.ViewModel
 
         private void CalculateTotals()
         {
-            if (!allowCalculation) return;
+            if (!enableCalculation) return;
             Analysis.CalculateTotals(Tasks, HoursPerDay, SkipWeekends);
             TotalEstimatedHours = Tasks.Sum(t => t.Hours);
             ShowHideAnalysis();
@@ -307,8 +321,8 @@ namespace Afterburn.ViewModel
 
         internal void LoadState(AfterburnFile file)
         {
-            DeferCalculation();
-            Reset();
+            DisableCalculation();
+
             foreach (var task in file.Tasks)
             {
                 var vm = new TaskViewModel
@@ -492,7 +506,6 @@ namespace Afterburn.ViewModel
         public const string SelectedTabIndexPropertyName = "SelectedTabIndex";
 
         private int selectedTabIndex = 0;
-        private bool allowCalculation;
 
         /// <summary>
         /// Sets and gets the SelectedTabIndex property.
