@@ -29,16 +29,15 @@ namespace Afterburn.ViewModel
         {
             this.Analysis = new AnalysisViewModel();
             this.EditDate = new EditDateViewModel();
-
             this.Tasks = new ObservableCollection<TaskViewModel>();
 
             this.AddDummyTask();
+     
             this.CalculateTotals();
 
             SetupCommands();
 
             SetupMessages();
-
         }
 
         private void SetupMessages()
@@ -63,7 +62,7 @@ namespace Afterburn.ViewModel
 
             Messenger.Default.Register<FeatureNameUpdatedMessage>(this, (m) =>
             {
-                Analysis.CalculateTotals(Tasks, hoursPerDay, skipWeekends);
+                CalculateTotals();
             });
 
             Messenger.Default.Register<DeleteDateMessage>(this,
@@ -90,6 +89,7 @@ namespace Afterburn.ViewModel
 
         private void ChangeDate(DateTime from, DateTime to)
         {
+            DeferCalculation();
             foreach (var task in Tasks)
             {
                 var updates = task.Updates.ToList();
@@ -97,8 +97,13 @@ namespace Afterburn.ViewModel
                 updates.Single(u => u.Date == from).Date = to;
                 task.Updates.AddRange(updates.OrderBy(u => u.Date));
             }
-            Analysis.Clear();
-            Analysis.CalculateTotals(Tasks, HoursPerDay, skipWeekends);
+            AllowCalculation();
+            CalculateTotals();
+        }
+
+        private void DeferCalculation()
+        {
+            allowCalculation = false;
         }
 
         private void SetupCommands()
@@ -131,6 +136,7 @@ namespace Afterburn.ViewModel
 
         private bool UpdateEstimates(EstimateUpdatedMessage m)
         {
+            DeferCalculation();
             if (m.Task.Updates.Any() &&
                 m.Task.Updates.First().Hours > 0)
             {
@@ -145,12 +151,14 @@ namespace Afterburn.ViewModel
             {
                 update.Hours = m.Task.Hours;
             }
+            AllowCalculation();
             this.CalculateTotals();
             return false;
         }
 
         private void DeleteDate(DeleteDateMessage m)
         {
+            DeferCalculation();
             foreach (var task in this.Tasks)
             {
                 var updateToRemove = task.Updates
@@ -162,23 +170,26 @@ namespace Afterburn.ViewModel
                 }
                 task.Updates.Remove(updateToRemove);
             }
+            AllowCalculation();
             this.CalculateTotals();
             this.ShowHideAnalysis();
         }
 
         private void DeleteTask(DeleteTaskMessage m)
         {
+            DeferCalculation();
             this.Tasks.Remove(m.Task);
             if (this.Tasks.Count == 0)
             {
                 this.AddDummyTask();
             }
-
+            AllowCalculation();
             this.CalculateTotals();
         }
 
         private void AddTask()
         {
+            DeferCalculation();
             var newTask = new TaskViewModel();
             if (this.Tasks.Any(t => t.Updates.Any()))
             {
@@ -194,13 +205,19 @@ namespace Afterburn.ViewModel
                     }
                 }
             }
-
+            AllowCalculation();
             this.Tasks.Add(newTask);
             this.CalculateTotals();
         }
 
+        private void AllowCalculation()
+        {
+            allowCalculation = true;
+        }
+
         private void AddDay()
         {
+            DeferCalculation();
             foreach (var task in this.Tasks)
             {
                 task.AllowEdits = true;
@@ -218,7 +235,7 @@ namespace Afterburn.ViewModel
                     Hours = lasthours
                 });
             }
-
+            AllowCalculation();
             this.CalculateTotals();
         }
 
@@ -259,6 +276,7 @@ namespace Afterburn.ViewModel
 
         private void CalculateTotals()
         {
+            if (!allowCalculation) return;
             Analysis.CalculateTotals(Tasks, HoursPerDay, SkipWeekends);
             this.TotalEstimatedHours = Tasks.Sum(t => t.Hours);
             ShowHideAnalysis();
@@ -287,6 +305,7 @@ namespace Afterburn.ViewModel
 
         internal void LoadState(AfterburnFile file)
         {
+            DeferCalculation();
             this.Reset();
             foreach (var task in file.Tasks)
             {
@@ -308,6 +327,7 @@ namespace Afterburn.ViewModel
                     });
                 }
             }
+            AllowCalculation();
             CalculateTotals();
         }
 
@@ -470,6 +490,7 @@ namespace Afterburn.ViewModel
         public const string SelectedTabIndexPropertyName = "SelectedTabIndex";
 
         private int selectedTabIndex = 0;
+        private bool allowCalculation;
 
         /// <summary>
         /// Sets and gets the SelectedTabIndex property.

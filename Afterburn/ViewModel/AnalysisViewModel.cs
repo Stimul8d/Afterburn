@@ -4,6 +4,7 @@ using System.Linq;
 using Afterburn.Extensions;
 using Afterburn.Model;
 using GalaSoft.MvvmLight;
+using System.Diagnostics;
 
 namespace Afterburn.ViewModel
 {
@@ -61,9 +62,11 @@ namespace Afterburn.ViewModel
             FeatureSpread.Clear();
         }
 
+        private static int calcCount = 0;
         public void CalculateTotals(IEnumerable<TaskViewModel> tasks,
             double hoursPerDay, bool skipWeekends)
         {
+            Debug.WriteLine("Calculating #{0}", ++calcCount);
             this.tasks = tasks;
             this.hoursPerDay = hoursPerDay;
             this.skipWeekends = skipWeekends;
